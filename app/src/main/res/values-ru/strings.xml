@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Кухонный калькулятор</string>
+    <string name="draw_menu_one">Пересчет массы продуктов</string>
+    <string name="draw_menu_two">Пересчет ингредиентов для выпечки</string>
+    <string name="choose_product">Выберети продукт...</string>
+    <string name="faceted_glass">Граненый стакан</string>
+    <string name="tea_glass">Стакан чайный</string>
+    <string name="tea_spoon">Чайная ложка</string>
+    <string name="table_spoon">Столовая ложка</string>
+    <string name="gramm">г.</string>
+    <string name="quantity">Колличество</string>
+
+
+
+    <string name="solt">Соль</string>
+    <string name="water">Вода</string>
+</resources>

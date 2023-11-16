@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">KitchenCalculator</string>
+    <string name="app_name">Kitchen Calculator</string>
+    <string name="draw_menu_one">Recalculation mass of products</string>
+    <string name="draw_menu_two">Converting baking ingredients</string>
+    <string name="choose_product">Choose product...</string>
+    <string name="faceted_glass">Faceted glass</string>
+    <string name="tea_glass">Tea glass</string>
+    <string name="tea_spoon">Tea spoon</string>
+    <string name="table_spoon">Table spoon</string>
+    <string name="gramm">g</string>
+    <string name="quantity">Quantity</string>
+
+    <string name="solt">Solt</string>
+    <string name="water">Water</string>
 </resources>

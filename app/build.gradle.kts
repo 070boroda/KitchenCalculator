@@ -51,7 +51,7 @@ android {
 
 dependencies {
 
-    implementation ("com.yandex.android:mobileads:6.1.0")
+  //  implementation ("com.yandex.android:mobileads:6.1.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
@@ -76,8 +76,12 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("com.maxkeppeler.sheets-compose-dialogs:core:1.2.0")
     implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.2.0")
-    implementation ("com.yandex.android:mobmetricalib:5.3.0")
-    implementation("com.android.billingclient:billing:6.0.1")
-    implementation("com.android.billingclient:billing-ktx:6.0.1")
-    implementation ("com.google.android.gms:play-services-ads:22.5.0")
+   // implementation ("com.yandex.android:mobmetricalib:5.3.0")
+    implementation("com.android.billingclient:billing:6.1.0")
+    implementation("com.android.billingclient:billing-ktx:6.1.0")
+   // implementation ("com.google.android.gms:play-services-ads:22.5.0")
+    implementation ("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation ("com.github.Breens-Mbaka:Searchable-Dropdown-Menu-Jetpack-Compose:0.3.6")
+    //Data store
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }

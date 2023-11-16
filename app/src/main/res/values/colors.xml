@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="backgroud_row">#EEEEEE</color>
+    <color name="table_spoon">#EA6313</color>
+    <color name="faceted_glass">#39CEF3</color>
+    <color name="tea_spoon">#39F3CE</color>
+    <color name="header_name_product">#BBFB8D</color>
+    <color name="top_app_bar">#FFF7F8</color>
 </resources>
