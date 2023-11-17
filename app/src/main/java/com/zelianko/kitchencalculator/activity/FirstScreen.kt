@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
@@ -41,8 +44,10 @@ import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.subactivity.CustomTextInput
-import com.zelianko.kitchencalculator.subactivity.DropListCondition
+import com.zelianko.kitchencalculator.subactivity.DropListConditionFrom
+import com.zelianko.kitchencalculator.subactivity.DropListConditionTo
 import com.zelianko.kitchencalculator.subactivity.DropListProduct
+import com.zelianko.kitchencalculator.subactivity.ResultCardProduct
 
 /**
  * Пересчет массы продуктов
@@ -54,9 +59,12 @@ fun FirstScreen(
     productViewModel: ProductViewModel,
     paddingValues: PaddingValues
 ) {
-    var selectedItemString = productViewModel.currentProduct.observeAsState()
+    val selectedItemString = productViewModel.currentProduct.observeAsState()
+    val selectedItemFrom = productViewModel.currentProductFrom.observeAsState("")
+    val selectedItemTo = productViewModel.currentProductTo.observeAsState("")
+    val inputText = remember { mutableStateOf("") }
 
-    var inputText = remember { mutableStateOf("") }
+    val resultCount = productViewModel.resultCount.observeAsState()
 
     Scaffold(
         modifier = Modifier.padding(paddingValues)
@@ -69,9 +77,10 @@ fun FirstScreen(
                 .alpha(0.2f),
             contentScale = ContentScale.FillHeight
         )
-
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(10.dp))
             Row(
@@ -150,7 +159,7 @@ fun FirstScreen(
                             text = if (selectedItemString.value?.teaGlass.toString()
                                     .equals("null")
                             ) "0" else selectedItemString.value?.teaGlass.toString() + stringResource(
-                                id = R.string.gramm
+                                id = R.string.g
                             ),
                             style = TextStyle(
                                 color = Color.Green,
@@ -171,7 +180,7 @@ fun FirstScreen(
                             text = if (selectedItemString.value?.facetedGlass.toString()
                                     .equals("null")
                             ) "0" else selectedItemString.value?.facetedGlass.toString() + stringResource(
-                                id = R.string.gramm
+                                id = R.string.g
                             ),
                             style = TextStyle(
                                 color = colorResource(id = R.color.faceted_glass),
@@ -199,7 +208,7 @@ fun FirstScreen(
                             text = if (selectedItemString.value?.tableSpoon.toString()
                                     .equals("null")
                             ) "0" else selectedItemString.value?.tableSpoon.toString() + stringResource(
-                                id = R.string.gramm
+                                id = R.string.g
                             ),
                             style = TextStyle(
                                 color = colorResource(id = R.color.table_spoon),
@@ -220,7 +229,7 @@ fun FirstScreen(
                             text = if (selectedItemString.value?.teaSpoon.toString()
                                     .equals("null")
                             ) "0" else selectedItemString.value?.teaSpoon.toString() + stringResource(
-                                id = R.string.gramm
+                                id = R.string.g
                             ),
                             style = TextStyle(
                                 color = colorResource(id = R.color.tea_spoon),
@@ -242,15 +251,31 @@ fun FirstScreen(
             }
             Spacer(modifier = Modifier.height(10.dp))
             if (selectedItemString.value != null) {
-                Row (
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                ){
-                    DropListCondition()
+                ) {
                     CustomTextInput(inputText)
+                    Spacer(modifier = Modifier.width(40.dp))
+                    DropListConditionFrom(productViewModel)
+                }
+                Spacer(modifier = Modifier.height(5.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
+                ) {
+                    DropListConditionTo(productViewModel)
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                if (selectedItemString.value != null && inputText.value.isNotEmpty() && selectedItemFrom.value.isNotEmpty() &&
+                    selectedItemTo.value.isNotEmpty()
+                ) {
+                    productViewModel.countProductResult(selectedItemString.value!!, inputText.value,
+                        selectedItemFrom.value, selectedItemTo.value
+                    )
+                    ResultCardProduct(resultCount, selectedItemTo.value)
 
                 }
-
             }
         }
     }

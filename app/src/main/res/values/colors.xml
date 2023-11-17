@@ -12,5 +12,8 @@
     <color name="faceted_glass">#39CEF3</color>
     <color name="tea_spoon">#39F3CE</color>
     <color name="header_name_product">#BBFB8D</color>
-    <color name="top_app_bar">#FFF7F8</color>
+    <color name="header_product_result">#FB2C2C</color>
+    <color name="top_app_bar">#FFFFFF</color>
+    <color name="top_app_bar_gr">#FAD7DB</color>
+
 </resources>

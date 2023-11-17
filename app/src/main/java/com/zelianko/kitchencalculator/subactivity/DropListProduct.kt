@@ -68,7 +68,8 @@ fun DropListProduct(
         defaultItem = {},
         onSearchTextFieldClicked = {
             keyboardController?.show()
-        }
+        },
+
     )
 }
 
@@ -77,7 +78,7 @@ fun DropDownItem(test: String) {
     Row(
         modifier = Modifier
             .padding(4.dp)
-           // .wrapContentSize(),
+        // .wrapContentSize(),
     ) {
         Text(
             test,

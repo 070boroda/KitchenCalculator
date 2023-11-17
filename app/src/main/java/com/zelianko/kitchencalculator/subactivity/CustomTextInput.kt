@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,8 +27,12 @@ import com.zelianko.kitchencalculator.R
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun CustomTextInput(inputText: MutableState<String>) {
-    Column {
-        var textState = inputText
+    Column (
+        modifier =
+            Modifier.width(160.dp)
+                .padding(start = 20.dp)
+    ){
+        val textState = inputText
         val maxLength = 110
         val lightBlue = Color(0xFF105FEC)
         val blue = Color(0xFF146AFC)
@@ -38,7 +43,8 @@ fun CustomTextInput(inputText: MutableState<String>) {
                 .padding(start = 24.dp, bottom = 4.dp),
             textAlign = TextAlign.Start,
             color = blue,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
         )
         TextField(
             modifier = Modifier
@@ -46,7 +52,7 @@ fun CustomTextInput(inputText: MutableState<String>) {
                 .padding(start = 24.dp),
             value = textState.value,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            textStyle = androidx.compose.ui.text.TextStyle(fontSize = 25.sp),
+            textStyle = androidx.compose.ui.text.TextStyle(fontSize = 22.sp),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = colorResource(id = R.color.backgroud_row),
                 cursorColor = Color.Black,
