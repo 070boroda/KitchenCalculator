@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.activity.FirstScreen
+import com.zelianko.kitchencalculator.activity.SecondScreen
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.NavGraf
 import kotlinx.coroutines.launch
@@ -213,8 +214,7 @@ fun Drawer(productViewModel: ProductViewModel) {
                         )
                     },
                     secondScreenContent = {
-                        FirstScreen(
-                            productViewModel = productViewModel,
+                        SecondScreen(
                             paddingValues = paddingValues
                         )
                     }

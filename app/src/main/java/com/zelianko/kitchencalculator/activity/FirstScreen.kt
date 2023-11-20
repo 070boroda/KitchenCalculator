@@ -79,8 +79,8 @@ fun FirstScreen(
         )
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
+                .fillMaxSize()
         ) {
             Spacer(modifier = Modifier.height(10.dp))
             Row(
