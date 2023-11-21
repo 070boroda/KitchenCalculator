@@ -7,7 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="backgroud_row">#EEEEEE</color>
+    <color name="backgroud_row">#FF7C7C</color>
     <color name="table_spoon">#EA6313</color>
     <color name="faceted_glass">#39CEF3</color>
     <color name="tea_spoon">#39F3CE</color>
@@ -15,5 +15,11 @@
     <color name="header_product_result">#FB2C2C</color>
     <color name="top_app_bar">#FFFFFF</color>
     <color name="top_app_bar_gr">#FAD7DB</color>
+
+    <color name="all_background">#F8F8F8</color>
+    <color name="tea_glass_card">#FFCFA4</color>
+    <color name="tea_spoon_card">#FFA4A4</color>
+    <color name="table_spoon_card">#BBFFA4</color>
+    <color name="faceted_glass_card">#A4D9FF</color>
 
 </resources>

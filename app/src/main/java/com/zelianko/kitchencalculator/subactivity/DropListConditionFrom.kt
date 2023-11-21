@@ -2,6 +2,7 @@ package com.zelianko.kitchencalculator.subactivity
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -44,24 +45,22 @@ fun DropListConditionFrom(productViewModel: ProductViewModel) {
         Text(
             text = stringResource(id = R.string.from),
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(bottom = 4.dp),
             textAlign = TextAlign.Start,
             fontSize = 16.sp,
-            color = blue,
+            color = Color.Black,
             fontWeight = FontWeight.Bold
         )
         SearchableExpandedDropDownMenu(
             listOfItems = products,
             modifier = Modifier
-                .width(170.dp),
+                .fillMaxSize(),
             //.padding(top = 14.dp),
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.from),
                     fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 16.sp
+                    fontSize = 19.sp
                 )
             },
             onDropDownItemSelected = { item ->

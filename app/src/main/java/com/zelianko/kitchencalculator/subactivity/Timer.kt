@@ -2,6 +2,8 @@ package com.zelianko.kitchencalculator.subactivity
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -111,7 +113,9 @@ fun Timer(
                     isTimerRunning = !isTimerRunning
                 }
             },
-            modifier = Modifier.align(Alignment.BottomCenter),
+            modifier = Modifier
+                .width(120.dp)
+                .align(Alignment.BottomCenter),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (!isTimerRunning || currentTime <= 0L) {
                     Color.Green

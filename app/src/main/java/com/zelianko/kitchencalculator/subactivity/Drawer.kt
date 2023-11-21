@@ -86,8 +86,7 @@ fun Drawer(productViewModel: ProductViewModel) {
 
     Surface(
         modifier = Modifier
-            .fillMaxSize(),
-        color = Color.Green
+            .fillMaxSize()
     ) {
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
@@ -130,7 +129,6 @@ fun Drawer(productViewModel: ProductViewModel) {
                                         Text(
                                             text = item.title,
                                             style = TextStyle(
-                                                fontStyle = FontStyle.Italic,
                                                 fontSize = 18.sp,
                                                 color = colorResource(id = R.color.faceted_glass)
                                             )
@@ -171,19 +169,14 @@ fun Drawer(productViewModel: ProductViewModel) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                brush = Brush.horizontalGradient(
-                                    listOf(
-                                        colorResource(id = R.color.top_app_bar),
-                                        colorResource(id = R.color.top_app_bar_gr),
-                                    )
-                                )
+                                colorResource(id = R.color.all_background)
                             )
                     ){
                     TopAppBar(
                         title = {
                             Text(
                                 selectedItem,
-                                style = TextStyle(fontStyle = FontStyle.Italic, fontSize = 24.sp)
+                                style = TextStyle( fontSize = 24.sp)
                             )
                         },
                         navigationIcon = {

@@ -3,7 +3,9 @@ package com.zelianko.kitchencalculator.subactivity
 import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,7 +48,6 @@ fun DropListProduct(
             Text(
                 text = stringResource(id = R.string.choose_product),
                 fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Italic,
                 fontSize = 20.sp
             )
         },
@@ -77,8 +78,8 @@ fun DropListProduct(
 fun DropDownItem(test: String) {
     Row(
         modifier = Modifier
-            .padding(4.dp)
-        // .wrapContentSize(),
+            .padding(8.dp)
+            .wrapContentSize(),
     ) {
         Text(
             test,

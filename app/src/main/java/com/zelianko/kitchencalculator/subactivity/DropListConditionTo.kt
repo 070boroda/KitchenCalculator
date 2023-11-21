@@ -43,7 +43,7 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
         modifier = Modifier
             .fillMaxHeight()
             .height(50.dp)
-            .padding(start = 44.dp, end = 40.dp)
+            .padding(start = 44.dp, end = 20.dp)
         // .background(Color.Black)
     ) {
         Text(
@@ -53,20 +53,19 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
                 .padding(bottom = 4.dp),
             textAlign = TextAlign.Start,
             fontSize = 16.sp,
-            color = blue,
+            color = Color.Black,
             fontWeight = FontWeight.Bold
         )
         SearchableExpandedDropDownMenu(
             listOfItems = products,
             modifier = Modifier
                 .fillMaxWidth(),
-            //.padding(top = 14.dp),
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.convert_to),
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
-                    fontSize = 16.sp
+                    fontSize = 19.sp
                 )
             },
             onDropDownItemSelected = { item ->

@@ -1,17 +1,18 @@
 package com.zelianko.kitchencalculator.subactivity
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,41 +21,51 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
 
 @Composable
-fun ResultCardProduct(resultCount: State<String?>, value: String) {
+@Preview(showBackground = true)
+fun CardFirstScreenTop(
+    title: Int = R.string.table_spoon,
+    value: String = "200g",
+    colorCard: Color = colorResource(id = R.color.table_spoon_card),
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-            .padding(start = 48.dp, end = 20.dp)
-            .clip(shape = RoundedCornerShape(12.dp)),
+        modifier = modifier
+            .height(135.dp)
+            .width(205.dp)
+            .padding(horizontal = 20.dp)
+            .clip(shape = RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.backgroud_row),
+            containerColor = colorCard,
             contentColor = Color.Black
         )
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .padding(5.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(id = R.string.your_result),
+                text = value,
                 style = TextStyle(
                     color = Color.Black,
-                    fontSize = 30.sp
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 40.sp
                 )
             )
             Text(
-                text = "${resultCount.value} ${value}",
+                text = stringResource(id = title),
                 style = TextStyle(
                     color = Color.Black,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
                 )
             )
         }
