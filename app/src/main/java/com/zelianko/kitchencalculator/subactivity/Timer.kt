@@ -1,8 +1,9 @@
 package com.zelianko.kitchencalculator.subactivity
 
+import android.content.Context
+import android.media.RingtoneManager
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,6 +33,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+
 @Composable
 fun Timer(
     totalTime: Long,
@@ -40,7 +42,8 @@ fun Timer(
     activeBarColor: Color,
     modifier: Modifier = Modifier,
     initialValue: Float = 1f,
-    strokeWidth: Dp = 5.dp
+    strokeWidth: Dp = 5.dp,
+    context: Context
 ) {
     var size by remember {
         mutableStateOf(IntSize.Zero)
@@ -54,11 +57,21 @@ fun Timer(
     var isTimerRunning by remember {
         mutableStateOf(false)
     }
+
+    val hour = 3600L * 1000L
+    val minut = 60L * 1000L
+
+    val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+    val r = RingtoneManager.getRingtone(context, notification)
+
     LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
         if(currentTime > 0 && isTimerRunning) {
             delay(100L)
             currentTime -= 100L
             value = currentTime / totalTime.toFloat()
+        } else if (currentTime == 0L && isTimerRunning) {
+            isTimerRunning = !isTimerRunning
+            r.play()
         }
     }
     Box(
@@ -99,7 +112,8 @@ fun Timer(
             )
         }
         Text(
-            text = (currentTime / 1000L).toString(),
+
+            text = String.format("%02d:%02d:%02d",(currentTime / hour),(currentTime % hour) / minut, (currentTime % minut)/1000L),
             fontSize = 44.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White

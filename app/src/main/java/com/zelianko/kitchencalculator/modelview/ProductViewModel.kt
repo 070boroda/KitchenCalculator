@@ -20,6 +20,7 @@ private const val FACETED_GLASS_RU = "Граненый стакан"
 
 private const val TEA_GLASS_EU = "Tea glass"
 private const val TEA_GLASS_RU = "Стакан чайный"
+private const val OZ_VAL = 28.3495
 
 class ProductViewModel : ViewModel() {
 
@@ -178,10 +179,22 @@ class ProductViewModel : ViewModel() {
         convertFrom: String,
         convertTo: String
     ) {
+        var temp = textQu
+        var convertFromTemp = convertFrom
 
-        val amountFrom = getAmount(convertFrom, textQu, product)
-        val amountTo = getAmount(convertTo, "1", product)
-        val result: Double = amountFrom.toDouble().div(amountTo.toDouble())
+        if ((convertFrom == "oz") or (convertFrom == "Унция")) {
+            temp = (textQu.toDouble() * OZ_VAL).toString()
+            convertFromTemp = GRAM_EU
+        }
+        val amountFrom = getAmount(convertFromTemp, temp, product)
+
+        var amountTo:Double
+        if ((convertTo == "oz") or (convertTo == "Унция")) {
+            amountTo = getAmount(GRAM_EU, OZ_VAL.toString(), product)
+        } else {
+            amountTo = getAmount(convertTo, "1", product)
+        }
+        val result: Double = amountFrom.div(amountTo)
         _resultCount.postValue(String.format("%.2f", result))
     }
 }
@@ -189,24 +202,24 @@ class ProductViewModel : ViewModel() {
 /**
  * что во что переводим
  */
-private fun getAmount(convertFrom: String, textQu: String, product: Products): Int {
+private fun getAmount(convertFrom: String, textQu: String, product: Products): Double {
     when (convertFrom) {
-        GRAM_EU -> return textQu.toInt()
-        GRAM_RU -> return textQu.toInt()
+        GRAM_EU -> return textQu.toDouble()
+        GRAM_RU -> return textQu.toDouble()
 
-        TABLE_SPOON_EU -> return product.tableSpoon * textQu.toInt()
-        TABLE_SPOON_RU -> return product.tableSpoon * textQu.toInt()
+        TABLE_SPOON_EU -> return product.tableSpoon * textQu.toDouble()
+        TABLE_SPOON_RU -> return product.tableSpoon * textQu.toDouble()
 
-        TEA_SPOON_EU -> return product.teaSpoon * textQu.toInt()
-        TEA_SPOON_RU -> return product.teaSpoon * textQu.toInt()
+        TEA_SPOON_EU -> return product.teaSpoon * textQu.toDouble()
+        TEA_SPOON_RU -> return product.teaSpoon * textQu.toDouble()
 
-        FACETED_GLASS_EU -> return product.facetedGlass * textQu.toInt()
-        FACETED_GLASS_RU -> return product.facetedGlass * textQu.toInt()
+        FACETED_GLASS_EU -> return product.facetedGlass * textQu.toDouble()
+        FACETED_GLASS_RU -> return product.facetedGlass * textQu.toDouble()
 
-        TEA_GLASS_EU -> return product.teaGlass * textQu.toInt()
-        TEA_GLASS_RU -> return product.teaGlass * textQu.toInt()
+        TEA_GLASS_EU -> return product.teaGlass * textQu.toDouble()
+        TEA_GLASS_RU -> return product.teaGlass * textQu.toDouble()
         else -> {
-            return 0
+            return Double.MAX_VALUE
         }
     }
 }

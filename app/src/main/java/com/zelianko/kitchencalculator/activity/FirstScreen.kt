@@ -121,6 +121,7 @@ fun FirstScreen(
 
                 CardFirstScreenTop(
                     title = R.string.tea_glass,
+                    titleGramm = R.string.tea_glass_250,
                     value = if (selectedItemString.value?.teaGlass.toString()
                                     .equals("null")
                            ) "0" else selectedItemString.value?.teaGlass.toString() + stringResource(
@@ -133,6 +134,7 @@ fun FirstScreen(
 
                 CardFirstScreenTop(
                     title = R.string.table_spoon,
+                    titleGramm = 0,
                     value = if (selectedItemString.value?.tableSpoon.toString()
                             .equals("null")
                     ) "0" else selectedItemString.value?.tableSpoon.toString() + stringResource(
@@ -151,6 +153,7 @@ fun FirstScreen(
             ) {
                 CardFirstScreenTop(
                     title = R.string.faceted_glass,
+                    titleGramm = R.string.faceted_glass_200,
                     value = if (selectedItemString.value?.facetedGlass.toString()
                             .equals("null")
                     ) "0" else selectedItemString.value?.facetedGlass.toString() + stringResource(
@@ -162,6 +165,7 @@ fun FirstScreen(
                 )
                 CardFirstScreenTop(
                     title = R.string.tea_spoon,
+                    titleGramm = 0,
                     value = if (selectedItemString.value?.teaSpoon.toString()
                             .equals("null")
                     ) "0" else selectedItemString.value?.teaSpoon.toString() + stringResource(

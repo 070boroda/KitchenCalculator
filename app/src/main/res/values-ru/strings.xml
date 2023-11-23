@@ -4,11 +4,14 @@
     <string name="draw_menu_two">Пересчет ингредиентов для выпечки</string>
     <string name="choose_product">Выберети продукт…</string>
     <string name="faceted_glass">Граненый стакан</string>
+    <string name="faceted_glass_200">200 мл</string>
     <string name="tea_glass">Стакан чайный</string>
+    <string name="tea_glass_250">250 мл</string>
     <string name="tea_spoon">Чайная ложка</string>
     <string name="table_spoon">Столовая ложка</string>
     <string name="gramm">Грамм</string>
     <string name="g">г.</string>
+    <string name="oz">Унция</string>
     <string name="quantity">Колличество</string>
     <string name="from">Из</string>
     <string name="convert_to">пересчитать в</string>
@@ -62,5 +65,6 @@
     <string name="cornflake">Хлопья кукурузные</string>
     <string name="tea">Чай сухой</string>
     <string name="egg_powder">Яичный порошок</string>
+
 
 </resources>

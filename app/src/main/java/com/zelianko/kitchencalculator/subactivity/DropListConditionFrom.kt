@@ -31,7 +31,8 @@ fun DropListConditionFrom(productViewModel: ProductViewModel) {
         stringResource(id = R.string.table_spoon),
         stringResource(id = R.string.tea_spoon),
         stringResource(id = R.string.tea_glass),
-        stringResource(id = R.string.faceted_glass)
+        stringResource(id = R.string.faceted_glass),
+        stringResource(id = R.string.oz)
     )
     val keyboardController = LocalSoftwareKeyboardController.current
     val blue = Color(0xFF146AFC)

@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
 
 @Composable
-@Preview(showBackground = true)
 fun CardFirstScreenTop(
     title: Int = R.string.table_spoon,
+    titleGramm: Int,
     value: String = "200g",
     colorCard: Color = colorResource(id = R.color.table_spoon_card),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -68,6 +68,16 @@ fun CardFirstScreenTop(
                     fontSize = 18.sp
                 )
             )
+            if (titleGramm != 0) {
+                Text(
+                    text = stringResource(id = titleGramm),
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
+                    )
+                )
+            }
         }
     }
 }
