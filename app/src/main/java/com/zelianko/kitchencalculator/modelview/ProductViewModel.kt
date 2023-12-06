@@ -123,7 +123,7 @@ class ProductViewModel : ViewModel() {
             "Варенье" -> "Jam"
             "Вишня свежая" -> "Cherry"
             "Горох лущеный" -> "Split peas"
-            "Грибы сушеные" -> "Dried_mushroom"
+            "Грибы сушеные" -> "Dried mushroom"
             "Желатин в порошке" -> "Gelatin powder"
             "Изюм" -> "Raisin"
             "Какао порошок" -> "Cocoa powder"

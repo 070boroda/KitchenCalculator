@@ -14,13 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Scale
-import androidx.compose.material.icons.outlined.Cake
-import androidx.compose.material.icons.outlined.Scale
-import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,43 +39,47 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.activity.FirstScreen
-import com.zelianko.kitchencalculator.activity.SecondScreen
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.NavGraf
+import com.zelianko.kitchencalculator.recipe_list_screen.RecipeListScreen
+import com.zelianko.kitchencalculator.util.Routes
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Drawer(productViewModel: ProductViewModel) {
+fun Drawer(
+    productViewModel: ProductViewModel,
+    mainNavHostController: NavHostController,
+) {
     val items = listOf(
         NavigationItem(
-            title = stringResource(R.string.draw_menu_one),
-            selectedIcon = Icons.Filled.Scale,
-            unselectedIcon = Icons.Outlined.Scale,
-            route = "firstScreen"
+            title = stringResource(R.string.draw_menu_two),
+            selectedIcon = ImageVector.vectorResource(R.drawable.ic_my_recipe),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.ic_my_recipe),
+            route = Routes.RECIPE_LIST_SCREEN
         ),
         NavigationItem(
-            title = stringResource(R.string.draw_menu_two),
-            selectedIcon = Icons.Filled.Cake,
-            unselectedIcon = Icons.Outlined.Cake,
-            route = "secondScreen"
+            title = stringResource(R.string.draw_menu_one),
+            selectedIcon = ImageVector.vectorResource(R.drawable.ic_vesi),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.ic_vesi),
+            route = Routes.COUNTER_SCREEN
         ),
     )
     val navController = rememberNavController()
@@ -99,22 +99,16 @@ fun Drawer(productViewModel: ProductViewModel) {
 
         ModalNavigationDrawer(
             drawerContent = {
-                ModalDrawerSheet {
+                ModalDrawerSheet(
+                    drawerContainerColor = colorResource(id = R.color.white)
+                ) {
                     Box(
                         modifier
                         = Modifier.wrapContentSize()
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.background_one),
-                            contentDescription = "Menu",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .alpha(0.1f),
-                            contentScale = ContentScale.Crop
-                        )
                         Column(modifier = Modifier.fillMaxSize()) {
                             Image(
-                                painter = painterResource(id = R.drawable.menu),
+                                painter = painterResource(id = R.drawable.background_header_menu),
                                 contentDescription = "Menu",
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -125,13 +119,15 @@ fun Drawer(productViewModel: ProductViewModel) {
                             Spacer(modifier = Modifier.height(32.dp))
                             items.forEachIndexed { index, item ->
                                 NavigationDrawerItem(
+                                    colors = NavigationDrawerItemDefaults.colors(
+                                        selectedContainerColor = colorResource(id = R.color.orange_primary),
+                                        unselectedContainerColor = colorResource(id = R.color.white)
+                                    ),
+                                    shape = RectangleShape,
                                     label = {
                                         Text(
                                             text = item.title,
-                                            style = TextStyle(
-                                                fontSize = 18.sp,
-                                                color = colorResource(id = R.color.faceted_glass)
-                                            )
+                                            style = MaterialTheme.typography.bodyLarge
                                         )
                                     },
                                     selected = index == selectedItemIndex,
@@ -164,39 +160,64 @@ fun Drawer(productViewModel: ProductViewModel) {
         ) {
             Scaffold(
                 topBar =
-                    {
+                {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
                                 colorResource(id = R.color.all_background)
                             )
-                    ){
-                    TopAppBar(
-                        title = {
-                            Text(
-                                selectedItem,
-                                style = TextStyle( fontSize = 24.sp)
-                            )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Menu,
-                                    contentDescription = "Menu"
+                    ) {
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    selectedItem,
+                                    style = TextStyle(fontSize = 24.sp)
                                 )
-                            }
-                        },
-                        colors = topAppBarColors(
-                            containerColor = Color.Transparent,
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = {
+                                    scope.launch {
+                                        drawerState.open()
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Menu,
+                                        contentDescription = "Menu"
+                                    )
+                                }
+                            },
+                            actions = {
+                                if (selectedItemIndex == 0) {
+                                    IconButton(
+                                        modifier = Modifier
+                                            .padding(end = 10.dp)
+                                            .background(
+                                                colorResource(id = R.color.orange_primary),
+                                                shape = CircleShape
+                                            ),
+                                        onClick = {
+                                            //Переход на экран жобавления рецепта
+                                            mainNavHostController.navigate(Routes.RECIPE_ADD_SCREEN)
+//                                            recipeViewModel.onEvent(
+//                                                RecipeListEvent.OnItemClick(
+//                                                    Routes.RECIPE_ADD_SCREEN
+//                                                )
+//                                            )
+                                        }) {
+                                        Icon(
+                                            imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                                            contentDescription = "plus"
+                                        )
+                                    }
+                                }
+                            },
+                            colors = topAppBarColors(
+                                containerColor = Color.Transparent,
+                            )
                         )
-                    )
-                }
-        },
+                    }
+                },
             ) { paddingValues ->
                 NavGraf(
                     navHostController = navController,
@@ -207,9 +228,7 @@ fun Drawer(productViewModel: ProductViewModel) {
                         )
                     },
                     secondScreenContent = {
-                        SecondScreen(
-                            paddingValues = paddingValues
-                        )
+                        RecipeListScreen()
                     }
                 )
             }

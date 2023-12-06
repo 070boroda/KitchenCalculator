@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Kitchen Calculator</string>
     <string name="draw_menu_one">Recalculation mass of products</string>
-    <string name="draw_menu_two">Converting baking ingredients</string>
+    <string name="draw_menu_two">My recipe</string>
     <string name="choose_product">Choose product…</string>
     <string name="faceted_glass">Faceted glass</string>
     <string name="tea_glass">Tea glass</string>
@@ -15,6 +15,11 @@
     <string name="your_result">Your Result</string>
     <string name="faceted_glass_200">200 ml</string>
     <string name="tea_glass_250">250 ml</string>
+    <string name="search_recipes">Search recipes</string>
+    <string name="create_recipe">"Create recipe"</string>
+    <string name="recipe_name">"Recipe name"</string>
+    <string name="add_ingredient">Add Ingredient</string>
+    <string name="save_recipe">Save recipe</string>
 
 
 
@@ -67,5 +72,8 @@
     <string name="tea">Tea</string>
     <string name="egg_powder">Egg powder</string>
     <string name="oz">oz\n</string>
+    <string name="add_photo">Add Photo</string>
+
+
 
 </resources>

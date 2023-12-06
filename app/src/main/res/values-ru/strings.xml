@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Кухонный калькулятор</string>
     <string name="draw_menu_one">Пересчет массы продуктов</string>
-    <string name="draw_menu_two">Пересчет ингредиентов для выпечки</string>
+    <string name="draw_menu_two">Мои рецепты</string>
     <string name="choose_product">Выберети продукт…</string>
     <string name="faceted_glass">Граненый стакан</string>
     <string name="faceted_glass_200">200 мл</string>
@@ -16,6 +16,11 @@
     <string name="from">Из</string>
     <string name="convert_to">пересчитать в</string>
     <string name="your_result">Ваш результат</string>
+    <string name="search_recipes">Поиск рецептов</string>
+    <string name="create_recipe">"Создать рецепт"</string>
+    <string name="recipe_name">"Название рецепта"</string>
+    <string name="add_ingredient">Добавить ингридиент</string>
+    <string name="save_recipe">Сохранить рецепт</string>
 
     <string name="solt">Соль</string>
     <string name="water">Вода</string>
@@ -65,6 +70,7 @@
     <string name="cornflake">Хлопья кукурузные</string>
     <string name="tea">Чай сухой</string>
     <string name="egg_powder">Яичный порошок</string>
+    <string name="add_photo">Добавить фотографию</string>
 
 
 </resources>

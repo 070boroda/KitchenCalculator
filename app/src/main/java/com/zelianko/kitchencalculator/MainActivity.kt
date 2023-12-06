@@ -11,8 +11,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
-import com.zelianko.kitchencalculator.subactivity.Drawer
+import com.zelianko.kitchencalculator.navigation.RecipeNavGraph
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +27,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Drawer(
-                    productViewModel = productViewModel
-                )
+                RecipeNavGraph(productViewModel = productViewModel)
             }
         }
     }

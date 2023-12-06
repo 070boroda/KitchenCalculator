@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.zelianko.kitchencalculator.util.Routes
 
 @Composable
 fun NavGraf(
@@ -16,13 +17,13 @@ fun NavGraf(
     ) {
     NavHost(
         navController = navHostController,
-        startDestination = "firstScreen",
+        startDestination = Routes.RECIPE_LIST_SCREEN,
         modifier = Modifier.background(Color.Black)
     ) {
-        composable("firstScreen") {
+        composable(Routes.COUNTER_SCREEN) {
             generalScreenContent()
         }
-        composable("secondScreen") {
+        composable(Routes.RECIPE_LIST_SCREEN) {
             secondScreenContent()
         }
 
