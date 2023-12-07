@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.data.Recipe
 
@@ -104,7 +105,7 @@ fun CustomTextInputField(
     }
     OutlinedTextField(
         modifier = Modifier
-            .height(48.dp)
+            .height(60.dp)
             .width(335.dp),
         value = value,
         colors = OutlinedTextFieldDefaults.colors(
@@ -123,7 +124,7 @@ fun CustomTextInputField(
                 tint = colorResource(id = R.color.grey)
             )
         },
-        placeholder = {
+        label = {
             Text(
                 text = stringResource(id = R.string.search_recipes),
                 style = MaterialTheme.typography.bodyMedium,
@@ -148,13 +149,13 @@ fun RowRecipe(
             .width(332.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.background_header_menu),
-            contentDescription = "Image recipe",
-            contentScale = ContentScale.Crop,
+        AsyncImage(
+            model = recipe.imageUrl,
+            contentDescription = null,
             modifier = Modifier
                 .size(50.dp)
-                .clip(CircleShape)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(18.dp))
         Column {
@@ -162,11 +163,10 @@ fun RowRecipe(
                 text = recipe.name,
                 style = MaterialTheme.typography.titleMedium
             )
-            Text(
-                text = "Ингредиентов на порцию * 2",
-                style = MaterialTheme.typography.bodySmall
-            )
-
+//            Text(
+//                text = "Ингредиентов на порцию * 2",
+//                style = MaterialTheme.typography.bodySmall
+//            )
         }
     }
 }

@@ -9,6 +9,5 @@ data class Recipe(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
     val name: String,
-//    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-//    val image: ByteArray?
+    val imageUrl: String
 )

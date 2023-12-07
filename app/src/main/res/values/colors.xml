@@ -25,5 +25,6 @@
     <color name="faceted_glass_card">#A4D9FF</color>
     <color name="grey">#9E9E9E</color>
     <color name="grey_light">#D9D9D9</color>
+    <color name="dismiss_color">#66FFA4A4</color>
 
 </resources>

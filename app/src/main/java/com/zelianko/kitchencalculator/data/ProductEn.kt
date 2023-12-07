@@ -9,5 +9,5 @@ data class ProductEn(
     val id:Long? = null,
     val name: String,
     val mass: Double,
-    val recipeId:Long
+    val recipeId:Long,
 )

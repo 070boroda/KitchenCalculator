@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductEnDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProductEn(item:ProductEn)
+    suspend fun insertProductEn(item: ProductEn)
 
     @Delete
     suspend fun deleteProductEn(item: ProductEn)
@@ -20,5 +20,5 @@ interface ProductEnDao {
     fun getAllItemsByRecipeId(recipeId: Long): Flow<List<ProductEn>>
 
     @Query("SELECT * FROM product_en WHERE product_en.id = :id")
-    fun getProductEnById(id: Long):Recipe
+    fun getProductEnById(id: Long): ProductEn
 }

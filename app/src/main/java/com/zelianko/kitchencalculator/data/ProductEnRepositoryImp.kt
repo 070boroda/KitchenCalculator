@@ -17,7 +17,7 @@ class ProductEnRepositoryImp(
         return dao.getAllItemsByRecipeId(recipeId)
     }
 
-    override fun getProductEnById(id: Long): Recipe {
+    override fun getProductEnById(id: Long): ProductEn {
         return dao.getProductEnById(id)
     }
 }

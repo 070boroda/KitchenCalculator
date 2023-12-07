@@ -10,5 +10,5 @@ interface ProductEnRepository {
 
     fun getAllItemsByRecipeId(recipeId: Long): Flow<List<ProductEn>>
 
-    fun getProductEnById(id: Long): Recipe
+    fun getProductEnById(id: Long): ProductEn
 }

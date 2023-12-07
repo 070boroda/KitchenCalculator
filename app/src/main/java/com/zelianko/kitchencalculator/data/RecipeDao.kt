@@ -1,5 +1,6 @@
 package com.zelianko.kitchencalculator.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface RecipeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipe(item: Recipe)
+    suspend fun insertRecipe(item: Recipe): Long
 
     @Delete
     suspend fun deleteRecipe(item: Recipe)
@@ -20,7 +21,7 @@ interface RecipeDao {
     fun getAllItems(): Flow<List<Recipe>>
 
     @Query("SELECT * FROM recipe WHERE recipe.id =:id")
-    fun getRecipeById(id: Long): Recipe
+    suspend fun getRecipeById(id: Long): Recipe
 
     @Query("SELECT * FROM recipe WHERE recipe.name like :name")
     fun getAllItemsByName(name: String): Flow<List<Recipe>>

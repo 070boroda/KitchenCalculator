@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 class RecipeRepositoryImpl(
     private val dao: RecipeDao
 ) : RecipeRepository {
-    override suspend fun insertRecipe(item: Recipe) {
-        dao.insertRecipe(item)
+    override suspend fun insertRecipe(item: Recipe): Long {
+        return dao.insertRecipe(item)
     }
 
     override suspend fun deleteRecipe(item: Recipe) {
@@ -17,7 +17,7 @@ class RecipeRepositoryImpl(
         return dao.getAllItems()
     }
 
-    override fun getRecipeById(id: Long): Recipe {
+    override suspend fun getRecipeById(id: Long): Recipe {
         return dao.getRecipeById(id)
     }
 
