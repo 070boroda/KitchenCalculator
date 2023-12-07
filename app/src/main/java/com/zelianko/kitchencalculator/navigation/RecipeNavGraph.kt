@@ -17,10 +17,12 @@ fun RecipeNavGraph(productViewModel: ProductViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.RECIPE_LIST_SCREEN) {
         composable(Routes.RECIPE_ADD_SCREEN) {
-            RecipeAddScreen()
+            RecipeAddScreen {
+                navController.navigate(it)
+            }
         }
         composable(Routes.RECIPE_LIST_SCREEN) {
-            Drawer (
+            Drawer(
                 productViewModel = productViewModel,
                 mainNavHostController = navController
             )

@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,16 +53,32 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.util.Routes
+import com.zelianko.kitchencalculator.util.UiEvent
 
 
 @Composable
-@Preview(showBackground = true)
 fun RecipeAddScreen(
-    viewModel: RecipeAddViewModel = hiltViewModel()
+    viewModel: RecipeAddViewModel = hiltViewModel(),
+    onNavigate: (String) -> Unit
 ) {
     val listProducts = viewModel.listProduct
+
+    //Переход на другой экран
+    LaunchedEffect(key1 = true){
+        viewModel.uiEvent.collect{ uiEven ->
+            when(uiEven){
+                is UiEvent.Navigate -> {
+                    onNavigate(uiEven.route)
+                }
+                else -> {}
+            }
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -80,7 +97,7 @@ fun RecipeAddScreen(
                 modifier = Modifier
                     .size(48.dp),
                 onClick = {
-
+                    viewModel.onEvent(RecipeAddEvent.OnItemClick(Routes.RECIPE_LIST_SCREEN))
                 })
             {
                 Icon(

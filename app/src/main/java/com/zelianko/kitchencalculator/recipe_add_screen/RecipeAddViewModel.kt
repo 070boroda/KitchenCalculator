@@ -10,8 +10,12 @@ import com.zelianko.kitchencalculator.data.ProductEn
 import com.zelianko.kitchencalculator.data.ProductEnRepository
 import com.zelianko.kitchencalculator.data.Recipe
 import com.zelianko.kitchencalculator.data.RecipeRepository
+import com.zelianko.kitchencalculator.util.Routes
+import com.zelianko.kitchencalculator.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
@@ -29,6 +33,9 @@ class RecipeAddViewModel @Inject constructor(
         private set
     var imageUri = mutableStateOf("")
         private set
+
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
 
     fun onEvent(event: RecipeAddEvent) {
@@ -101,9 +108,18 @@ class RecipeAddViewModel @Inject constructor(
 
                         }
                 }
-
+                sendUiEvent(UiEvent.Navigate(Routes.RECIPE_LIST_SCREEN))
+            }
+            is RecipeAddEvent.OnItemClick -> {
+                sendUiEvent(UiEvent.Navigate(event.route))
             }
             else -> {}
+        }
+    }
+
+    private fun sendUiEvent(event: UiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event)
         }
     }
 }

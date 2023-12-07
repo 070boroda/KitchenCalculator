@@ -197,13 +197,8 @@ fun Drawer(
                                                 shape = CircleShape
                                             ),
                                         onClick = {
-                                            //Переход на экран жобавления рецепта
+                                            //Переход на экран добавления рецепта
                                             mainNavHostController.navigate(Routes.RECIPE_ADD_SCREEN)
-//                                            recipeViewModel.onEvent(
-//                                                RecipeListEvent.OnItemClick(
-//                                                    Routes.RECIPE_ADD_SCREEN
-//                                                )
-//                                            )
                                         }) {
                                         Icon(
                                             imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
