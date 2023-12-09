@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,24 +19,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,10 +59,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.util.Routes
@@ -68,12 +75,13 @@ fun RecipeAddScreen(
     val listProducts = viewModel.listProduct
 
     //Переход на другой экран
-    LaunchedEffect(key1 = true){
-        viewModel.uiEvent.collect{ uiEven ->
-            when(uiEven){
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { uiEven ->
+            when (uiEven) {
                 is UiEvent.Navigate -> {
                     onNavigate(uiEven.route)
                 }
+
                 else -> {}
             }
         }
@@ -91,7 +99,8 @@ fun RecipeAddScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             IconButton(
                 modifier = Modifier
@@ -110,6 +119,23 @@ fun RecipeAddScreen(
                 text = stringResource(id = R.string.create_recipe),
                 style = MaterialTheme.typography.titleLarge
             )
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .background(
+                        colorResource(id = R.color.orange_primary),
+                        shape = CircleShape
+                    ),
+                onClick = {
+                    viewModel.onEvent(RecipeAddEvent.AddRowProduct)
+
+                }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                    contentDescription = "plus"
+                )
+            }
         }
         Spacer(modifier = Modifier.width(20.dp))
         RecipeNameTextInputField() { event ->
@@ -119,12 +145,13 @@ fun RecipeAddScreen(
             viewModel.onEvent(event)
         }
         Spacer(modifier = Modifier.width(40.dp))
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .height(400.dp),
+                .height(420.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            itemsIndexed(listProducts) { index, ingredient ->
+            listProducts.forEachIndexed { index, ingredient ->
                 Spacer(modifier = Modifier.height(12.dp))
                 IngredientsRow(
                     index = index
@@ -265,6 +292,24 @@ fun IngredientsRow(
     var ingredientWeight by remember {
         mutableStateOf("")
     }
+
+    val measureWeight = remember {
+        mutableStateOf("")
+    }
+
+    var showSheet by remember { mutableStateOf(false) }
+
+    if (showSheet) {
+        BottomSheet(
+            onDismiss = { showSheet = false },
+            measureWeight = measureWeight,
+            index =index
+        ) { event ->
+            onEvent(event)
+        }
+    }
+
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -274,7 +319,7 @@ fun IngredientsRow(
         TextField(
             modifier = Modifier
                 .height(55.dp)
-                .width(235.dp),
+                .width(225.dp),
             value = ingredientName,
             colors = TextFieldDefaults.colors(
                 cursorColor = colorResource(id = R.color.grey_light),
@@ -315,7 +360,7 @@ fun IngredientsRow(
             maxLines = 1,
             label = {
                 Text(
-                    text = "   " + stringResource(id = R.string.g),
+                    text = "   ",
                     style = MaterialTheme.typography.titleSmall,
                     color = colorResource(id = R.color.grey)
                 )
@@ -332,28 +377,111 @@ fun IngredientsRow(
                 .height(40.dp)
                 .width(40.dp),
             onClick = {
-                onEvent(RecipeAddEvent.AddRowProduct)
+                showSheet = true
+                // onEvent(RecipeAddEvent.DismissItem(index))
             })
         {
-            Icon(
-                ImageVector.vectorResource(R.drawable.ic_plus),
-                contentDescription = "plus",
-                tint = colorResource(id = R.color.grey)
-            )
+            if (measureWeight.value.isBlank()) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = "contentDescription",
+                    modifier = Modifier
+                        .size(18.dp)
+                        .background(colorResource(id = R.color.orange_primary), CircleShape)
+                        .padding(2.dp),
+                    tint = colorResource(id = R.color.orange_primary)
+                )
+            } else {
+                Text(text = measureWeight.value.substring(0, 2) + ".")
+            }
         }
-        IconButton(
-            modifier = Modifier
-                .height(40.dp)
-                .width(40.dp),
-            onClick = {
-                onEvent(RecipeAddEvent.DismissItem(index))
-            })
-        {
-            Icon(
-                ImageVector.vectorResource(R.drawable.ic_trach),
-                contentDescription = "plus",
-                tint = Color.Red
-            )
+        Spacer(modifier = Modifier.width(5.dp))
+        if (index != 0) {
+            IconButton(
+                modifier = Modifier
+                    .height(40.dp)
+                    .width(40.dp),
+                onClick = {
+                    onEvent(RecipeAddEvent.DismissItem(index))
+                })
+            {
+                Icon(
+                    ImageVector.vectorResource(R.drawable.ic_trach),
+                    contentDescription = "plus",
+                    tint = Color.Red
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomSheet(
+    onDismiss: () -> Unit,
+    measureWeight: MutableState<String>,
+    index: Int,
+    onEvent: (RecipeAddEvent) -> Unit
+) {
+    val modalBottomSheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() },
+        sheetState = modalBottomSheetState,
+        dragHandle = { BottomSheetDefaults.DragHandle() },
+    ) {
+        WeightList(
+            measureWeight = measureWeight,
+            index = index
+        ) { event ->
+            onEvent(event)
+        }
+    }
+}
+
+
+@Composable
+fun WeightList(
+    measureWeight: MutableState<String>,
+    index: Int,
+    onEvent: (RecipeAddEvent) -> Unit
+) {
+    val countries = listOf(
+        stringResource(id = R.string.recipe_name),
+        "Миллиграмм",
+        "Грамм",
+        "Килограмм",
+        "Миллилитр",
+        "Стакан",
+        "Чайная ложка",
+        "Столовая ложка",
+        "Штук"
+//        Pair("United States", "\uD83C\uDDFA\uD83C\uDDF8"),
+//        Pair("Canada", "\uD83C\uDDE8\uD83C\uDDE6"),
+//        Pair("India", "\uD83C\uDDEE\uD83C\uDDF3"),
+//        Pair("Germany", "\uD83C\uDDE9\uD83C\uDDEA"),
+//        Pair("France", "\uD83C\uDDEB\uD83C\uDDF7"),
+//        Pair("Japan", "\uD83C\uDDEF\uD83C\uDDF5"),
+//        Pair("China", "\uD83C\uDDE8\uD83C\uDDF3"),
+//        Pair("Brazil", "\uD83C\uDDE7\uD83C\uDDF7"),
+//        Pair("Australia", "\uD83C\uDDE6\uD83C\uDDFA"),
+//        Pair("Russia", "\uD83C\uDDF7\uD83C\uDDFA"),
+//        Pair("United Kingdom", "\uD83C\uDDEC\uD83C\uDDE7"),
+    )
+
+    LazyColumn {
+        items(countries) { it ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp, horizontal = 20.dp)
+                    .clickable {
+                        onEvent(RecipeAddEvent.MeasureWeight(it, index))
+                        measureWeight.value = it
+                    }
+            ) {
+                Text(text = it)
+            }
         }
     }
 }

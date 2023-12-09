@@ -14,6 +14,7 @@ sealed class RecipeAddEvent {
     data class IngredientName(val text: String, val index: Int) : RecipeAddEvent()
     //Вес продукта
     data class IngredientWeight(val weight: String, val index: Int) : RecipeAddEvent()
+    data class MeasureWeight(val value: String, val index: Int) : RecipeAddEvent()
     //Выход из экрана
     data class OnItemClick(val route: String) : RecipeAddEvent()
     object AddRowProduct : RecipeAddEvent()

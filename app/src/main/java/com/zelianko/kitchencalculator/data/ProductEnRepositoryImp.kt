@@ -20,4 +20,8 @@ class ProductEnRepositoryImp(
     override fun getProductEnById(id: Long): ProductEn {
         return dao.getProductEnById(id)
     }
+
+    override suspend fun deleteProductEnByRecipeId(recipeId: Long) {
+        dao.deleteProductEnByRecipeId(recipeId)
+    }
 }

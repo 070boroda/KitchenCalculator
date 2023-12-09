@@ -9,5 +9,6 @@ data class ProductEn(
     val id:Long? = null,
     val name: String,
     val mass: Double,
+    val measureWeight: String,
     val recipeId:Long,
 )

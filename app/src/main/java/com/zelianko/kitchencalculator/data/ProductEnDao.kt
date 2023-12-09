@@ -16,6 +16,9 @@ interface ProductEnDao {
     @Delete
     suspend fun deleteProductEn(item: ProductEn)
 
+    @Query("DELETE FROM product_en WHERE recipeId = :recipeId")
+    suspend fun deleteProductEnByRecipeId(recipeId: Long)
+
     @Query("SELECT * FROM product_en WHERE recipeId = :recipeId")
     fun getAllItemsByRecipeId(recipeId: Long): Flow<List<ProductEn>>
 

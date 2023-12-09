@@ -1,12 +1,12 @@
 package com.zelianko.kitchencalculator.recipe_list_screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,16 +18,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,9 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -50,6 +50,7 @@ fun RecipeListScreen(
 ) {
 
     val recipeList = viewModel.listRecipe.collectAsState(initial = emptyList())
+    val textSearch = remember { mutableStateOf(TextFieldValue("")) }
 
 //    LaunchedEffect(key1 = true) {
 //        viewModel.uiEvent.collect { uiEvent ->
@@ -77,18 +78,23 @@ fun RecipeListScreen(
         )
 
         //Передаем евент, что будем делать
-        CustomTextInputField() { event ->
-            viewModel.onEvent(event)
-        }
+        CustomTextInputField(
+            state = textSearch
+        )
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(recipeList.value) { recipe ->
+            items(recipeList.value.filter {
+                it.name.contains(textSearch.value.text, ignoreCase = true)
+            }
+            ) { recipe ->
                 Spacer(modifier = Modifier.height(12.dp))
-                RowRecipe(recipe)
+                RowRecipe(recipe) { event ->
+                    viewModel.onEvent(event)
+                }
             }
 
         }
@@ -98,16 +104,13 @@ fun RecipeListScreen(
 
 @Composable
 fun CustomTextInputField(
-    onEvent: (RecipeListEvent) -> Unit
+    state: MutableState<TextFieldValue>,
 ) {
-    var value by remember {
-        mutableStateOf("")
-    }
     OutlinedTextField(
         modifier = Modifier
             .height(60.dp)
             .width(335.dp),
-        value = value,
+        value = state.value,
         colors = OutlinedTextFieldDefaults.colors(
             cursorColor = Color.White,
             focusedContainerColor = Color.White,
@@ -131,9 +134,8 @@ fun CustomTextInputField(
                 color = colorResource(id = R.color.grey)
             )
         },
-        onValueChange = { newText ->
-            value = newText
-            onEvent(RecipeListEvent.SearchRecipe(value))
+        onValueChange = { value ->
+            state.value = value
         }
     )
 }
@@ -141,7 +143,8 @@ fun CustomTextInputField(
 
 @Composable
 fun RowRecipe(
-    recipe: Recipe
+    recipe: Recipe,
+    onEvent: (RecipeListEvent) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -163,10 +166,17 @@ fun RowRecipe(
                 text = recipe.name,
                 style = MaterialTheme.typography.titleMedium
             )
-//            Text(
-//                text = "Ингредиентов на порцию * 2",
-//                style = MaterialTheme.typography.bodySmall
-//            )
+        }
+
+        Spacer(Modifier.weight(1f).fillMaxHeight())
+        IconButton(onClick = {
+            onEvent(RecipeListEvent.DeleteRecipe(recipe))
+        }) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_trach),
+                contentDescription = "trash",
+                tint = Color.Red,
+            )
         }
     }
 }

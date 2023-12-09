@@ -27,7 +27,7 @@ class RecipeAddViewModel @Inject constructor(
 ) : ViewModel() {
 
     @SuppressLint("MutableCollectionMutableState")
-    val listProduct = mutableStateListOf(TwoField("", ""))
+    val listProduct = mutableStateListOf(TwoField("", "", ""))
 
     var nameRecipeText = mutableStateOf("")
         private set
@@ -51,7 +51,7 @@ class RecipeAddViewModel @Inject constructor(
             }
 
             is RecipeAddEvent.AddRowProduct -> {
-                listProduct.add(TwoField("", ""))
+                listProduct.add(TwoField("", "", ""))
                 Log.d("MyLog", "Add product")
             }
 
@@ -71,9 +71,15 @@ class RecipeAddViewModel @Inject constructor(
             }
 
             is RecipeAddEvent.IngredientWeight -> {
-                Log.d("MyLog", "${event.weight}")
+
                 if (event.weight.isBlank()) return
                 listProduct[event.index].value = event.weight
+            }
+            //
+            is RecipeAddEvent.MeasureWeight -> {
+
+                if (event.value.isBlank()) return
+                listProduct[event.index].plWeight = event.value
             }
 
             //Сохраняем рецепт выходим из экрана
@@ -102,6 +108,7 @@ class RecipeAddViewModel @Inject constructor(
                                     null,
                                     ingredient.key,
                                     ingredient.value.toDouble(),
+                                    ingredient.plWeight,
                                     idRecipe
                                 )
                             )
@@ -124,6 +131,6 @@ class RecipeAddViewModel @Inject constructor(
     }
 }
 
-data class TwoField<T>(var key: T, var value: T) {
+data class TwoField<T>(var key: T, var value: T, var plWeight: T) {
 
 }
