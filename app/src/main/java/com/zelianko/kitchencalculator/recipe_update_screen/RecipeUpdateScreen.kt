@@ -1,4 +1,4 @@
-package com.zelianko.kitchencalculator.recipe_add_screen
+package com.zelianko.kitchencalculator.recipe_update_screen
 
 import android.content.Intent
 import android.net.Uri
@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +46,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,21 +62,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.data.ProductEn
+import com.zelianko.kitchencalculator.data.Recipe
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
 
 @Composable
-fun RecipeAddScreen(
-    viewModel: RecipeAddViewModel = hiltViewModel(),
+fun RecipeUpdateScreen(
+    viewModel: RecipeUpdateViewModel = hiltViewModel(),
     onNavigate: (String) -> Unit
 ) {
-    val listProducts = viewModel.listProduct
+    val screenState = viewModel.screenState.collectAsState(RecipeUpdateState.Initial)
 
-    //Переход на другой экран
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEven ->
             when (uiEven) {
@@ -87,7 +91,36 @@ fun RecipeAddScreen(
         }
     }
 
+    when (val currentState = screenState.value) {
+        is RecipeUpdateState.RecipeDto -> {
+            RecipeUpdateCurrentScreen(viewModel, currentState)
+        }
 
+        RecipeUpdateState.Initial -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    color = Color.DarkGray
+                )
+            }
+        }
+
+        RecipeUpdateState.Loading -> {
+
+        }
+    }
+}
+
+
+@Composable
+fun RecipeUpdateCurrentScreen(
+    viewModel: RecipeUpdateViewModel,
+    currentState: RecipeUpdateState.RecipeDto,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -106,7 +139,7 @@ fun RecipeAddScreen(
                 modifier = Modifier
                     .size(48.dp),
                 onClick = {
-                    viewModel.onEvent(RecipeAddEvent.OnItemClick(Routes.RECIPE_LIST_SCREEN))
+                    viewModel.onEvent(RecipeUpdateEvent.OnItemClick(Routes.RECIPE_LIST_SCREEN))
                 })
             {
                 Icon(
@@ -128,7 +161,7 @@ fun RecipeAddScreen(
                         shape = CircleShape
                     ),
                 onClick = {
-                    viewModel.onEvent(RecipeAddEvent.AddRowProduct)
+                    viewModel.onEvent(RecipeUpdateEvent.AddRowProduct)
 
                 }) {
                 Icon(
@@ -138,11 +171,20 @@ fun RecipeAddScreen(
             }
         }
         Spacer(modifier = Modifier.width(20.dp))
-        RecipeNameTextInputField() { event ->
-            viewModel.onEvent(event)
+
+        currentState.recipe?.let {
+            RecipeNameTextInputField(
+                recipe = it
+            ) { event ->
+                viewModel.onEvent(event)
+            }
         }
-        CardLoadImage() { event ->
-            viewModel.onEvent(event)
+        currentState.recipe?.let {
+            CardLoadImage(
+                recipe = it
+            ) { event ->
+                viewModel.onEvent(event)
+            }
         }
         Spacer(modifier = Modifier.width(40.dp))
         Column(
@@ -151,10 +193,11 @@ fun RecipeAddScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            listProducts.forEachIndexed { index, ingredient ->
+            currentState.products.forEachIndexed { index, ingredient ->
                 Spacer(modifier = Modifier.height(12.dp))
                 IngredientsRow(
-                    index = index
+                    index = index,
+                    ingredient
                 ) { event ->
                     viewModel.onEvent(event)
                 }
@@ -166,7 +209,7 @@ fun RecipeAddScreen(
                 contentColor = Color.Black
             ),
             onClick = {
-                viewModel.onEvent(RecipeAddEvent.OnItemSave)
+                viewModel.onEvent(RecipeUpdateEvent.OnItemSave)
             }
         ) {
             Text(
@@ -179,10 +222,11 @@ fun RecipeAddScreen(
 
 @Composable
 fun RecipeNameTextInputField(
-    onEvent: (RecipeAddEvent) -> Unit
+    recipe: Recipe,
+    onEvent: (RecipeUpdateEvent) -> Unit
 ) {
     var value by remember {
-        mutableStateOf("")
+        mutableStateOf(recipe.name)
     }
     OutlinedTextField(
         modifier = Modifier
@@ -207,17 +251,19 @@ fun RecipeNameTextInputField(
         },
         onValueChange = { newText ->
             value = newText
-            onEvent(RecipeAddEvent.RecipeNameTextEnter(value))
+            onEvent(RecipeUpdateEvent.RecipeNameTextEnter(value))
         }
     )
 }
 
+
 @Composable
 fun CardLoadImage(
-    onEvent: (RecipeAddEvent) -> Unit
+    recipe: Recipe,
+    onEvent: (RecipeUpdateEvent) -> Unit
 ) {
 
-    var imageUri: Uri? by remember { mutableStateOf(null) }
+    var imageUri: Uri? by remember { mutableStateOf(recipe.imageUrl.toUri()) }
     val context = LocalContext.current
 
     val launcher =
@@ -275,7 +321,7 @@ fun CardLoadImage(
                         .fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                onEvent(RecipeAddEvent.RecipeImageEnter(imageUri.toString()))
+                onEvent(RecipeUpdateEvent.RecipeImageEnter(imageUri.toString()))
             }
         }
     }
@@ -284,28 +330,31 @@ fun CardLoadImage(
 @Composable
 fun IngredientsRow(
     index: Int,
-    onEvent: (RecipeAddEvent) -> Unit,
+    productEn: ProductEn,
+    onEvent: (RecipeUpdateEvent) -> Unit,
 ) {
     var ingredientName by remember {
-        mutableStateOf("")
+        mutableStateOf(productEn.name)
     }
     var ingredientWeight by remember {
-        mutableStateOf("")
+        mutableStateOf(productEn.mass.toString())
     }
 
     val measureWeight = remember {
-        mutableStateOf("")
+        mutableStateOf(productEn.measureWeight)
     }
 
     var showSheet by remember { mutableStateOf(false) }
 
     if (showSheet) {
-        BottomSheet(
-            onDismiss = { showSheet = false },
-            measureWeight = measureWeight,
-            index =index
-        ) { event ->
-            onEvent(event)
+        productEn.id?.let {
+            BottomSheet(
+                onDismiss = { showSheet = false },
+                measureWeight = measureWeight,
+                productId = it
+            ) { event ->
+                onEvent(event)
+            }
         }
     }
 
@@ -319,7 +368,7 @@ fun IngredientsRow(
         TextField(
             modifier = Modifier
                 .height(55.dp)
-                .width(200.dp),
+                .width(225.dp),
             value = ingredientName,
             colors = TextFieldDefaults.colors(
                 cursorColor = colorResource(id = R.color.grey_light),
@@ -340,7 +389,8 @@ fun IngredientsRow(
 
             onValueChange = { newText ->
                 ingredientName = newText
-                onEvent(RecipeAddEvent.IngredientName(ingredientName, index))
+                productEn.id?.let { RecipeUpdateEvent.IngredientName(ingredientName, it) }
+                    ?.let { onEvent(it) }
             }
         )
         Spacer(modifier = Modifier.width(5.dp))
@@ -367,7 +417,12 @@ fun IngredientsRow(
             },
             onValueChange = { newText ->
                 ingredientWeight = newText
-                onEvent(RecipeAddEvent.IngredientWeight(ingredientWeight, index))
+                productEn.id?.let {
+                    RecipeUpdateEvent.IngredientWeight(
+                        ingredientWeight,
+                        it
+                    )
+                }?.let { onEvent(it) }
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -375,7 +430,7 @@ fun IngredientsRow(
         IconButton(
             modifier = Modifier
                 .height(40.dp)
-                .width(60.dp),
+                .width(40.dp),
             onClick = {
                 showSheet = true
                 // onEvent(RecipeAddEvent.DismissItem(index))
@@ -402,7 +457,7 @@ fun IngredientsRow(
                     .height(40.dp)
                     .width(40.dp),
                 onClick = {
-                    onEvent(RecipeAddEvent.DismissItem(index))
+                    onEvent(RecipeUpdateEvent.DismissItem(productEn))
                 })
             {
                 Icon(
@@ -420,8 +475,8 @@ fun IngredientsRow(
 fun BottomSheet(
     onDismiss: () -> Unit,
     measureWeight: MutableState<String>,
-    index: Int,
-    onEvent: (RecipeAddEvent) -> Unit
+    productId: Long,
+    onEvent: (RecipeUpdateEvent) -> Unit
 ) {
     val modalBottomSheetState = rememberModalBottomSheetState()
 
@@ -432,19 +487,18 @@ fun BottomSheet(
     ) {
         WeightList(
             measureWeight = measureWeight,
-            index = index
+            productId = productId
         ) { event ->
             onEvent(event)
         }
     }
 }
 
-
 @Composable
 fun WeightList(
     measureWeight: MutableState<String>,
-    index: Int,
-    onEvent: (RecipeAddEvent) -> Unit
+    productId: Long,
+    onEvent: (RecipeUpdateEvent) -> Unit
 ) {
     val countries = listOf(
         stringResource(id = R.string.g),
@@ -470,7 +524,7 @@ fun WeightList(
                     .fillMaxWidth()
                     .padding(vertical = 10.dp, horizontal = 20.dp)
                     .clickable {
-                        onEvent(RecipeAddEvent.MeasureWeight(it, index))
+                        onEvent(RecipeUpdateEvent.MeasureWeight(it, productId))
                         measureWeight.value = it
                     }
             ) {

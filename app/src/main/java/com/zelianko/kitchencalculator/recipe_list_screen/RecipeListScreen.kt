@@ -24,6 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -43,26 +44,28 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.data.Recipe
+import com.zelianko.kitchencalculator.util.Routes
+import com.zelianko.kitchencalculator.util.UiEvent
 
 @Composable
 fun RecipeListScreen(
     viewModel: RecipeViewModel = hiltViewModel(),
+    onNavigate: (String) -> Unit
 ) {
 
     val recipeList = viewModel.listRecipe.collectAsState(initial = emptyList())
     val textSearch = remember { mutableStateOf(TextFieldValue("")) }
 
-//    LaunchedEffect(key1 = true) {
-//        viewModel.uiEvent.collect { uiEvent ->
-//            when (uiEvent) {
-//                is UiEvent.Navigate -> {
-//                    onNavigate(uiEvent.route)
-//                }
-//
-//                else -> {}
-//            }
-//        }
-//    }
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.Navigate -> {
+                    onNavigate(uiEvent.route)
+                }
+                else -> {}
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -84,7 +87,7 @@ fun RecipeListScreen(
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             items(recipeList.value.filter {
@@ -169,6 +172,17 @@ fun RowRecipe(
         }
 
         Spacer(Modifier.weight(1f).fillMaxHeight())
+        IconButton(onClick = {
+            Routes.RECIPE_UPDATE_SCREEN + "/${recipe.id}"
+            onEvent(RecipeListEvent.OnItemClick(Routes.RECIPE_UPDATE_SCREEN + "/${recipe.id}"))
+        }) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.baseline_edit_24),
+                contentDescription = "update",
+                tint = Color.Green,
+            )
+        }
+
         IconButton(onClick = {
             onEvent(RecipeListEvent.DeleteRecipe(recipe))
         }) {

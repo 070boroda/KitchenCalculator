@@ -8,7 +8,6 @@
     <string name="tea_spoon">Tea spoon</string>
     <string name="table_spoon">Table spoon</string>
     <string name="gramm">Gram</string>
-    <string name="g">g</string>
     <string name="quantity">Quantity</string>
     <string name="from">From</string>
     <string name="convert_to">Convert To</string>
@@ -17,10 +16,27 @@
     <string name="tea_glass_250">250 ml</string>
     <string name="search_recipes">Search recipes</string>
     <string name="create_recipe">"Create recipe"</string>
+    <string name="edit_recipe">"Edit recipe"</string>
     <string name="recipe_name">"Recipe name"</string>
     <string name="add_ingredient">Add Ingredient</string>
     <string name="save_recipe">Save recipe</string>
 
+    <!--    Меры веса сокращенные-->
+    <string name="g">g</string>
+    <string name="ml">ml.</string>
+    <string name="l">l.</string>
+    <string name="kg">kg.</string>
+    <string name="sht">pcs.</string>
+    <string name="tea_spoon_short">t.sp.</string>
+    <string name="table_spoon_short">tb.s.</string>
+    <string name="glass_short">gl.</string>
+    <string name="oz">oz</string>
+    <string name="packing_short">pkg.</string>
+    <string name="pinch">pinch</string>
+    <string name="lb">lb</string>
+    <string name="drop">drop</string>
+    <string name="pinta">pt</string>
+    <string name="gallon">gal.</string>
 
 
     <string name="solt">Solt</string>
@@ -71,7 +87,6 @@
     <string name="cornflake">Cornflake</string>
     <string name="tea">Tea</string>
     <string name="egg_powder">Egg powder</string>
-    <string name="oz">oz\n</string>
     <string name="add_photo">Add Photo</string>
 
 

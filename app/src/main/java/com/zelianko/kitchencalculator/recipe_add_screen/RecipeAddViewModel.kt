@@ -120,7 +120,6 @@ class RecipeAddViewModel @Inject constructor(
             is RecipeAddEvent.OnItemClick -> {
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
-            else -> {}
         }
     }
 

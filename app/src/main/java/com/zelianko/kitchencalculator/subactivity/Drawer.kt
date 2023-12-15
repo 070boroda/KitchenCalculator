@@ -223,7 +223,9 @@ fun Drawer(
                         )
                     },
                     secondScreenContent = {
-                        RecipeListScreen()
+                        RecipeListScreen() {route ->
+                            mainNavHostController.navigate(route)
+                        }
                     }
                 )
             }

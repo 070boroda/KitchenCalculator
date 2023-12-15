@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class Recipe(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
-    val name: String,
-    val imageUrl: String
+    var name: String,
+    var imageUrl: String
 )

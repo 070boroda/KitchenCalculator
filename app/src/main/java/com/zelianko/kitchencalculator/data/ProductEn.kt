@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 data class ProductEn(
     @PrimaryKey(autoGenerate = true)
     val id:Long? = null,
-    val name: String,
-    val mass: Double,
-    val measureWeight: String,
+    var name: String,
+    var mass: Double,
+    var measureWeight: String,
     val recipeId:Long,
 )

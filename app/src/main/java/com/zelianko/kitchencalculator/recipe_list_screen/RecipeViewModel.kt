@@ -27,11 +27,6 @@ class RecipeViewModel @Inject constructor(
     fun onEvent(event: RecipeListEvent) {
         when (event) {
             is RecipeListEvent.SearchRecipe -> {
-//                if (event.text.isBlank()) {
-//                    listRecipe = repository.getAllItems()
-//                } else {
-//                    listRecipe = repository.getAllItemsByName("${event.text}%")
-//                }
             }
             is RecipeListEvent.OnItemClick -> {
                 sendUiEvent(UiEvent.Navigate(event.route))

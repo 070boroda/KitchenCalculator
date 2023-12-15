@@ -10,17 +10,36 @@
     <string name="tea_spoon">Чайная ложка</string>
     <string name="table_spoon">Столовая ложка</string>
     <string name="gramm">Грамм</string>
-    <string name="g">г.</string>
-    <string name="oz">Унция</string>
+
     <string name="quantity">Колличество</string>
     <string name="from">Из</string>
     <string name="convert_to">пересчитать в</string>
     <string name="your_result">Ваш результат</string>
     <string name="search_recipes">Поиск рецептов</string>
     <string name="create_recipe">"Создать рецепт"</string>
+    <string name="edit_recipe">"Редактирование рецепт"</string>
     <string name="recipe_name">"Название рецепта"</string>
     <string name="add_ingredient">Добавить ингридиент</string>
     <string name="save_recipe">Сохранить рецепт</string>
+
+<!--    Меры веса сокращенные-->
+    <string name="g">г.</string>
+    <string name="ml">мл.</string>
+    <string name="l">л.</string>
+    <string name="kg">кг.</string>
+    <string name="sht">шт.</string>
+    <string name="tea_spoon_short">ч.л.</string>
+    <string name="table_spoon_short">ст.л.</string>
+    <string name="glass_short">ст.</string>
+    <string name="oz">унция</string>
+    <string name="packing_short">уп.</string>
+    <string name="pinch">щепотка</string>
+    <string name="lb">фунт</string>
+    <string name="drop">капля</string>
+    <string name="pinta">пинта</string>
+    <string name="gallon">галлон</string>
+
+
 
     <string name="solt">Соль</string>
     <string name="water">Вода</string>
