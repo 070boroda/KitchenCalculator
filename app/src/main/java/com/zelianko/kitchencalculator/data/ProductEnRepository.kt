@@ -10,7 +10,7 @@ interface ProductEnRepository {
 
     suspend fun deleteProductEnByRecipeId(recipeId: Long)
 
-    fun getAllItemsByRecipeId(recipeId: Long): Flow<List<ProductEn>>
+    suspend fun getAllItemsByRecipeId(recipeId: Long): MutableList<ProductEn>
 
     fun getProductEnById(id: Long): ProductEn
 }

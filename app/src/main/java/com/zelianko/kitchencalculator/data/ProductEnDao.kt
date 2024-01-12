@@ -19,8 +19,8 @@ interface ProductEnDao {
     @Query("DELETE FROM product_en WHERE recipeId = :recipeId")
     suspend fun deleteProductEnByRecipeId(recipeId: Long)
 
-    @Query("SELECT * FROM product_en AS pr WHERE pr.recipeId = :recipeId")
-    fun getAllItemsByRecipeId(recipeId: Long): Flow<List<ProductEn>>
+    @Query("SELECT * FROM product_en AS pr WHERE pr.recipeId = :recipeId ORDER BY pr.id")
+    fun getAllItemsByRecipeId(recipeId: Long): MutableList<ProductEn>
 
     @Query("SELECT * FROM product_en WHERE product_en.id = :id")
     fun getProductEnById(id: Long): ProductEn

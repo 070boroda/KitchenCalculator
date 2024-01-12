@@ -147,9 +147,9 @@ fun RecipeUpdateCurrentScreen(
                     contentDescription = "arrow left"
                 )
             }
-            Spacer(modifier = Modifier.width(26.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = stringResource(id = R.string.create_recipe),
+                text = stringResource(id = R.string.edit_recipe),
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.weight(1f))

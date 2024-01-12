@@ -1,7 +1,6 @@
 package com.zelianko.kitchencalculator.recipe_update_screen
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,9 +11,10 @@ import com.zelianko.kitchencalculator.data.RecipeRepository
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
 @HiltViewModel
 class RecipeUpdateViewModel @Inject constructor(
     private val recipeRepository: RecipeRepository,
@@ -33,26 +34,20 @@ class RecipeUpdateViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
 
-    var recipeId: Long? = null
+    private var recipeId: Long? = null
     var recipe: Recipe? = null
-    private var productList: Flow<List<ProductEn>>? = null
-    private val recipeDto = RecipeUpdateState.RecipeDto(Recipe(null, "", ""), emptyList())
+    private var productList: MutableList<ProductEn>? = null
+    private val recipeDto = RecipeUpdateState.RecipeDto(Recipe(null, "", ""), mutableListOf())
     private val _screenState = MutableStateFlow<RecipeUpdateState>(RecipeUpdateState.Initial)
     val screenState: StateFlow<RecipeUpdateState> = _screenState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            recipeId = savedStateHandle.get<String>("recipeId")?.toLong()!!
-            Log.d("MyLog", "recipeId" + recipeId.toString())
+        recipeId = savedStateHandle.get<String>("recipeId")?.toLong()!!
+        viewModelScope.launch(Dispatchers.IO) {
+            productList = productRepository.getAllItemsByRecipeId(recipeId!!)
             recipe = recipeRepository.getRecipeById(recipeId!!)
-            Log.d("MyLog", recipe!!.name)
             recipeDto.recipe = recipe
-        }
-        productList = productRepository.getAllItemsByRecipeId(recipeId!!)
-        viewModelScope.launch {
-            productList!!.collect {
-                recipeDto.products = it
-            }
+            recipeDto.products = productList!!.toMutableList()
         }
         _screenState.value = recipeDto
     }
@@ -63,30 +58,40 @@ class RecipeUpdateViewModel @Inject constructor(
             is RecipeUpdateEvent.RecipeNameTextEnter -> {
                 recipeDto.recipe?.name = event.text
             }
+
             is RecipeUpdateEvent.RecipeImageEnter -> {
-                    recipeDto.recipe?.imageUrl = event.uri
+                recipeDto.recipe?.imageUrl = event.uri
             }
 
             is RecipeUpdateEvent.AddRowProduct -> {
                 val currentState = _screenState.value
                 if (currentState is RecipeUpdateState.RecipeDto) {
-                    viewModelScope.launch {
-                        _screenState.emit(RecipeUpdateState.Initial)
-                        productRepository.insertProductEn(recipeId?.let {
-                            ProductEn(
-                                null, "", 0.00, "",
-                                it
-                            )
-                        }!!)
-                        productList = productRepository.getAllItemsByRecipeId(recipeId!!)
-                        productList!!.collect {
-                            _screenState.emit(
-                                currentState.copy(
-                                    products = it
-                                )
-                            )
-                        }
-                    }
+                    val pr = ProductEn(null, "", 0.00, "", recipeId!!)
+                    productList?.add(pr)
+                    _screenState.value = productList?.let {
+                        currentState.copy(
+                            products = it
+                        )
+                    }!!
+
+
+//                    viewModelScope.launch {
+//                        _screenState.emit(RecipeUpdateState.Initial)
+//                        productRepository.insertProductEn(recipeId?.let {
+//                            ProductEn(
+//                                null, recipeDto.products.last().name,
+//                                recipeDto.products.last().mass,
+//                                recipeDto.products.last().measureWeight,
+//                                it
+//                            )
+//                        }!!)
+//                        productList = productRepository.getAllItemsByRecipeId(recipeId!!)
+//                        _screenState.emit(
+//                            currentState.copy(
+//                                products = productList!!.toMutableList()
+//                            )
+//                        )
+//                    }
                 }
             }
 
@@ -100,29 +105,27 @@ class RecipeUpdateViewModel @Inject constructor(
                     _screenState.emit(RecipeUpdateState.Initial)
                     productRepository.deleteProductEn(event.productEn)
                     productList = productRepository.getAllItemsByRecipeId(recipeId!!)
-                    productList!!.collect {
-                        _screenState.emit(
-                            recipeDto.copy(
-                                products = it
-                            )
+                    _screenState.emit(
+                        recipeDto.copy(
+                            products = productList!!.toMutableList()
                         )
-                    }
+                    )
                 }
             }
 
             is RecipeUpdateEvent.IngredientName -> {
                 if (event.text.isBlank()) return
-                recipeDto.products.find {it.id == event.productId}?.name = event.text
+                recipeDto.products.find { it.id == event.productId }?.name = event.text
             }
 
             is RecipeUpdateEvent.IngredientWeight -> {
                 if (event.weight.isBlank()) return
-                recipeDto.products.find {it.id == event.productId}?.mass = event.weight.toDouble()
+                recipeDto.products.find { it.id == event.productId }?.mass = event.weight.toDouble()
             }
             //
             is RecipeUpdateEvent.MeasureWeight -> {
                 if (event.value.isBlank()) return
-                recipeDto.products.find {it.id == event.productId}?.measureWeight = event.value
+                recipeDto.products.find { it.id == event.productId }?.measureWeight = event.value
             }
 
             //Сохраняем рецепт выходим из экрана
@@ -156,8 +159,10 @@ class RecipeUpdateViewModel @Inject constructor(
 
                         }
                     _screenState.emit(
-                        recipeDto.copy( recipe = Recipe(null, "", ""),
-                            products = emptyList())
+                        recipeDto.copy(
+                            recipe = Recipe(null, "", ""),
+                            products = mutableListOf()
+                        )
                     )
                 }
                 sendUiEvent(UiEvent.Navigate(Routes.RECIPE_LIST_SCREEN))

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zelianko.kitchencalculator.data.ProductEn
@@ -26,8 +28,9 @@ class RecipeAddViewModel @Inject constructor(
     private val productRepository: ProductEnRepository
 ) : ViewModel() {
 
-    @SuppressLint("MutableCollectionMutableState")
-    val listProduct = mutableStateListOf(TwoField("", "", ""))
+    var _listProduct = mutableStateListOf(ThreeField("", "", ""))
+    val listProduct: List<ThreeField<String>>
+        get() = _listProduct
 
     var nameRecipeText = mutableStateOf("")
         private set
@@ -51,18 +54,19 @@ class RecipeAddViewModel @Inject constructor(
             }
 
             is RecipeAddEvent.AddRowProduct -> {
-                listProduct.add(TwoField("", "", ""))
+                _listProduct.add(ThreeField("", "", ""))
                 Log.d("MyLog", "Add product")
             }
 
             is RecipeAddEvent.RecipeProductEnter -> {
                 if (StringUtils.isBlank(event.value.value) or StringUtils.isBlank(event.value.key)) return
-                listProduct[event.index] = event.value
+                _listProduct[event.index] = event.value
             }
 
             is RecipeAddEvent.DismissItem -> {
-                if (listProduct.size == 1) return
-                listProduct.removeAt(index = event.index)
+                if (_listProduct.size == 1) return
+                _listProduct.removeLast()
+                Log.d("MyLog", "djsakl")
             }
 
             is RecipeAddEvent.IngredientName -> {
@@ -87,10 +91,7 @@ class RecipeAddViewModel @Inject constructor(
                 if (nameRecipeText.value.isBlank()) return
                 Log.d("MyLog", nameRecipeText.value)
                 if (listProduct.isEmpty()) return
-                Log.d("MyLog", listProduct.size.toString())
-                Log.d("MyLog", "${listProduct[0].key} ${listProduct[0].value}")
                 if (listProduct.size == 1 && (listProduct[0].key.isBlank() || listProduct[0].value.isBlank())) return
-                Log.d("MyLog", "${listProduct[0].key} ${listProduct[0].value}")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     val idRecipe = recipeRepository.insertRecipe(
@@ -130,6 +131,6 @@ class RecipeAddViewModel @Inject constructor(
     }
 }
 
-data class TwoField<T>(var key: T, var value: T, var plWeight: T) {
+data class ThreeField<T>(var key: T, var value: T, var plWeight: T) {
 
 }

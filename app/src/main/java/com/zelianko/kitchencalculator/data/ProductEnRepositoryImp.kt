@@ -13,7 +13,7 @@ class ProductEnRepositoryImp(
         dao.deleteProductEn(item)
     }
 
-    override fun getAllItemsByRecipeId(recipeId: Long): Flow<List<ProductEn>> {
+    override suspend fun getAllItemsByRecipeId(recipeId: Long): MutableList<ProductEn> {
         return dao.getAllItemsByRecipeId(recipeId)
     }
 

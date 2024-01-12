@@ -1,7 +1,7 @@
 package com.zelianko.kitchencalculator.recipe_update_screen
 
 import com.zelianko.kitchencalculator.data.ProductEn
-import com.zelianko.kitchencalculator.recipe_add_screen.TwoField
+import com.zelianko.kitchencalculator.recipe_add_screen.ThreeField
 
 sealed class RecipeUpdateEvent {
 
@@ -10,7 +10,7 @@ sealed class RecipeUpdateEvent {
     //Картинка
     data class RecipeImageEnter(val uri: String) : RecipeUpdateEvent()
     //Добавление строки продукт
-    data class RecipeProductEnter(val value: TwoField<String>, val index: Int) : RecipeUpdateEvent()
+    data class RecipeProductEnter(val value: ThreeField<String>, val index: Int) : RecipeUpdateEvent()
     //Удаление продуктов
     data class DismissItem(val productEn: ProductEn) : RecipeUpdateEvent()
     //Имя продукта

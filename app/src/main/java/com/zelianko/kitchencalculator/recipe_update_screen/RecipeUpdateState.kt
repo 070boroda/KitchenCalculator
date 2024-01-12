@@ -8,5 +8,5 @@ sealed class RecipeUpdateState {
     object Initial : RecipeUpdateState()
     object Loading: RecipeUpdateState()
 
-    data class RecipeDto(var recipe: Recipe?, var products: List<ProductEn>) : RecipeUpdateState()
+    data class RecipeDto(var recipe: Recipe?, var products: MutableList<ProductEn>) : RecipeUpdateState()
 }

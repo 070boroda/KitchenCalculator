@@ -154,7 +154,8 @@ fun RecipeAddScreen(
             listProducts.forEachIndexed { index, ingredient ->
                 Spacer(modifier = Modifier.height(12.dp))
                 IngredientsRow(
-                    index = index
+                    index = index,
+                    listProducts = listProducts
                 ) { event ->
                     viewModel.onEvent(event)
                 }
@@ -284,6 +285,7 @@ fun CardLoadImage(
 @Composable
 fun IngredientsRow(
     index: Int,
+    listProducts: List<ThreeField<String>>,
     onEvent: (RecipeAddEvent) -> Unit,
 ) {
     var ingredientName by remember {
@@ -303,7 +305,7 @@ fun IngredientsRow(
         BottomSheet(
             onDismiss = { showSheet = false },
             measureWeight = measureWeight,
-            index =index
+            index = index
         ) { event ->
             onEvent(event)
         }
@@ -378,7 +380,6 @@ fun IngredientsRow(
                 .width(60.dp),
             onClick = {
                 showSheet = true
-                // onEvent(RecipeAddEvent.DismissItem(index))
             })
         {
             if (measureWeight.value.isBlank()) {
@@ -396,13 +397,13 @@ fun IngredientsRow(
             }
         }
         Spacer(modifier = Modifier.width(5.dp))
-        if (index != 0) {
+        if (index == (listProducts.size-1) && index != 0) {
             IconButton(
                 modifier = Modifier
                     .height(40.dp)
                     .width(40.dp),
                 onClick = {
-                    onEvent(RecipeAddEvent.DismissItem(index))
+                    onEvent(RecipeAddEvent.DismissItem)
                 })
             {
                 Icon(

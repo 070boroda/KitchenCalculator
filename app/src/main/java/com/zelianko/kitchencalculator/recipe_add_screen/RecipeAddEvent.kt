@@ -1,5 +1,7 @@
 package com.zelianko.kitchencalculator.recipe_add_screen
 
+import com.zelianko.kitchencalculator.data.ProductEn
+
 sealed class RecipeAddEvent {
 
     //Название рецепта
@@ -7,9 +9,9 @@ sealed class RecipeAddEvent {
     //Картинка
     data class RecipeImageEnter(val uri: String) : RecipeAddEvent()
     //Добавление строки продукт
-    data class RecipeProductEnter(val value: TwoField<String>, val index: Int) : RecipeAddEvent()
+    data class RecipeProductEnter(val value: ThreeField<String>, val index: Int) : RecipeAddEvent()
     //Удаление продуктов
-    data class DismissItem(val index: Int) : RecipeAddEvent()
+    object DismissItem : RecipeAddEvent()
     //Имя продукта
     data class IngredientName(val text: String, val index: Int) : RecipeAddEvent()
     //Вес продукта
