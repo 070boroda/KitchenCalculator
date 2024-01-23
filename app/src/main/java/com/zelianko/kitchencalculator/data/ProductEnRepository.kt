@@ -12,5 +12,5 @@ interface ProductEnRepository {
 
     suspend fun getAllItemsByRecipeId(recipeId: Long): MutableList<ProductEn>
 
-    fun getProductEnById(id: Long): ProductEn
+    suspend fun getProductEnById(id: Long): ProductEn
 }

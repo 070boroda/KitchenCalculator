@@ -197,26 +197,27 @@ fun RecipeUpdateCurrentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 IngredientsRow(
                     index = index,
-                    ingredient
+                    ingredient,
+                    currentState.products
                 ) { event ->
                     viewModel.onEvent(event)
                 }
             }
         }
-        Button(
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.orange_primary),
-                contentColor = Color.Black
-            ),
-            onClick = {
-                viewModel.onEvent(RecipeUpdateEvent.OnItemSave)
-            }
-        ) {
-            Text(
-                text = stringResource(id = R.string.save_recipe),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
+//        Button(
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = colorResource(id = R.color.orange_primary),
+//                contentColor = Color.Black
+//            ),
+//            onClick = {
+//                viewModel.onEvent(RecipeUpdateEvent.OnItemSave)
+//            }
+//        ) {
+//            Text(
+//                text = stringResource(id = R.string.save_recipe),
+//                style = MaterialTheme.typography.titleLarge
+//            )
+//        }
     }
 }
 
@@ -331,6 +332,7 @@ fun CardLoadImage(
 fun IngredientsRow(
     index: Int,
     productEn: ProductEn,
+    listProducts: MutableList<ProductEn>,
     onEvent: (RecipeUpdateEvent) -> Unit,
 ) {
     var ingredientName by remember {
@@ -396,7 +398,7 @@ fun IngredientsRow(
         Spacer(modifier = Modifier.width(5.dp))
         OutlinedTextField(
             modifier = Modifier
-                .height(54.dp)
+                .height(50.dp)
                 .width(67.dp),
             value = ingredientWeight,
             colors = OutlinedTextFieldDefaults.colors(
@@ -408,13 +410,13 @@ fun IngredientsRow(
             ),
             shape = RoundedCornerShape(12.dp),
             maxLines = 1,
-            label = {
-                Text(
-                    text = "   ",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = colorResource(id = R.color.grey)
-                )
-            },
+//            label = {
+//                Text(
+//                    text = "",
+//                    style = MaterialTheme.typography.titleSmall,
+//                    color = colorResource(id = R.color.grey)
+//                )
+//            },
             onValueChange = { newText ->
                 ingredientWeight = newText
                 productEn.id?.let {
@@ -451,7 +453,7 @@ fun IngredientsRow(
             }
         }
         Spacer(modifier = Modifier.width(5.dp))
-        if (index != 0) {
+        if (index == (listProducts.size-1) && index != 0) {
             IconButton(
                 modifier = Modifier
                     .height(40.dp)

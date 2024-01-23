@@ -19,7 +19,7 @@
     <string name="create_recipe">"Создать рецепт"</string>
     <string name="edit_recipe">"Редактирование рецепт"</string>
     <string name="recipe_name">"Название рецепта"</string>
-    <string name="add_ingredient">Добавить ингридиент</string>
+    <string name="add_ingredient">Название ингридиент</string>
     <string name="save_recipe">Сохранить рецепт</string>
 
 <!--    Меры веса сокращенные-->

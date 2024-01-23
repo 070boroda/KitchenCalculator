@@ -18,7 +18,7 @@
     <string name="create_recipe">"Create recipe"</string>
     <string name="edit_recipe">"Edit recipe"</string>
     <string name="recipe_name">"Recipe name"</string>
-    <string name="add_ingredient">Add Ingredient</string>
+    <string name="add_ingredient">Name Ingredient</string>
     <string name="save_recipe">Save recipe</string>
 
     <!--    Меры веса сокращенные-->

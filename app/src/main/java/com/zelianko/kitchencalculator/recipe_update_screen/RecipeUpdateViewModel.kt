@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
 @HiltViewModel
 class RecipeUpdateViewModel @Inject constructor(
     private val recipeRepository: RecipeRepository,
@@ -33,19 +32,19 @@ class RecipeUpdateViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-
-    private var recipeId: Long? = null
+    private var recipeId: Long = savedStateHandle.get<String>("recipeId")?.toLong()!!
     var recipe: Recipe? = null
+
+
     private var productList: MutableList<ProductEn>? = null
     private val recipeDto = RecipeUpdateState.RecipeDto(Recipe(null, "", ""), mutableListOf())
     private val _screenState = MutableStateFlow<RecipeUpdateState>(RecipeUpdateState.Initial)
     val screenState: StateFlow<RecipeUpdateState> = _screenState.asStateFlow()
 
     init {
-        recipeId = savedStateHandle.get<String>("recipeId")?.toLong()!!
         viewModelScope.launch(Dispatchers.IO) {
-            productList = productRepository.getAllItemsByRecipeId(recipeId!!)
-            recipe = recipeRepository.getRecipeById(recipeId!!)
+            productList = productRepository.getAllItemsByRecipeId(recipeId)
+            recipe = recipeRepository.getRecipeById(recipeId)
             recipeDto.recipe = recipe
             recipeDto.products = productList!!.toMutableList()
         }
@@ -56,55 +55,29 @@ class RecipeUpdateViewModel @Inject constructor(
     fun onEvent(event: RecipeUpdateEvent) {
         when (event) {
             is RecipeUpdateEvent.RecipeNameTextEnter -> {
-                recipeDto.recipe?.name = event.text
-            }
-
-            is RecipeUpdateEvent.RecipeImageEnter -> {
-                recipeDto.recipe?.imageUrl = event.uri
-            }
-
-            is RecipeUpdateEvent.AddRowProduct -> {
-                val currentState = _screenState.value
-                if (currentState is RecipeUpdateState.RecipeDto) {
-                    val pr = ProductEn(null, "", 0.00, "", recipeId!!)
-                    productList?.add(pr)
-                    _screenState.value = productList?.let {
-                        currentState.copy(
-                            products = it
-                        )
-                    }!!
-
-
-//                    viewModelScope.launch {
-//                        _screenState.emit(RecipeUpdateState.Initial)
-//                        productRepository.insertProductEn(recipeId?.let {
-//                            ProductEn(
-//                                null, recipeDto.products.last().name,
-//                                recipeDto.products.last().mass,
-//                                recipeDto.products.last().measureWeight,
-//                                it
-//                            )
-//                        }!!)
-//                        productList = productRepository.getAllItemsByRecipeId(recipeId!!)
-//                        _screenState.emit(
-//                            currentState.copy(
-//                                products = productList!!.toMutableList()
-//                            )
-//                        )
-//                    }
+                if (event.text.isBlank()) return
+                viewModelScope.launch(Dispatchers.IO) {
+                    recipe!!.name = event.text
+                    recipeDto.recipe = recipe
+                    recipeRepository.insertRecipe(recipe!!)
                 }
             }
 
-            is RecipeUpdateEvent.RecipeProductEnter -> {
-//                if (StringUtils.isBlank(event.value.value) or StringUtils.isBlank(event.value.key)) return
-//                listProduct[event.index] = event.value
+            is RecipeUpdateEvent.RecipeImageEnter -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    recipe!!.imageUrl = event.uri
+                    recipeDto.recipe = recipe
+                    recipeRepository.insertRecipe(recipe!!)
+                }
+//                recipeDto.recipe?.imageUrl = event.uri
             }
 
-            is RecipeUpdateEvent.DismissItem -> {
-                viewModelScope.launch {
+            is RecipeUpdateEvent.AddRowProduct -> {
+                viewModelScope.launch(Dispatchers.IO) {
                     _screenState.emit(RecipeUpdateState.Initial)
-                    productRepository.deleteProductEn(event.productEn)
-                    productList = productRepository.getAllItemsByRecipeId(recipeId!!)
+                    val pr = ProductEn(null, "", 0.00, "", recipeId)
+                    productRepository.insertProductEn(pr)
+                    productList = productRepository.getAllItemsByRecipeId(recipeId)
                     _screenState.emit(
                         recipeDto.copy(
                             products = productList!!.toMutableList()
@@ -113,19 +86,51 @@ class RecipeUpdateViewModel @Inject constructor(
                 }
             }
 
+            is RecipeUpdateEvent.RecipeProductEnter -> {
+//                if (StringUtils.isBlank(event.value.value) or StringUtils.isBlank(event.value.key)) return
+//                listProduct[event.index] = event.value
+            }
+
+            //Удаление ингредиентов работает
+            is RecipeUpdateEvent.DismissItem -> {
+                viewModelScope.launch(Dispatchers.IO){
+                    _screenState.emit(RecipeUpdateState.Initial)
+                    productRepository.deleteProductEn(event.productEn)
+                    productList = productRepository.getAllItemsByRecipeId(recipeId)
+                    _screenState.emit(
+                        recipeDto.copy(
+                            products = productList!!.toMutableList()
+                        )
+                    )
+                }
+            }
+            //TODO Переделать на один запрос
             is RecipeUpdateEvent.IngredientName -> {
                 if (event.text.isBlank()) return
-                recipeDto.products.find { it.id == event.productId }?.name = event.text
+                viewModelScope.launch(Dispatchers.IO) {
+                    val product = productRepository.getProductEnById(event.productId)
+                    product.name = event.text
+                    productRepository.insertProductEn(product)
+                }
             }
 
             is RecipeUpdateEvent.IngredientWeight -> {
                 if (event.weight.isBlank()) return
-                recipeDto.products.find { it.id == event.productId }?.mass = event.weight.toDouble()
+                viewModelScope.launch(Dispatchers.IO) {
+                    val product = productRepository.getProductEnById(event.productId)
+                    product.mass = event.weight.toDouble()
+                    productRepository.insertProductEn(product)
+                }
             }
             //
             is RecipeUpdateEvent.MeasureWeight -> {
                 if (event.value.isBlank()) return
-                recipeDto.products.find { it.id == event.productId }?.measureWeight = event.value
+                viewModelScope.launch(Dispatchers.IO) {
+                    val product = productRepository.getProductEnById(event.productId)
+                    product.measureWeight = event.value
+                    productRepository.insertProductEn(product)
+                }
+               // recipeDto.products.find { it.id == event.productId }?.measureWeight = event.value
             }
 
             //Сохраняем рецепт выходим из экрана
@@ -151,7 +156,7 @@ class RecipeUpdateViewModel @Inject constructor(
                                 ProductEn(
                                     ingredient.id,
                                     ingredient.name,
-                                    ingredient.mass.toDouble(),
+                                    ingredient.mass,
                                     ingredient.measureWeight,
                                     ingredient.recipeId
                                 )
