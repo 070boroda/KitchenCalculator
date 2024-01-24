@@ -21,6 +21,7 @@
     <string name="recipe_name">"Название рецепта"</string>
     <string name="add_ingredient">Название ингридиент</string>
     <string name="save_recipe">Сохранить рецепт</string>
+    <string name="form">Форма</string>
 
 <!--    Меры веса сокращенные-->
     <string name="g">г.</string>

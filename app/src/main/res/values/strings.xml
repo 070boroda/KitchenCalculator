@@ -20,6 +20,7 @@
     <string name="recipe_name">"Recipe name"</string>
     <string name="add_ingredient">Name Ingredient</string>
     <string name="save_recipe">Save recipe</string>
+    <string name="form">Form</string>
 
     <!--    Меры веса сокращенные-->
     <string name="g">g</string>

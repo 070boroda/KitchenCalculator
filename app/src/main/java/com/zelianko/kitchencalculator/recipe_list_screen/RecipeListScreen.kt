@@ -1,6 +1,7 @@
 package com.zelianko.kitchencalculator.recipe_list_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -160,7 +161,10 @@ fun RowRecipe(
             contentDescription = null,
             modifier = Modifier
                 .size(50.dp)
-                .clip(CircleShape),
+                .clip(CircleShape)
+                .clickable {
+                    onEvent(RecipeListEvent.OnItemClick(Routes.RECIPE_ABOUT_SCREEN + "/${recipe.id}"))
+                },
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(18.dp))
