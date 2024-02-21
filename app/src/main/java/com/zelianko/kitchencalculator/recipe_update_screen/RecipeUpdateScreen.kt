@@ -29,8 +29,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -453,7 +451,7 @@ fun IngredientsRow(
             }
         }
         Spacer(modifier = Modifier.width(5.dp))
-        if (index == (listProducts.size-1) && index != 0) {
+        if (index == (listProducts.size - 1) && index != 0) {
             IconButton(
                 modifier = Modifier
                     .height(40.dp)
@@ -505,6 +503,7 @@ fun WeightList(
     val countries = listOf(
         stringResource(id = R.string.g),
         stringResource(id = R.string.l),
+        stringResource(id = R.string.ml),
         stringResource(id = R.string.kg),
         stringResource(id = R.string.sht),
         stringResource(id = R.string.tea_spoon_short),
@@ -528,8 +527,21 @@ fun WeightList(
                     .clickable {
                         onEvent(RecipeUpdateEvent.MeasureWeight(it, productId))
                         measureWeight.value = it
-                    }
+                    },
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                if (measureWeight.value == it) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "contentDescription",
+                        modifier = Modifier
+                            .size(10.dp)
+                            .background(colorResource(id = R.color.orange_primary), CircleShape)
+                            .padding(2.dp),
+                        tint = colorResource(id = R.color.orange_primary)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                }
                 Text(text = it)
             }
         }

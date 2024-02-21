@@ -38,10 +38,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.dialog.DialogEvent
+import com.zelianko.kitchencalculator.dialog.MainDialog
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
@@ -56,6 +60,7 @@ fun RecipeAboutScreen(
     val recipeName = viewModel.recipeName.collectAsState("")
     val uriImage = viewModel.uriImage.collectAsState("")
     val listProducts = viewModel.productList.collectAsState(initial = emptyList())
+    val coff = viewModel.coff.collectAsState()
 
 
     LaunchedEffect(key1 = true) {
@@ -69,6 +74,10 @@ fun RecipeAboutScreen(
             }
         }
     }
+    
+    MainDialog(dialogController = viewModel)
+
+
 
     Column(
         modifier = Modifier
@@ -80,13 +89,14 @@ fun RecipeAboutScreen(
     ) {
         Box(
             modifier = Modifier
-                .size(400.dp, 230.dp)
+                .height(180.dp)
+                .fillMaxWidth()
                 .background(Color.Transparent),
         ) {
             AsyncImage(
                 model = uriImage.value,
                 contentDescription = "file",
-                contentScale = ContentScale.FillHeight,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
             )
@@ -95,7 +105,7 @@ fun RecipeAboutScreen(
                     .size(336.dp, 52.dp)
                     .align(Alignment.TopCenter)
                     .offset(y = 15.dp),
-                horizontalArrangement = Arrangement.Center,
+                //horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
@@ -108,14 +118,15 @@ fun RecipeAboutScreen(
                     Icon(
                         ImageVector.vectorResource(R.drawable.ic_arrow_left_white),
                         contentDescription = "arrow left",
-                        tint = Color.Black
+                        tint = Color.White
                     )
                 }
-                Spacer(modifier = Modifier.width(45.dp))
+                Spacer(modifier = Modifier.width(50.dp))
                 Text(
                     text = recipeName.value,
                     style = MaterialTheme.typography.headlineLarge,
-                    color = Color.Black
+                    color = Color.White,
+                    fontWeight = FontWeight.ExtraBold
                 )
                 Spacer(modifier = Modifier.width(95.dp))
             }
@@ -134,10 +145,15 @@ fun RecipeAboutScreen(
         }
         Spacer(modifier = Modifier.size(2.dp))
         UsebleCard(
-            counter = counter.value
-        ) { event ->
-            viewModel.onEvent(event)
-        }
+            counter = counter.value,
+            coff =coff.value,
+            onEvent = {event ->
+                viewModel.onEvent(event)
+            },
+            onEventDialog = {event ->
+                viewModel.onDialogEvent(event)
+            }
+        )
     }
 }
 
@@ -189,7 +205,9 @@ fun IngredientRow(
 @Composable
 fun UsebleCard(
     counter: Double,
-    onEvent: (RecipeAboutEvent) -> Unit
+    coff: Double,
+    onEvent: (RecipeAboutEvent) -> Unit,
+    onEventDialog: (DialogEvent) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -226,10 +244,10 @@ fun UsebleCard(
                         ),
                     onClick = {
                         //Пересчет Ингредиентов
-                        onEvent(RecipeAboutEvent.CounterUp)
+                        onEvent(RecipeAboutEvent.CounterDown)
                     }) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.baseline_keyboard_arrow_up_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.baseline_keyboard_arrow_down_24),
                         contentDescription = "plus"
                     )
                 }
@@ -248,10 +266,10 @@ fun UsebleCard(
                         ),
                     onClick = {
                         //Пересчет Ингредиентов
-                        onEvent(RecipeAboutEvent.CounterDown)
+                        onEvent(RecipeAboutEvent.CounterUp)
                     }) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.baseline_keyboard_arrow_down_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.baseline_keyboard_arrow_up_24),
                         contentDescription = "plus"
                     )
                 }
@@ -267,13 +285,14 @@ fun UsebleCard(
                 Button(
                     modifier = Modifier
                         .height(50.dp)
-                        .width(140.dp),
+                        .width(250.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.orange_primary),
                         contentColor = Color.Black
                     ),
                     onClick = {
-                        // viewModel.onEvent(RecipeAddEvent.OnItemSave)
+                        //Меняет статус диалога на видно не видно
+                        onEventDialog(DialogEvent.OnCancel)
                     }
                 ) {
                     Icon(
@@ -283,8 +302,13 @@ fun UsebleCard(
                         tint = Color.Blue
                     )
                     Spacer(modifier = Modifier.size(6.dp))
+                    val str = buildAnnotatedString {
+                        append(stringResource(id = R.string.form))
+                        append(" X ")
+                        append(coff.toString())
+                    }
                     Text(
-                        text = stringResource(id = R.string.form),
+                        text =  str,
                         style = MaterialTheme.typography.titleLarge
                     )
                 }

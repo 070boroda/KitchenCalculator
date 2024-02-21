@@ -360,13 +360,13 @@ fun IngredientsRow(
             ),
             shape = RoundedCornerShape(12.dp),
             maxLines = 1,
-            label = {
-                Text(
-                    text = "   ",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = colorResource(id = R.color.grey)
-                )
-            },
+//            label = {
+//                Text(
+//                    text = "   ",
+//                    style = MaterialTheme.typography.titleSmall,
+//                    color = colorResource(id = R.color.grey)
+//                )
+//            },
             onValueChange = { newText ->
                 ingredientWeight = newText
                 onEvent(RecipeAddEvent.IngredientWeight(ingredientWeight, index))
@@ -450,6 +450,7 @@ fun WeightList(
     val countries = listOf(
         stringResource(id = R.string.g),
         stringResource(id = R.string.l),
+        stringResource(id = R.string.ml),
         stringResource(id = R.string.kg),
         stringResource(id = R.string.sht),
         stringResource(id = R.string.tea_spoon_short),
@@ -473,8 +474,21 @@ fun WeightList(
                     .clickable {
                         onEvent(RecipeAddEvent.MeasureWeight(it, index))
                         measureWeight.value = it
-                    }
+                    },
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                if (measureWeight.value == it) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "contentDescription",
+                        modifier = Modifier
+                            .size(10.dp)
+                            .background(colorResource(id = R.color.orange_primary), CircleShape)
+                            .padding(2.dp),
+                        tint = colorResource(id = R.color.orange_primary)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                }
                 Text(text = it)
             }
         }

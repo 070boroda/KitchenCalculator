@@ -22,6 +22,13 @@
     <string name="add_ingredient">Название ингридиент</string>
     <string name="save_recipe">Сохранить рецепт</string>
     <string name="form">Форма</string>
+    <string name="form_in_recipe">Форма в рецепте</string>
+    <string name="round">Круглая</string>
+    <string name="rectangle">Прямоугольная</string>
+    <string name="dlinna_shirina">Длинна, ширина</string>
+    <string name="radius">Радиус</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
 
 <!--    Меры веса сокращенные-->
     <string name="g">г.</string>

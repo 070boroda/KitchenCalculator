@@ -21,6 +21,13 @@
     <string name="add_ingredient">Name Ingredient</string>
     <string name="save_recipe">Save recipe</string>
     <string name="form">Form</string>
+    <string name="form_in_recipe">Form in recipe</string>
+    <string name="round">Round</string>
+    <string name="rectangle">Rectangle</string>
+    <string name="dlinna_shirina">Height, Width</string>
+    <string name="radius">Radius</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 
     <!--    Меры веса сокращенные-->
     <string name="g">g</string>
