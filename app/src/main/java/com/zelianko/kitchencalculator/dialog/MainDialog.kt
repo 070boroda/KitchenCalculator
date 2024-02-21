@@ -51,11 +51,11 @@ fun MainDialog(
 
     val fromWidth = remember { dialogController.fromWidth }
     val fromHeight = remember { dialogController.fromHeight }
-    val fromRadius = remember { dialogController.fromRadius }
+    val fromDiametr = remember { dialogController.fromDiametr }
 
     val toWidth = remember { dialogController.toWidth }
     val toHeight = remember { dialogController.toHeight }
-    val toRadius = remember { dialogController.toRadius }
+    val toDiametr = remember { dialogController.toDiametr }
 
 
     if (dialogController.openDialog.value) {
@@ -221,7 +221,7 @@ fun MainDialog(
                             Text(
                                 modifier = Modifier
                                     .offset((-5).dp),
-                                text = "Длинна, ширина",
+                                text = stringResource(id = R.string.dlinna_shirina),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = Color.Black
                             )
@@ -254,7 +254,7 @@ fun MainDialog(
                             Text(
                                 modifier = Modifier
                                     .offset((-37).dp),
-                                text = "Радиус",
+                                text = stringResource(id = R.string.diameter),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = Color.Black
                             )
@@ -269,7 +269,7 @@ fun MainDialog(
                                 CircleInput(
                                     height = 60.dp,
                                     width = 60.dp,
-                                    input = fromRadius.value,
+                                    input = fromDiametr.value,
                                     dialogSizeType = DialogSizeTypes.FromRadius
                                 ) { event ->
                                     dialogController.onDialogEvent(event)
@@ -324,7 +324,7 @@ fun MainDialog(
                             Text(
                                 modifier = Modifier
                                     .offset((-37).dp),
-                                text = stringResource(id = R.string.radius),
+                                text = stringResource(id = R.string.diameter),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = Color.Black
                             )
@@ -339,7 +339,7 @@ fun MainDialog(
                                 CircleInput(
                                     height = 60.dp,
                                     width = 60.dp,
-                                    input = toRadius.value,
+                                    input = toDiametr.value,
                                     dialogSizeType = DialogSizeTypes.ToRadius
                                 ) { event ->
                                     dialogController.onDialogEvent(event)

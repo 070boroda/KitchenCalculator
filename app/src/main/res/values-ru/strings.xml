@@ -27,6 +27,7 @@
     <string name="rectangle">Прямоугольная</string>
     <string name="dlinna_shirina">Длинна, ширина</string>
     <string name="radius">Радиус</string>
+    <string name="diameter">Диаметр</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
 

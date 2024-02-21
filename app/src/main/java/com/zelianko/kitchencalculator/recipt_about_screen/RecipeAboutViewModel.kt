@@ -1,6 +1,5 @@
 package com.zelianko.kitchencalculator.recipt_about_screen
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -60,13 +60,13 @@ class RecipeAboutViewModel @Inject constructor(
         private set
     override var toFormRectangle = mutableStateOf(false)
         private set
-    override var fromRadius = mutableStateOf("")
+    override var fromDiametr = mutableStateOf("")
         private set
     override var fromWidth = mutableStateOf("")
         private set
     override var fromHeight = mutableStateOf("")
         private set
-    override var toRadius = mutableStateOf("")
+    override var toDiametr = mutableStateOf("")
         private set
     override var toWidth = mutableStateOf("")
         private set
@@ -99,6 +99,9 @@ class RecipeAboutViewModel @Inject constructor(
                 _productList.value.forEach(
                     this::countWeight
                 )
+                _coff.update {
+                    1.0
+                }
             }
 
             is RecipeAboutEvent.CounterDown -> {
@@ -107,6 +110,9 @@ class RecipeAboutViewModel @Inject constructor(
                     _productList.value.forEach(
                         this::countWeight
                     )
+                    _coff.update {
+                        1.0
+                    }
                 }
             }
 
@@ -141,7 +147,7 @@ class RecipeAboutViewModel @Inject constructor(
             }
             //SIZE FROM
             is DialogEvent.RadiusSetFrom -> {
-                fromRadius.value = event.text
+                fromDiametr.value = event.text
             }
 
             is DialogEvent.HeightSetFrom -> {
@@ -154,7 +160,7 @@ class RecipeAboutViewModel @Inject constructor(
 
             //SIZE TO
             is DialogEvent.RadiusSetTo -> {
-                toRadius.value = event.text
+                toDiametr.value = event.text
             }
 
             is DialogEvent.HeightSetTo -> {
@@ -172,24 +178,62 @@ class RecipeAboutViewModel @Inject constructor(
             is DialogEvent.OnConfirm -> {
                 //Пересчет из круглой формы в круглую
                 if (fromFormCircle.value && toFormCircle.value) {
-                    if (fromRadius.value.toInt() == 0 || toRadius.value.toInt() == 0) return
+                    if (fromDiametr.value.toInt() == 0 || toDiametr.value.toInt() == 0) return
 
-                    val fromTempRadius = fromRadius.value.toDouble() * fromRadius.value.toDouble()
-                    val toTempRadius = toRadius.value.toDouble() * toRadius.value.toDouble()
+                    val fromTempRadius = fromDiametr.value.toDouble() * fromDiametr.value.toDouble()
+                    val toTempRadius = toDiametr.value.toDouble() * toDiametr.value.toDouble()
                     if (fromTempRadius < toTempRadius) {
                         _coff.value = Math.round((toTempRadius / fromTempRadius) * 100.00) / 100.00
                     } else {
                         _coff.value = Math.round((toTempRadius / fromTempRadius) * 100.00) / 100.00
                     }
 
-                } else if (toFormRectangle.value && toFormRectangle.value) {
+                } else if (toFormRectangle.value && fromFormRectangle.value) {
                     //Пересчет из прямоугольной формы в прямоугольную
+                    if (fromWidth.value.toInt() == 0 || fromHeight.value.toInt() == 0 || toWidth.value.toInt() == 0 || toHeight.value.toInt() == 0) return
+
+                    val fromTempRect = fromWidth.value.toDouble() * fromHeight.value.toDouble()
+                    val toTempRect = toWidth.value.toDouble() * toHeight.value.toDouble()
+
+                    if (fromTempRect < toTempRect) {
+                        _coff.value = Math.round((toTempRect / fromTempRect) * 100.00) / 100.00
+                    } else {
+                        _coff.value = Math.round((toTempRect / fromTempRect) * 100.00) / 100.00
+                    }
+                } else {
+                    //Пересчет из прямоугольной формы в круглую
+                    if (fromFormCircle.value && toFormRectangle.value) {
+                        if (fromDiametr.value.toInt() == 0 || toWidth.value.toInt() == 0 || toHeight.value.toInt() == 0) return
+
+                        val fromTempCircle =
+                            3.14 * ((fromDiametr.value.toDouble() / 2) * (fromDiametr.value.toDouble() / 2))
+                        val toTempRectl = toWidth.value.toDouble() * toHeight.value.toDouble()
+
+                        if (fromTempCircle < toTempRectl) {
+                            _coff.value =
+                                Math.round((toTempRectl / fromTempCircle) * 100.00) / 100.00
+                        } else {
+                            _coff.value =
+                                Math.round((toTempRectl / fromTempCircle) * 100.00) / 100.00
+                        }
 
 
-                    Log.d("My log", coff.toString())
+                    } else if (fromFormRectangle.value && toFormCircle.value) {
+                        if (toDiametr.value.toInt() == 0 || fromWidth.value.toInt() == 0 || fromHeight.value.toInt() == 0) return
+                        val fromTempCircle =
+                            3.14 * ((toDiametr.value.toDouble() / 2) * (toDiametr.value.toDouble() / 2))
+                        val toTempRectl = fromWidth.value.toDouble() * fromHeight.value.toDouble()
+
+                        if (fromTempCircle < toTempRectl) {
+                            _coff.value =
+                                Math.round((fromTempCircle / toTempRectl) * 100.00) / 100.00
+                        } else {
+                            _coff.value =
+                                Math.round((fromTempCircle / toTempRectl) * 100.00) / 100.00
+                        }
+                    }
                 }
                 openDialog.value = !openDialog.value
-                Log.d("My log", coff.toString())
                 _productList.value.forEach(
                     this::countByCoff
                 )

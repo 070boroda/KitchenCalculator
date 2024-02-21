@@ -11,11 +11,11 @@ interface DialogController {
     val toFormRectangle: MutableState<Boolean>
     val toFormCircle: MutableState<Boolean>
 
-    val fromRadius: MutableState<String>
+    val fromDiametr: MutableState<String>
     val fromWidth: MutableState<String>
     val fromHeight: MutableState<String>
 
-    val toRadius: MutableState<String>
+    val toDiametr: MutableState<String>
     val toWidth: MutableState<String>
     val toHeight: MutableState<String>
 
