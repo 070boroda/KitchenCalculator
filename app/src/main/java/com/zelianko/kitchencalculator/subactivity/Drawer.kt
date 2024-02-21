@@ -57,6 +57,7 @@ import com.zelianko.kitchencalculator.activity.FirstScreen
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.NavGraf
 import com.zelianko.kitchencalculator.recipe_list_screen.RecipeListScreen
+import com.zelianko.kitchencalculator.timer_screen.TimerScreen
 import com.zelianko.kitchencalculator.util.Routes
 import kotlinx.coroutines.launch
 
@@ -80,6 +81,12 @@ fun Drawer(
             selectedIcon = ImageVector.vectorResource(R.drawable.ic_vesi),
             unselectedIcon = ImageVector.vectorResource(R.drawable.ic_vesi),
             route = Routes.COUNTER_SCREEN
+        ),
+        NavigationItem(
+            title = stringResource(R.string.draw_menu_timer),
+            selectedIcon = ImageVector.vectorResource(R.drawable.baseline_av_timer_24),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.baseline_av_timer_24),
+            route = Routes.TIMER_SCREEN
         ),
     )
     val navController = rememberNavController()
@@ -226,6 +233,9 @@ fun Drawer(
                         RecipeListScreen() {route ->
                             mainNavHostController.navigate(route)
                         }
+                    },
+                    timerScreen = {
+                        TimerScreen(paddingValues = paddingValues)
                     }
                 )
             }

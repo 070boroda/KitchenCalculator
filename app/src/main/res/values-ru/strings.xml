@@ -2,6 +2,7 @@
     <string name="app_name">Кухонный калькулятор</string>
     <string name="draw_menu_one">Пересчет массы продуктов</string>
     <string name="draw_menu_two">Мои рецепты</string>
+    <string name="draw_menu_timer">Время приготовления</string>
     <string name="choose_product">Выберети продукт…</string>
     <string name="faceted_glass">Граненый стакан</string>
     <string name="faceted_glass_200">200 мл</string>
@@ -30,6 +31,9 @@
     <string name="diameter">Диаметр</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
+    <string name="start">Старт</string>
+    <string name="stop">Стоп</string>
+    <string name="restart">Сброс</string>
 
 <!--    Меры веса сокращенные-->
     <string name="g">г.</string>

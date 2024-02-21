@@ -2,6 +2,7 @@
     <string name="app_name">Kitchen Calculator</string>
     <string name="draw_menu_one">Recalculation mass of products</string>
     <string name="draw_menu_two">My recipe</string>
+    <string name="draw_menu_timer">Cooking time</string>
     <string name="choose_product">Choose product…</string>
     <string name="faceted_glass">Faceted glass</string>
     <string name="tea_glass">Tea glass</string>
@@ -29,6 +30,9 @@
     <string name="diameter">Diameter</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="restart">Restart</string>
 
     <!--    Меры веса сокращенные-->
     <string name="g">g</string>

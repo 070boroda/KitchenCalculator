@@ -23,11 +23,13 @@ import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zelianko.kitchencalculator.R
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 import kotlin.math.cos
@@ -139,9 +141,9 @@ fun Timer(
             )
         ) {
             Text(
-                text = if (isTimerRunning && currentTime >= 0L) "Stop"
-                else if (!isTimerRunning && currentTime >= 0L) "Start"
-                else "Restart"
+                text = if (isTimerRunning && currentTime >= 0L) stringResource(id = R.string.stop)
+                else if (!isTimerRunning && currentTime >= 0L) stringResource(id = R.string.start)
+                else stringResource(id = R.string.restart)
             )
         }
     }

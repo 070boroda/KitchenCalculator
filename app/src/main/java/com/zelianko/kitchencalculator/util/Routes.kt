@@ -6,4 +6,5 @@ object Routes {
     const val RECIPE_UPDATE_SCREEN = "recipe_update_screen"
     const val COUNTER_SCREEN = "counter_screen"
     const val RECIPE_ABOUT_SCREEN = "recipe_about_screen"
+    const val TIMER_SCREEN = "timer_screen"
 }
