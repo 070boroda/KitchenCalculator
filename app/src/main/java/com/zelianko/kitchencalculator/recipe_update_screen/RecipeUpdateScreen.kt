@@ -110,6 +110,8 @@ fun RecipeUpdateScreen(
         RecipeUpdateState.Loading -> {
 
         }
+
+        else -> {}
     }
 }
 
@@ -202,20 +204,6 @@ fun RecipeUpdateCurrentScreen(
                 }
             }
         }
-//        Button(
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = colorResource(id = R.color.orange_primary),
-//                contentColor = Color.Black
-//            ),
-//            onClick = {
-//                viewModel.onEvent(RecipeUpdateEvent.OnItemSave)
-//            }
-//        ) {
-//            Text(
-//                text = stringResource(id = R.string.save_recipe),
-//                style = MaterialTheme.typography.titleLarge
-//            )
-//        }
     }
 }
 

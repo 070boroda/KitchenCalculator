@@ -26,6 +26,7 @@
     <string name="round">Round</string>
     <string name="rectangle">Rectangle</string>
     <string name="dlinna_shirina">Height, Width</string>
+    <string name="cooking_time">Cooking time</string>
     <string name="radius">Radius</string>
     <string name="diameter">Diameter</string>
     <string name="no">No</string>
@@ -33,6 +34,17 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="restart">Restart</string>
+
+
+    <string name="pasta">Pasta</string>
+    <string name="meat">Meat</string>
+    <string name="fish">Fish</string>
+    <string name="porridge">Porridge</string>
+    <string name="mushrooms">Mushrooms</string>
+
+    <string name="boiling">Boiling</string>
+    <string name="fry">Fry</string>
+    <string name="braise">Braise</string>
 
     <!--    Меры веса сокращенные-->
     <string name="g">g</string>
@@ -101,7 +113,7 @@
     <string name="tea">Tea</string>
     <string name="egg_powder">Egg powder</string>
     <string name="add_photo">Add Photo</string>
-
+    <string name="baranina">Lamb</string>
 
 
 </resources>

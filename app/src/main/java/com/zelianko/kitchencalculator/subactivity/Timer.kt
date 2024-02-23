@@ -63,11 +63,11 @@ fun Timer(
     val hour = 3600L * 1000L
     val minut = 60L * 1000L
 
-    val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+    val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
     val r = RingtoneManager.getRingtone(context, notification)
 
     LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
-        if(currentTime > 0 && isTimerRunning) {
+        if (currentTime > 0 && isTimerRunning) {
             delay(100L)
             currentTime -= 100L
             value = currentTime / totalTime.toFloat()
@@ -114,20 +114,25 @@ fun Timer(
             )
         }
         Text(
-
-            text = String.format("%02d:%02d:%02d",(currentTime / hour),(currentTime % hour) / minut, (currentTime % minut)/1000L),
+            text = String.format(
+                "%02d:%02d:%02d",
+                (currentTime / hour),
+                (currentTime % hour) / minut,
+                (currentTime % minut) / 1000L
+            ),
             fontSize = 44.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
         Button(
             onClick = {
-                if(currentTime <= 0L) {
+                if (currentTime <= 0L) {
                     currentTime = totalTime
                     isTimerRunning = true
                 } else {
                     isTimerRunning = !isTimerRunning
                 }
+                r.stop()
             },
             modifier = Modifier
                 .width(120.dp)

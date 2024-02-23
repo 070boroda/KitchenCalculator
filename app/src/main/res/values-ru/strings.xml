@@ -16,6 +16,7 @@
     <string name="from">Из</string>
     <string name="convert_to">пересчитать в</string>
     <string name="your_result">Ваш результат</string>
+    <string name="cooking_time">Время приготовления</string>
     <string name="search_recipes">Поиск рецептов</string>
     <string name="create_recipe">"Создать рецепт"</string>
     <string name="edit_recipe">"Редактирование рецепт"</string>
@@ -34,6 +35,16 @@
     <string name="start">Старт</string>
     <string name="stop">Стоп</string>
     <string name="restart">Сброс</string>
+
+    <string name="pasta">Паста</string>
+    <string name="meat">Мясо</string>
+    <string name="fish">Рыба</string>
+    <string name="porridge">Каши</string>
+    <string name="mushrooms">Грибы</string>
+
+    <string name="boiling">Варить</string>
+    <string name="fry">Жарить</string>
+    <string name="braise">Тушить</string>
 
 <!--    Меры веса сокращенные-->
     <string name="g">г.</string>
@@ -103,6 +114,7 @@
     <string name="tea">Чай сухой</string>
     <string name="egg_powder">Яичный порошок</string>
     <string name="add_photo">Добавить фотографию</string>
+    <string name="baranina">Баранина</string>
 
 
 </resources>
