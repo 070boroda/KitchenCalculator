@@ -1,6 +1,7 @@
 package com.zelianko.kitchencalculator.subactivity
 
 import android.content.Context
+import android.media.Ringtone
 import android.media.RingtoneManager
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ fun Timer(
     modifier: Modifier = Modifier,
     initialValue: Float = 1f,
     strokeWidth: Dp = 5.dp,
+    ringtone: Ringtone,
     context: Context
 ) {
     var size by remember {
@@ -63,9 +65,6 @@ fun Timer(
     val hour = 3600L * 1000L
     val minut = 60L * 1000L
 
-    val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-    val r = RingtoneManager.getRingtone(context, notification)
-
     LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
         if (currentTime > 0 && isTimerRunning) {
             delay(100L)
@@ -73,7 +72,7 @@ fun Timer(
             value = currentTime / totalTime.toFloat()
         } else if (currentTime == 0L && isTimerRunning) {
             isTimerRunning = !isTimerRunning
-            r.play()
+            ringtone.play()
         }
     }
     Box(
@@ -129,10 +128,11 @@ fun Timer(
                 if (currentTime <= 0L) {
                     currentTime = totalTime
                     isTimerRunning = true
+                    ringtone.stop()
                 } else {
                     isTimerRunning = !isTimerRunning
+                    ringtone.stop()
                 }
-                r.stop()
             },
             modifier = Modifier
                 .width(120.dp)

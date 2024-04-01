@@ -1,5 +1,7 @@
 package com.zelianko.kitchencalculator.timer_screen
 
+import android.media.Ringtone
+import android.media.RingtoneManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -67,6 +69,9 @@ fun TimerScreen(
         TwoField(stringResource(id = R.string.fry), TypeCooking.FRY),
         TwoField(stringResource(id = R.string.braise), TypeCooking.BRAISE)
     )
+    val context = LocalContext.current
+    val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+    val ringtone = RingtoneManager.getRingtone(context, notification)
 
     /**
      * начение выбранного времени приготовления
@@ -110,7 +115,8 @@ fun TimerScreen(
             ) {
                 CustomScrollGroupProductsTabs(
                     listGroupProduct,
-                    2
+                    2,
+                    ringtone
                 ) { event ->
                     viewModel.onEvent(event)
                 }
@@ -122,7 +128,7 @@ fun TimerScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                CustomCookingTypeTabs(listTypeCooking, 1, numberTypeCooking)
+                CustomCookingTypeTabs(listTypeCooking, 1, numberTypeCooking, ringtone)
                 { event ->
                     viewModel.onEvent(event)
                 }
@@ -137,7 +143,8 @@ fun TimerScreen(
                     CustomScrollProductTabs(
                         productList.value,
                         0,
-                        translateMap
+                        translateMap,
+                        ringtone
                     ) { event ->
                         viewModel.onEvent(event)
                     }
@@ -165,13 +172,13 @@ fun TimerScreen(
                     contentAlignment = Alignment.BottomCenter
                 ) {
                     key(cookingTimeTimer.value) {
-                        val context = LocalContext.current
                         Timer(
                             totalTime = cookingTimeTimer.value,
                             handleColor = colorResource(id = R.color.orange_primary),
                             inactiveBarColor = Color.DarkGray,
                             activeBarColor = colorResource(id = R.color.orange_primary),
                             modifier = Modifier.size(250.dp),
+                            ringtone = ringtone,
                             context = context
                         )
                     }
@@ -186,6 +193,7 @@ fun CustomScrollProductTabs(
     list: List<CookingTime>,
     startPosition: Int,
     translateMap: HashMap<Int, Int>,
+    ringtone: Ringtone,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(startPosition) }
@@ -224,6 +232,7 @@ fun CustomScrollProductTabs(
                 onClick = {
                     selectedIndex = index
                     onEvent(TimerScreenEvent.ChooseProduct(groupProduct.id))
+                    ringtone.stop()
                 },
                 text = { Text(text = nameProduct!!, color = Color.Black) }
             )
@@ -235,6 +244,7 @@ fun CustomScrollProductTabs(
 fun CustomScrollGroupProductsTabs(
     list: List<TwoField>,
     startPosition: Int,
+    ringtone: Ringtone,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(startPosition) }
@@ -268,6 +278,7 @@ fun CustomScrollGroupProductsTabs(
                 onClick = {
                     selectedIndex = index
                     onEvent(TimerScreenEvent.ChooseGroup(groupProduct.key))
+                    ringtone.stop()
                 },
                 text = { Text(text = groupProduct.name, color = Color.Black) }
             )
@@ -280,6 +291,7 @@ fun CustomCookingTypeTabs(
     list: List<TwoField>,
     startPosition: Int,
     numberTypeCooking: MutableState<Int>,
+    ringtone: Ringtone,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
     var selectedIndex by remember { mutableIntStateOf(startPosition) }
@@ -313,6 +325,7 @@ fun CustomCookingTypeTabs(
                     selectedIndex = index
                     numberTypeCooking.value = cookingType.key
                     onEvent(TimerScreenEvent.ChooseCookingType(cookingType.key))
+                    ringtone.stop()
                 },
                 text = { Text(text = cookingType.name, color = Color.Black) }
             )
@@ -363,13 +376,17 @@ fun ResultCardProduct(
                 )
             )
             Text(
+                //Этот блок текста был со временем, пока оставил только название продукта
+//                text = String.format(
+//                    "%s %s", nameProduct, String.format(
+//                        "%02d:%02d:%02d",
+//                        (cookingTime / hour),
+//                        (cookingTime % hour) / minut,
+//                        (cookingTime % minut) / 1000L
+//                    )
+//                ),
                 text = String.format(
-                    "%s %s", nameProduct, String.format(
-                        "%02d:%02d:%02d",
-                        (cookingTime / hour),
-                        (cookingTime % hour) / minut,
-                        (cookingTime % minut) / 1000L
-                    )
+                    "%s", nameProduct
                 ),
                 style = TextStyle(
                     color = Color.Black,
