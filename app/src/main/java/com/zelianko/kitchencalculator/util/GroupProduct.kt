@@ -9,5 +9,6 @@ object GroupProduct {
      */
     const val PORRIDGE = 40
     const val MUSHROOM = 50
+    const val VEGETABLES = 60
 
 }

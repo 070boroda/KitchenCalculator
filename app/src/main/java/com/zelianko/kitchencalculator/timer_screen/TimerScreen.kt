@@ -25,6 +25,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,7 +58,8 @@ fun TimerScreen(
         TwoField(stringResource(id = R.string.fish), GroupProduct.FISH_AND_SEAFOOD),
         TwoField(stringResource(id = R.string.meat), GroupProduct.CHICKEN_AND_MEAT),
         TwoField(stringResource(id = R.string.porridge), GroupProduct.PORRIDGE),
-        TwoField(stringResource(id = R.string.mushrooms), GroupProduct.MUSHROOM)
+        TwoField(stringResource(id = R.string.mushrooms), GroupProduct.MUSHROOM),
+        TwoField(stringResource(id = R.string.vegetables), GroupProduct.VEGETABLES)
     )
 
     val listTypeCooking = listOf(
@@ -101,7 +103,7 @@ fun TimerScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
-            //писок групп продуктов
+            //список групп продуктов
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -135,6 +137,7 @@ fun TimerScreen(
                     CustomScrollProductTabs(
                         productList.value,
                         0,
+                        translateMap
                     ) { event ->
                         viewModel.onEvent(event)
                     }
@@ -152,7 +155,8 @@ fun TimerScreen(
                         else -> {
                             0
                         }
-                    }
+                    },
+                    translateMap
                 )
 
                 Spacer(modifier = Modifier.height(50.dp))
@@ -181,6 +185,7 @@ fun TimerScreen(
 fun CustomScrollProductTabs(
     list: List<CookingTime>,
     startPosition: Int,
+    translateMap: HashMap<Int, Int>,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(startPosition) }
@@ -197,6 +202,11 @@ fun CustomScrollProductTabs(
     ) {
         list.forEachIndexed { index, groupProduct ->
             val selected = selectedIndex == index
+
+            val idStringResource = translateMap.get(groupProduct.id!!.toInt())
+            val nameProduct = idStringResource?.let { stringResource(id = it) }
+
+
             Tab(
                 modifier = if (selected) Modifier
                     .padding(2.dp)
@@ -215,7 +225,7 @@ fun CustomScrollProductTabs(
                     selectedIndex = index
                     onEvent(TimerScreenEvent.ChooseProduct(groupProduct.id))
                 },
-                text = { Text(text = groupProduct.productName, color = Color.Black) }
+                text = { Text(text = nameProduct!!, color = Color.Black) }
             )
         }
     }
@@ -272,7 +282,7 @@ fun CustomCookingTypeTabs(
     numberTypeCooking: MutableState<Int>,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
-    var selectedIndex by remember { mutableStateOf(startPosition) }
+    var selectedIndex by remember { mutableIntStateOf(startPosition) }
     TabRow(
         selectedTabIndex = selectedIndex,
         containerColor = colorResource(id = R.color.grey_light),
@@ -318,6 +328,7 @@ fun CustomCookingTypeTabs(
 fun ResultCardProduct(
     product: CookingTime,
     cookingTime: Long,
+    translateMap: HashMap<Int, Int>,
 ) {
     val hour = 3600L * 1000L
     val minut = 60L * 1000L
@@ -333,6 +344,12 @@ fun ResultCardProduct(
             contentColor = Color.Black
         )
     ) {
+        val idStringResource = translateMap.get(product.id!!.toInt())
+        var nameProduct = idStringResource?.let { stringResource(id = it) }
+
+        if (nameProduct!!.contains("(")) {
+            nameProduct = nameProduct.substring(0, nameProduct.indexOf("("))
+        }
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -347,7 +364,7 @@ fun ResultCardProduct(
             )
             Text(
                 text = String.format(
-                    "%s %s", product.productName, String.format(
+                    "%s %s", nameProduct, String.format(
                         "%02d:%02d:%02d",
                         (cookingTime / hour),
                         (cookingTime % hour) / minut,

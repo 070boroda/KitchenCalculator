@@ -231,7 +231,7 @@ fun UsebleCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "На порцию",
+                    text = stringResource(id = R.string.for_portion),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Black
                 )
