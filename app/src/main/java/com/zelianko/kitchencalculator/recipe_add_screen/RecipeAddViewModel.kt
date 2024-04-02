@@ -1,11 +1,8 @@
 package com.zelianko.kitchencalculator.recipe_add_screen
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zelianko.kitchencalculator.data.ProductEn
@@ -88,10 +85,20 @@ class RecipeAddViewModel @Inject constructor(
 
             //Сохраняем рецепт выходим из экрана
             is RecipeAddEvent.OnItemSave -> {
-                if (nameRecipeText.value.isBlank()) return
+                if (nameRecipeText.value.isBlank()) {
+                    sendUiEvent(UiEvent.ShowSnackBarIfNameRecipeIsEmpty)
+                    return
+                }
+
                 Log.d("MyLog", nameRecipeText.value)
-                if (listProduct.isEmpty()) return
-                if (listProduct.size == 1 && (listProduct[0].key.isBlank() || listProduct[0].value.isBlank())) return
+                if (listProduct.isEmpty()) {
+                    sendUiEvent(UiEvent.ShowSnackBarIfNameProductIsEmpty)
+                    return
+                }
+                if (listProduct.size == 1 && (listProduct[0].key.isBlank() || listProduct[0].value.isBlank())) {
+                    sendUiEvent(UiEvent.ShowSnackBarIfNameProductIsEmpty)
+                    return
+                }
 
                 viewModelScope.launch(Dispatchers.IO) {
                     val idRecipe = recipeRepository.insertRecipe(

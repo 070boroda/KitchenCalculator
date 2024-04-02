@@ -1,7 +1,5 @@
 package com.zelianko.kitchencalculator.data
 
-import kotlinx.coroutines.flow.Flow
-
 interface ProductEnRepository {
 
     suspend fun insertProductEn(item: ProductEn)

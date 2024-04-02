@@ -2,6 +2,7 @@ package com.zelianko.kitchencalculator.recipe_add_screen
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,6 +39,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -74,6 +77,13 @@ fun RecipeAddScreen(
 ) {
     val listProducts = viewModel.listProduct
 
+    val snackState = remember { SnackbarHostState() }
+
+    val context = LocalContext.current
+    val name_recipt_is_empty = stringResource(id = R.string.name_recipt_is_empty)
+    val product_is_empty = stringResource(id = R.string.product_is_empty)
+
+    SnackbarHost(hostState = snackState, Modifier)
     //Переход на другой экран
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEven ->
@@ -81,12 +91,16 @@ fun RecipeAddScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(uiEven.route)
                 }
-
+                is UiEvent.ShowSnackBarIfNameRecipeIsEmpty -> {
+                    Toast.makeText(context, name_recipt_is_empty, Toast.LENGTH_SHORT).show()
+                }
+                is UiEvent.ShowSnackBarIfNameProductIsEmpty -> {
+                    Toast.makeText(context, product_is_empty, Toast.LENGTH_SHORT).show()
+                }
                 else -> {}
             }
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -397,7 +411,7 @@ fun IngredientsRow(
             }
         }
         Spacer(modifier = Modifier.width(5.dp))
-        if (index == (listProducts.size-1) && index != 0) {
+        if (index == (listProducts.size - 1) && index != 0) {
             IconButton(
                 modifier = Modifier
                     .height(40.dp)
@@ -494,4 +508,3 @@ fun WeightList(
         }
     }
 }
-

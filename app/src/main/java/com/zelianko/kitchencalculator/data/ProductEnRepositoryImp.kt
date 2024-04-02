@@ -1,7 +1,5 @@
 package com.zelianko.kitchencalculator.data
 
-import kotlinx.coroutines.flow.Flow
-
 class ProductEnRepositoryImp(
     private val dao: ProductEnDao
 ) : ProductEnRepository {
