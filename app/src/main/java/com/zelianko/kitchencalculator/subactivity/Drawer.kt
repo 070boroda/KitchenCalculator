@@ -54,6 +54,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.activity.FirstScreen
+import com.zelianko.kitchencalculator.cook_temp_screen.CokingTemperatureScreen
 import com.zelianko.kitchencalculator.meat_screen.MeatScreen
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.NavGraf
@@ -94,6 +95,12 @@ fun Drawer(
             selectedIcon = ImageVector.vectorResource(R.drawable.steak),
             unselectedIcon = ImageVector.vectorResource(R.drawable.steak),
             route = Routes.MEAT_SCREEN
+        ),
+        NavigationItem(
+            title = stringResource(R.string.cooking_temp),
+            selectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
+            route = Routes.COCKING_TEMPERATURE_SCREEN
         ),
     )
     val navController = rememberNavController()
@@ -247,6 +254,11 @@ fun Drawer(
                     meatScreen = {
                         MeatScreen(
                            paddingValues = paddingValues
+                        )
+                    },
+                    cokingTemperatureScreen = {
+                        CokingTemperatureScreen(
+                            paddingValues = paddingValues
                         )
                     }
                 )

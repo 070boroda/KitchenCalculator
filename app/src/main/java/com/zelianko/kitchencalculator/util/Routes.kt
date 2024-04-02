@@ -8,4 +8,5 @@ object Routes {
     const val RECIPE_ABOUT_SCREEN = "recipe_about_screen"
     const val TIMER_SCREEN = "timer_screen"
     const val MEAT_SCREEN = "meat_screen"
+    const val COCKING_TEMPERATURE_SCREEN = "cocking_temperature_screen"
 }

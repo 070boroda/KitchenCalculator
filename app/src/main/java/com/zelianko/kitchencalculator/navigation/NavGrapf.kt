@@ -15,7 +15,8 @@ fun NavGraf(
     generalScreenContent: @Composable () -> Unit,
     secondScreenContent: @Composable () -> Unit,
     timerScreen: @Composable () -> Unit,
-    meatScreen: @Composable () -> Unit
+    meatScreen: @Composable () -> Unit,
+    cokingTemperatureScreen: @Composable () -> Unit,
     ) {
     NavHost(
         navController = navHostController,
@@ -33,6 +34,9 @@ fun NavGraf(
         }
         composable(Routes.MEAT_SCREEN) {
             meatScreen()
+        }
+        composable(Routes.COCKING_TEMPERATURE_SCREEN) {
+            cokingTemperatureScreen()
         }
 
     }
