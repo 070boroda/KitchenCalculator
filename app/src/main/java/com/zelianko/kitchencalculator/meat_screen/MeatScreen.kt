@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -89,7 +90,7 @@ fun MeatScreen(
             )
             Spacer(modifier = Modifier.height(5.dp))
             MeatCard(
-                heightCard = 500.dp,
+                heightCard = 510.dp,
                 R.drawable.well_done_hand,
                 R.string.well_done_hand
             )
@@ -116,14 +117,23 @@ fun MeatCard(
         )
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        Image(
+        Card (
             modifier = Modifier
-                .fillMaxWidth()
-                .height(165.dp),
-            painter = painterResource(id = imageId),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-        )
+                .width(400.dp)
+                .height(175.dp)
+                .padding(horizontal = 15.dp)
+                .clip(shape = RoundedCornerShape(10.dp))
+        ){
+            Image(
+                modifier = Modifier
+                    .width(400.dp)
+                    .height(200.dp),
+                painter = painterResource(id = imageId),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+            )
+        }
+
         Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = stringResource(id = stringId).trimIndent(),

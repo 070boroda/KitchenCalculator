@@ -125,7 +125,7 @@ fun CokingTemperatureScreen(
                                 .padding(10.dp),
                             fontWeight = FontWeight.Bold,
                             style = TextStyle(
-                                fontSize = 14.sp
+                                fontSize = 15.sp
                             )
                         )
                     }
@@ -182,7 +182,7 @@ fun RowScope.TableCell(
         fontWeight = if (title) FontWeight.Bold else FontWeight.Normal,
         textAlign = alignment,
         style = TextStyle(
-            fontSize = 14.sp
+            fontSize = 15.sp
         )
     )
 }
@@ -210,7 +210,7 @@ fun RowScope.StatusCell(
         textAlign = alignment,
         color = textColor,
         style = TextStyle(
-            fontSize = 14.sp
+            fontSize = 15.sp
         )
     )
 }
