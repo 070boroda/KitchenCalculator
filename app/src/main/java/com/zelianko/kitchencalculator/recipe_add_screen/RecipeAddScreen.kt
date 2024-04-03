@@ -66,6 +66,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
@@ -161,7 +163,7 @@ fun RecipeAddScreen(
         Spacer(modifier = Modifier.width(40.dp))
         Column(
             modifier = Modifier
-                .height(420.dp)
+                .height(380.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -189,6 +191,7 @@ fun RecipeAddScreen(
                 style = MaterialTheme.typography.titleLarge
             )
         }
+        GoogleBannerAd(textId = StringConstants.BannerAddRecipeId)
     }
 }
 

@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.ads.MobileAds
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.RecipeNavGraph
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +21,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
+        //Инициализация рекламы гугл
+        MobileAds.initialize(this) {}
         setContent {
             // KitchenCalculatorTheme {
             // A surface container using the 'background' color from the theme

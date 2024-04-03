@@ -33,6 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 
 /**
  * Экран температура приготовления продуктов
@@ -41,7 +43,6 @@ import com.zelianko.kitchencalculator.R
 fun CokingTemperatureScreen(
     paddingValues: PaddingValues
 ) {
-
 
     val dataCookingTempLists = listOf(
         DataCookingTemp(R.drawable.bull, stringResource(id = R.string.beef_veal_lamb), "     ", "  ", true),
@@ -77,9 +78,9 @@ fun CokingTemperatureScreen(
             .padding(paddingValues),
         color = colorResource(id = R.color.grey_light)
     ) {
-
         LazyColumn(Modifier.padding(8.dp)) {
             item {
+                GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween

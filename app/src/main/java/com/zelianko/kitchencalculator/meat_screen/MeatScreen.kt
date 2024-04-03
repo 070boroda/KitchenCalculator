@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 
 
 /**
@@ -58,6 +60,7 @@ fun MeatScreen(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            GoogleBannerAd(textId = StringConstants.BannerSteakScreenId)
             // Child components of the Column
             MeatCard(
                 heightCard = 530.dp,

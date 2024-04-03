@@ -44,8 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.dialog.DialogEvent
 import com.zelianko.kitchencalculator.dialog.MainDialog
+import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
@@ -131,6 +133,7 @@ fun RecipeAboutScreen(
                 Spacer(modifier = Modifier.width(95.dp))
             }
         }
+        GoogleBannerAd(textId = StringConstants.BannerAboutRecipeId)
         Spacer(modifier = Modifier.size(10.dp))
         Column(
             modifier = Modifier

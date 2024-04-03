@@ -44,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.data.Recipe
+import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
@@ -80,7 +82,7 @@ fun RecipeListScreen(
             modifier = Modifier
                 .height(20.dp)
         )
-
+        GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
         //Передаем евент, что будем делать
         CustomTextInputField(
             state = textSearch

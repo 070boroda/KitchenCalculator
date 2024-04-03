@@ -44,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.data.CookingTime
+import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subactivity.Timer
 import com.zelianko.kitchencalculator.util.GroupProduct
 import com.zelianko.kitchencalculator.util.TypeCooking
@@ -108,6 +110,7 @@ fun TimerScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
+            GoogleBannerAd(textId = StringConstants.BannerTimerScreenId)
             //список групп продуктов
             Row(
                 modifier = Modifier

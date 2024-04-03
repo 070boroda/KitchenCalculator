@@ -110,4 +110,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation("org.apache.commons:commons-lang3:3.0")
+
+    //Google Ads
+    implementation ("com.google.android.gms:play-services-ads:23.0.0")
 }
