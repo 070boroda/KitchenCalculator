@@ -113,4 +113,19 @@ dependencies {
 
     //Google Ads
     implementation ("com.google.android.gms:play-services-ads:23.0.0")
+
+
+    implementation ("androidx.window:window:1.2.0")
+
+    // For Java-friendly APIs to register and unregister callbacks
+    implementation ("androidx.window:window-java:1.2.0")
+
+    // For RxJava2 integration
+    implementation ("androidx.window:window-rxjava2:1.2.0")
+
+    // For RxJava3 integration
+    implementation ("androidx.window:window-rxjava3:1.2.0")
+
+    // For testing
+    implementation ("androidx.window:window-testing:1.2.0")
 }

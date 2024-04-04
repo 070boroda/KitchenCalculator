@@ -11,6 +11,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.MobileAds
+import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.google_ads.AppOpenAdManager
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.RecipeNavGraph
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +25,8 @@ class MainActivity : ComponentActivity() {
         val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
         //Инициализация рекламы гугл
         MobileAds.initialize(this) {}
+        //
+        AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId)
         setContent {
             // KitchenCalculatorTheme {
             // A surface container using the 'background' color from the theme
