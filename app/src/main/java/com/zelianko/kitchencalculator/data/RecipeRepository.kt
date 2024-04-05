@@ -12,4 +12,6 @@ interface RecipeRepository {
     suspend fun getRecipeById(id: Long): Recipe
 
     fun getAllItemsByName(name: String): Flow<List<Recipe>>
+
+    fun getCount(): Long
 }

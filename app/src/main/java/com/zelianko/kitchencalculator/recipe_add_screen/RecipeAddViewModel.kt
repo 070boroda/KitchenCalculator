@@ -37,7 +37,6 @@ class RecipeAddViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-
     fun onEvent(event: RecipeAddEvent) {
         when (event) {
             is RecipeAddEvent.RecipeNameTextEnter -> {

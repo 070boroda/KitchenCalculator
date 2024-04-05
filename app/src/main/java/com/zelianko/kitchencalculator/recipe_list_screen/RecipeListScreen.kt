@@ -45,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.data.Recipe
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.util.Routes
@@ -53,6 +54,7 @@ import com.zelianko.kitchencalculator.util.UiEvent
 @Composable
 fun RecipeListScreen(
     viewModel: RecipeViewModel = hiltViewModel(),
+    currentSubscriptionList: List<String>,
     onNavigate: (String) -> Unit
 ) {
 
@@ -82,11 +84,18 @@ fun RecipeListScreen(
             modifier = Modifier
                 .height(20.dp)
         )
-        GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
+        if (!currentSubscriptionList.contains(MONTHLY)) {
+            GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
+        }
+
         //Передаем евент, что будем делать
         CustomTextInputField(
             state = textSearch
         )
+//TODO нужно попробовать передать ивент во вьюмодел и от туда обрезать список
+//        if (!currentSubscriptionList.contains(MONTHLY)) {
+//            recipeList.value.subList(0, 2);
+//        }
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),

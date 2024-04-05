@@ -24,4 +24,8 @@ class RecipeRepositoryImpl(
     override fun getAllItemsByName(name: String): Flow<List<Recipe>> {
         return dao.getAllItemsByName(name)
     }
+
+    override fun getCount(): Long {
+        return dao.getCount()
+    }
 }

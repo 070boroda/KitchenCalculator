@@ -41,7 +41,8 @@ import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
  */
 @Composable
 fun CokingTemperatureScreen(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    currentSubscriptionList: List<String>
 ) {
 
     val dataCookingTempLists = listOf(
@@ -80,7 +81,9 @@ fun CokingTemperatureScreen(
     ) {
         LazyColumn(Modifier.padding(8.dp)) {
             item {
-                GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
+                if (!currentSubscriptionList.contains(StringConstants.MONTHLY)) {
+                    GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
+                }
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween

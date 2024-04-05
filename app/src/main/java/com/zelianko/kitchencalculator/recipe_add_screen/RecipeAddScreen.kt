@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -39,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -67,6 +69,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
@@ -75,6 +78,7 @@ import com.zelianko.kitchencalculator.util.UiEvent
 @Composable
 fun RecipeAddScreen(
     viewModel: RecipeAddViewModel = hiltViewModel(),
+    currentSubscriptionList: List<String>,
     onNavigate: (String) -> Unit
 ) {
     val listProducts = viewModel.listProduct
@@ -93,106 +97,139 @@ fun RecipeAddScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(uiEven.route)
                 }
+
                 is UiEvent.ShowSnackBarIfNameRecipeIsEmpty -> {
                     Toast.makeText(context, name_recipt_is_empty, Toast.LENGTH_SHORT).show()
                 }
+
                 is UiEvent.ShowSnackBarIfNameProductIsEmpty -> {
                     Toast.makeText(context, product_is_empty, Toast.LENGTH_SHORT).show()
                 }
+
                 else -> {}
             }
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.grey_light)),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            IconButton(
-                modifier = Modifier
-                    .size(48.dp),
-                onClick = {
-                    viewModel.onEvent(RecipeAddEvent.OnItemClick(Routes.RECIPE_LIST_SCREEN))
-                })
-            {
-                Icon(
-                    ImageVector.vectorResource(R.drawable.ic_arrow_left),
-                    contentDescription = "arrow left"
-                )
-            }
-            Spacer(modifier = Modifier.width(26.dp))
-            Text(
-                text = stringResource(id = R.string.create_recipe),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                modifier = Modifier
-                    .padding(end = 10.dp)
-                    .background(
-                        colorResource(id = R.color.orange_primary),
-                        shape = CircleShape
-                    ),
-                onClick = {
-                    viewModel.onEvent(RecipeAddEvent.AddRowProduct)
-
-                }) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                    contentDescription = "plus"
-                )
-            }
-        }
-        Spacer(modifier = Modifier.width(20.dp))
-        RecipeNameTextInputField() { event ->
-            viewModel.onEvent(event)
-        }
-        CardLoadImage() { event ->
-            viewModel.onEvent(event)
-        }
-        Spacer(modifier = Modifier.width(40.dp))
-        Column(
-            modifier = Modifier
-                .height(380.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            listProducts.forEachIndexed { index, ingredient ->
-                Spacer(modifier = Modifier.height(12.dp))
-                IngredientsRow(
-                    index = index,
-                    listProducts = listProducts
-                ) { event ->
-                    viewModel.onEvent(event)
+    Scaffold(
+        bottomBar = {
+            BottomAppBar(
+                backgroundColor = colorResource(id = R.color.grey_light),
+                cutoutShape = CircleShape,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.orange_primary),
+                            contentColor = Color.Black
+                        ),
+                        onClick = {
+                            viewModel.onEvent(RecipeAddEvent.OnItemSave)
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.save_recipe),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
                 }
             }
-        }
-        Button(
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.orange_primary),
-                contentColor = Color.Black
-            ),
-            onClick = {
-                viewModel.onEvent(RecipeAddEvent.OnItemSave)
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+                    .background(colorResource(id = R.color.grey_light))
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    IconButton(
+                        modifier = Modifier
+                            .size(48.dp),
+                        onClick = {
+                            viewModel.onEvent(RecipeAddEvent.OnItemClick(Routes.RECIPE_LIST_SCREEN))
+                        })
+                    {
+                        Icon(
+                            ImageVector.vectorResource(R.drawable.ic_arrow_left),
+                            contentDescription = "arrow left"
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(26.dp))
+                    Text(
+                        text = stringResource(id = R.string.create_recipe),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    //Если нет подписки и рецептов базе больше или равно пяти не даем создавать
+                    //больше
+                    if (!currentSubscriptionList.contains(MONTHLY) && listProducts.size >= 5) {
+
+                    } else {
+                        IconButton(
+                            modifier = Modifier
+                                .padding(end = 10.dp)
+                                .background(
+                                    colorResource(id = R.color.orange_primary),
+                                    shape = CircleShape
+                                ),
+                            onClick = {
+                                viewModel.onEvent(RecipeAddEvent.AddRowProduct)
+
+                            }) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                                contentDescription = "plus"
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+                if (!currentSubscriptionList.contains(MONTHLY)) {
+                    GoogleBannerAd(textId = StringConstants.BannerAddRecipeId)
+                }
+                RecipeNameTextInputField() { event ->
+                    viewModel.onEvent(event)
+                }
+                CardLoadImage() { event ->
+                    viewModel.onEvent(event)
+                }
+                Spacer(modifier = Modifier.width(40.dp))
+                Column(
+                    modifier = Modifier
+                        .height(380.dp)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    listProducts.forEachIndexed { index, ingredient ->
+                        Spacer(modifier = Modifier.height(12.dp))
+                        IngredientsRow(
+                            index = index,
+                            listProducts = listProducts
+                        ) { event ->
+                            viewModel.onEvent(event)
+                        }
+                    }
+                }
+
             }
-        ) {
-            Text(
-                text = stringResource(id = R.string.save_recipe),
-                style = MaterialTheme.typography.titleLarge
-            )
+
         }
-        GoogleBannerAd(textId = StringConstants.BannerAddRecipeId)
-    }
+    )
 }
 
 @Composable

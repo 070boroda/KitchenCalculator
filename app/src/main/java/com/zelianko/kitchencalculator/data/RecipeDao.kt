@@ -25,4 +25,6 @@ interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE recipe.name like :name")
     fun getAllItemsByName(name: String): Flow<List<Recipe>>
 
+    @Query("SELECT count(*) FROM recipe")
+    fun getCount(): Long
 }

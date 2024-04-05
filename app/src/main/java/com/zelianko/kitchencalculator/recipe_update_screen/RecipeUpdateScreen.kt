@@ -65,6 +65,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.data.ProductEn
 import com.zelianko.kitchencalculator.data.Recipe
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
@@ -75,6 +76,7 @@ import com.zelianko.kitchencalculator.util.UiEvent
 @Composable
 fun RecipeUpdateScreen(
     viewModel: RecipeUpdateViewModel = hiltViewModel(),
+    currentSubscriptionList: List<String>,
     onNavigate: (String) -> Unit
 ) {
     val screenState = viewModel.screenState.collectAsState(RecipeUpdateState.Initial)
@@ -93,7 +95,7 @@ fun RecipeUpdateScreen(
 
     when (val currentState = screenState.value) {
         is RecipeUpdateState.RecipeDto -> {
-            RecipeUpdateCurrentScreen(viewModel, currentState)
+            RecipeUpdateCurrentScreen(viewModel, currentSubscriptionList, currentState)
         }
 
         RecipeUpdateState.Initial -> {
@@ -121,6 +123,7 @@ fun RecipeUpdateScreen(
 @Composable
 fun RecipeUpdateCurrentScreen(
     viewModel: RecipeUpdateViewModel,
+    currentSubscriptionList: List<String>,
     currentState: RecipeUpdateState.RecipeDto,
 ) {
     Column(
@@ -173,7 +176,10 @@ fun RecipeUpdateCurrentScreen(
             }
         }
         Spacer(modifier = Modifier.width(20.dp))
-        GoogleBannerAd(textId = StringConstants.BannerUpdateRecipeId)
+
+        if (!currentSubscriptionList.contains(MONTHLY)) {
+            GoogleBannerAd(textId = StringConstants.BannerUpdateRecipeId)
+        }
         currentState.recipe?.let {
             RecipeNameTextInputField(
                 recipe = it

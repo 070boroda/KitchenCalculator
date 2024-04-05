@@ -219,6 +219,7 @@
     <string name="goose_duck">Утка, гусь</string>
     <string name="minced_meat">Фарш</string>
     <string name="all_meat">Говядина, телятина, свинина</string>
+    <string name="premium">Premium</string>
 
 
 </resources>

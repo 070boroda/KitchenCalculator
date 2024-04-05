@@ -29,7 +29,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,7 +43,8 @@ import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 @Composable
 //@Preview(showBackground = true)
 fun MeatScreen(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    currentSubscriptionList: List<String>
 ) {
     Surface(
         modifier = Modifier
@@ -61,7 +61,9 @@ fun MeatScreen(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GoogleBannerAd(textId = StringConstants.BannerSteakScreenId)
+            if (!currentSubscriptionList.contains(StringConstants.MONTHLY)) {
+                GoogleBannerAd(textId = StringConstants.BannerSteakScreenId)
+            }
             // Child components of the Column
             MeatCard(
                 heightCard = 530.dp,
@@ -121,13 +123,13 @@ fun MeatCard(
         )
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        Card (
+        Card(
             modifier = Modifier
                 .width(400.dp)
                 .height(175.dp)
                 .padding(horizontal = 15.dp)
                 .clip(shape = RoundedCornerShape(10.dp))
-        ){
+        ) {
             Image(
                 modifier = Modifier
                     .width(400.dp)

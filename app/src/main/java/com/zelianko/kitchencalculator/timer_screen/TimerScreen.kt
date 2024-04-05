@@ -54,6 +54,7 @@ import com.zelianko.kitchencalculator.util.TypeCooking
 @Composable
 fun TimerScreen(
     paddingValues: PaddingValues,
+    currentSubscriptionList: List<String>,
     viewModel: TimerScreenViewModel = hiltViewModel(),
 ) {
 
@@ -110,7 +111,10 @@ fun TimerScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
-            GoogleBannerAd(textId = StringConstants.BannerTimerScreenId)
+
+            if (!currentSubscriptionList.contains(StringConstants.MONTHLY)) {
+                GoogleBannerAd(textId = StringConstants.BannerTimerScreenId)
+            }
             //список групп продуктов
             Row(
                 modifier = Modifier

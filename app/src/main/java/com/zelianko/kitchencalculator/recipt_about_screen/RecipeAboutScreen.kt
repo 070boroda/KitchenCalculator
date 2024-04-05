@@ -45,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.dialog.DialogEvent
 import com.zelianko.kitchencalculator.dialog.MainDialog
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
@@ -55,6 +56,7 @@ import com.zelianko.kitchencalculator.util.UiEvent
 @Composable
 fun RecipeAboutScreen(
     viewModel: RecipeAboutViewModel = hiltViewModel(),
+    currentSubscriptionList: List<String>,
     onNavigate: (String) -> Unit
 ) {
 
@@ -133,7 +135,9 @@ fun RecipeAboutScreen(
                 Spacer(modifier = Modifier.width(95.dp))
             }
         }
-        GoogleBannerAd(textId = StringConstants.BannerAboutRecipeId)
+        if (!currentSubscriptionList.contains(MONTHLY) ) {
+            GoogleBannerAd(textId = StringConstants.BannerAboutRecipeId)
+        }
         Spacer(modifier = Modifier.size(10.dp))
         Column(
             modifier = Modifier
