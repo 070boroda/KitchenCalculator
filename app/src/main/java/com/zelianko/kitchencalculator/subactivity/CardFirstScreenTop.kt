@@ -36,9 +36,9 @@ fun CardFirstScreenTop(
 ) {
     Card(
         modifier = modifier
-            .height(135.dp)
-            .width(205.dp)
-            .padding(horizontal = 20.dp)
+            .height(120.dp)
+            .width(164.dp)
+            //.padding(horizontal = 2.dp)
             .clip(shape = RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(
             containerColor = colorCard,

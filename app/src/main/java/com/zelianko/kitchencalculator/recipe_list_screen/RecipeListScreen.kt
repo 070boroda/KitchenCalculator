@@ -67,6 +67,7 @@ fun RecipeListScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(uiEvent.route)
                 }
+
                 else -> {}
             }
         }
@@ -97,21 +98,40 @@ fun RecipeListScreen(
 //            recipeList.value.subList(0, 2);
 //        }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            items(recipeList.value.filter {
-                it.name.contains(textSearch.value.text, ignoreCase = true)
-            }
-            ) { recipe ->
-                Spacer(modifier = Modifier.height(12.dp))
-                RowRecipe(recipe) { event ->
-                    viewModel.onEvent(event)
+        //Если нет подписки и список рецептов больше трех выводим только три рецепта
+        if (!currentSubscriptionList.contains(MONTHLY) && recipeList.value.size >= 5) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                val tempList = recipeList.value.subList(0, 4);
+                items(tempList.filter {
+                    it.name.contains(textSearch.value.text, ignoreCase = true)
+                }
+                ) { recipe ->
+                    Spacer(modifier = Modifier.height(12.dp))
+                    RowRecipe(recipe) { event ->
+                        viewModel.onEvent(event)
+                    }
                 }
             }
-
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                items(recipeList.value.filter {
+                    it.name.contains(textSearch.value.text, ignoreCase = true)
+                }
+                ) { recipe ->
+                    Spacer(modifier = Modifier.height(12.dp))
+                    RowRecipe(recipe) { event ->
+                        viewModel.onEvent(event)
+                    }
+                }
+            }
         }
     }
 }
@@ -186,7 +206,10 @@ fun RowRecipe(
             )
         }
 
-        Spacer(Modifier.weight(1f).fillMaxHeight())
+        Spacer(
+            Modifier
+                .weight(1f)
+                .fillMaxHeight())
         IconButton(onClick = {
             Routes.RECIPE_UPDATE_SCREEN + "/${recipe.id}"
             onEvent(RecipeListEvent.OnItemClick(Routes.RECIPE_UPDATE_SCREEN + "/${recipe.id}"))

@@ -5,7 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,9 +29,9 @@ import com.zelianko.kitchencalculator.R
 fun ResultCardProduct(resultCount: State<String?>, value: String) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
             .height(140.dp)
-            .padding(start = 48.dp, end = 20.dp)
+            .width(360.dp)
+            // .padding(start = 48.dp, end = 20.dp)
             .clip(shape = RoundedCornerShape(12.dp)),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.backgroud_row),
@@ -38,7 +39,8 @@ fun ResultCardProduct(resultCount: State<String?>, value: String) {
         )
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

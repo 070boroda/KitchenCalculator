@@ -44,7 +44,7 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
         modifier = Modifier
             .fillMaxHeight()
             .height(50.dp)
-            .padding(start = 44.dp, end = 20.dp)
+            .padding(start = 30.dp, end = 20.dp)
         // .background(Color.Black)
     ) {
         Text(

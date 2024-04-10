@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -125,18 +126,17 @@ fun MeatCard(
         Spacer(modifier = Modifier.height(10.dp))
         Card(
             modifier = Modifier
-                .width(400.dp)
-                .height(175.dp)
-                .padding(horizontal = 15.dp)
+                .width(350.dp)
+                .height(180.dp)
+                .align(Alignment.CenterHorizontally)
                 .clip(shape = RoundedCornerShape(10.dp))
         ) {
             Image(
                 modifier = Modifier
-                    .width(400.dp)
-                    .height(200.dp),
+                    .fillMaxSize(),
                 painter = painterResource(id = imageId),
                 contentDescription = null,
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
             )
         }
 

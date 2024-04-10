@@ -50,15 +50,10 @@ class MainActivity : ComponentActivity() {
                 if (!currentSubscriptionList.contains(MONTHLY)) {
                     AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId)
                 }
-                //Для загрузки рекламы
-                Thread.sleep(500)
-
                 LaunchedEffect(key1 = true) {
                     chooseSubscriptionModel.billingSetup()
                     chooseSubscriptionModel.hasSubscription()
-
                 }
-
                 RecipeNavGraph(
                     productViewModel = productViewModel,
                     currentSubscriptionList = currentSubscriptionList,

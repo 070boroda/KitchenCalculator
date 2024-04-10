@@ -35,7 +35,7 @@ fun CustomTextInput(inputText: MutableState<String>) {
         modifier =
         Modifier
             .width(160.dp)
-            .padding(start = 20.dp)
+            .padding(start = 8.dp)
     ){
         val textState = inputText
         val maxLength = 110

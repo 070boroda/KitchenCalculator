@@ -69,7 +69,8 @@ fun FirstScreen(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .fillMaxSize()
-                .background(Color.Transparent)
+                .background(Color.Transparent),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(5.dp))
             Row(
@@ -116,7 +117,7 @@ fun FirstScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+               horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally)
             ) {
 
                 CardFirstScreenTop(
@@ -149,7 +150,7 @@ fun FirstScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally)
             ) {
                 CardFirstScreenTop(
                     title = R.string.faceted_glass,
