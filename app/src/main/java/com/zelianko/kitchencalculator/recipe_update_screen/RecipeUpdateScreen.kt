@@ -59,8 +59,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -446,7 +449,7 @@ fun IngredientsRow(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "contentDescription",
                     modifier = Modifier
-                        .size(18.dp)
+                        .size(23.dp)
                         .background(colorResource(id = R.color.orange_primary), CircleShape)
                         .padding(2.dp),
                     tint = colorResource(id = R.color.orange_primary)
@@ -540,14 +543,19 @@ fun WeightList(
                         imageVector = Icons.Filled.Check,
                         contentDescription = "contentDescription",
                         modifier = Modifier
-                            .size(10.dp)
+                            .size(14.dp)
                             .background(colorResource(id = R.color.orange_primary), CircleShape)
                             .padding(2.dp),
                         tint = colorResource(id = R.color.orange_primary)
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                 }
-                Text(text = it)
+                Text(text = it,
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 20.sp
+                    )
+                )
             }
         }
     }
