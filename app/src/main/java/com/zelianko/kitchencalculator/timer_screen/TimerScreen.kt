@@ -27,6 +27,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,15 +49,18 @@ import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.data.CookingTime
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subactivity.Timer
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.GroupProduct
 import com.zelianko.kitchencalculator.util.TypeCooking
 
 @Composable
 fun TimerScreen(
     paddingValues: PaddingValues,
-    currentSubscriptionList: List<String>,
+    billingViewModel: BillingViewModel,
     viewModel: TimerScreenViewModel = hiltViewModel(),
 ) {
+
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
 
     val listGroupProduct = listOf(
         TwoField(stringResource(id = R.string.pasta), GroupProduct.PASTA),
@@ -112,7 +116,7 @@ fun TimerScreen(
         ) {
             Spacer(modifier = Modifier.height(5.dp))
 
-            if (!currentSubscriptionList.contains(StringConstants.MONTHLY)) {
+            if (isActiveSub.value == false) {
                 GoogleBannerAd(textId = StringConstants.BannerTimerScreenId)
             }
             //список групп продуктов

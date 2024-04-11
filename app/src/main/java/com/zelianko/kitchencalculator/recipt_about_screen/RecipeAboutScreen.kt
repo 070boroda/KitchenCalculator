@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +50,7 @@ import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHL
 import com.zelianko.kitchencalculator.dialog.DialogEvent
 import com.zelianko.kitchencalculator.dialog.MainDialog
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
@@ -56,7 +58,7 @@ import com.zelianko.kitchencalculator.util.UiEvent
 @Composable
 fun RecipeAboutScreen(
     viewModel: RecipeAboutViewModel = hiltViewModel(),
-    currentSubscriptionList: List<String>,
+    billingViewModel: BillingViewModel,
     onNavigate: (String) -> Unit
 ) {
 
@@ -65,6 +67,8 @@ fun RecipeAboutScreen(
     val uriImage = viewModel.uriImage.collectAsState("")
     val listProducts = viewModel.productList.collectAsState(initial = emptyList())
     val coff = viewModel.coff.collectAsState()
+
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
 
 
     LaunchedEffect(key1 = true) {
@@ -135,7 +139,7 @@ fun RecipeAboutScreen(
                 Spacer(modifier = Modifier.width(95.dp))
             }
         }
-        if (!currentSubscriptionList.contains(MONTHLY) ) {
+        if (isActiveSub.value == false) {
             GoogleBannerAd(textId = StringConstants.BannerAboutRecipeId)
         }
         Spacer(modifier = Modifier.size(10.dp))

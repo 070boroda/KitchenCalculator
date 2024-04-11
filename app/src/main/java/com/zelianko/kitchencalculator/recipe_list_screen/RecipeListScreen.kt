@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,15 +49,18 @@ import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.data.Recipe
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
 @Composable
 fun RecipeListScreen(
     viewModel: RecipeViewModel = hiltViewModel(),
-    currentSubscriptionList: List<String>,
+    billingViewModel: BillingViewModel,
     onNavigate: (String) -> Unit
 ) {
+
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
 
     val recipeList = viewModel.listRecipe.collectAsState(initial = emptyList())
     val textSearch = remember { mutableStateOf(TextFieldValue("")) }
@@ -85,7 +89,7 @@ fun RecipeListScreen(
             modifier = Modifier
                 .height(20.dp)
         )
-        if (!currentSubscriptionList.contains(MONTHLY)) {
+        if (isActiveSub.value == false) {
             GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
         }
 
@@ -99,7 +103,7 @@ fun RecipeListScreen(
 //        }
 
         //Если нет подписки и список рецептов больше трех выводим только три рецепта
-        if (!currentSubscriptionList.contains(MONTHLY) && recipeList.value.size >= 5) {
+        if (isActiveSub.value == false && recipeList.value.size >= 5) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),

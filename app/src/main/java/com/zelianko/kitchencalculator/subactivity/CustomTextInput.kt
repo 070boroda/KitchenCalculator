@@ -17,6 +17,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.zelianko.kitchencalculator.R
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -40,6 +42,9 @@ fun CustomTextInput(inputText: MutableState<String>) {
         val textState = inputText
         val maxLength = 110
         val blue = Color(0xFF146AFC)
+
+        val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
+
         Text(
             text = stringResource(id = R.string.quantity),
             modifier = Modifier
@@ -65,7 +70,7 @@ fun CustomTextInput(inputText: MutableState<String>) {
                 focusedBorderColor = Color.Black
             ) ,
             onValueChange = {
-                if (it.length <= maxLength) textState.value = it
+                if (it.isEmpty() || it.matches(pattern)) textState.value = it
             },
             shape = RoundedCornerShape(8.dp),
             singleLine = true,

@@ -188,7 +188,7 @@ class ProductViewModel : ViewModel() {
         }
         val amountFrom = getAmount(convertFromTemp, temp, product)
 
-        var amountTo:Double
+        val amountTo:Double
         if ((convertTo == "oz") or (convertTo == "Унция")) {
             amountTo = getAmount(GRAM_EU, OZ_VAL.toString(), product)
         } else {

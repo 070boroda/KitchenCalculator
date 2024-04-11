@@ -1,5 +1,6 @@
 package com.zelianko.kitchencalculator.subscriptions
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,10 +13,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,9 +35,15 @@ import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHL
 @Composable
 fun SubscribesScreen(
     paddingValues: PaddingValues,
-    currentSubscriptionList: List<String>,
-    chooseSubscriptionModel: ChooseSubscription
+    billingViewModel: BillingViewModel
 ) {
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+
+    val textPrice = billingViewModel.textPrice.observeAsState("")
+    val tokenOffer = billingViewModel.offerToken.observeAsState("")
+    val productDetails = billingViewModel.productDetails.observeAsState()
+
+    val activity = LocalContext.current as Activity
 
     Surface(
         modifier = Modifier
@@ -59,7 +68,7 @@ fun SubscribesScreen(
 
             Spacer(modifier = Modifier.size(120.dp))
 
-            if (currentSubscriptionList.contains(MONTHLY)) {
+            if (isActiveSub.value == true) {
                 Text(
                     text = "Premium is already available",
                     modifier = Modifier.padding(top = 5.dp),
@@ -82,11 +91,17 @@ fun SubscribesScreen(
                         contentColor = Color.White
                     ),
                     onClick = {
-                        chooseSubscriptionModel.checkSubscriptionStatus(MONTHLY)
+                        productDetails.value?.let {
+                            billingViewModel.launchPurchaseFlow(
+                                it,
+                                activity,
+                                tokenOffer.value
+                            )
+                        }
 
                     }) {
                     Text(
-                        stringResource(id = R.string.subscribe) + chooseSubscriptionModel.textPrice.value + stringResource(
+                        stringResource(id = R.string.subscribe) + textPrice.value + stringResource(
                             id = R.string.month
                         ),
                         fontSize = 22.sp

@@ -1,6 +1,7 @@
 package com.zelianko.kitchencalculator.subscriptions
 
 import android.app.Activity
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.android.billingclient.api.AcknowledgePurchaseParams
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.update
 
 /**
  * Класс подписки к приложению
+ * https://medium.com/@daniel.atitienei/implementing-in-app-subscriptions-and-products-using-jetpack-compose-e867141bec7b
  */
 class ChooseSubscription(
     private val activity: Activity
@@ -34,12 +36,15 @@ class ChooseSubscription(
 
     private val purchaseUpdateListener = PurchasesUpdatedListener { result, purchases ->
         if (result.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+            Log.d("BILLING", "OK")
             for (purchase in purchases) {
                 handlePurchase(purchase)
             }
         } else if (result.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
+            Log.d("BILLING", "USER_CANCELED")
             // User canceled the purchase
         } else {
+            Log.d("BILLING", result.responseCode.toString())
             // Handle other error cases
         }
     }
@@ -82,27 +87,34 @@ class ChooseSubscription(
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(result: BillingResult) {
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    Log.d("BILLING", "billingSetup OK")
                     hasSubscription()
                 }
             }
 
             override fun onBillingServiceDisconnected() {
+                Log.d("BILLING", "DISCONECCT")
                 // Handle billing service disconnection
             }
         })
     }
 
+    //Как я понял проверяет наличие текущих подписок, КУПЛЕННЫХ
     fun hasSubscription() {
         val queryPurchaseParams = QueryPurchasesParams.newBuilder()
             .setProductType(BillingClient.ProductType.SUBS)
             .build()
-
+        Log.d("BILLING", "hasSubscription queryPurchaseParams OK")
         billingClient.queryPurchasesAsync(
             queryPurchaseParams
         ) { result, purchases ->
+            Log.d("BILLING", "hasSubscription queryPurchasesAsync OK")
             when (result.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
+                    Log.d("BILLING", "hasSubscription in WHEN OK")
+                    Log.d("BILLING",  purchases.size.toString())
                     for (purchase in purchases) {
+                        Log.d("BILLING", purchases.size.toString())
                         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
                             // User has an active subscription
                             _subscriptions.update {
@@ -116,10 +128,12 @@ class ChooseSubscription(
                 }
 
                 BillingClient.BillingResponseCode.USER_CANCELED -> {
+                    Log.d("BILLING", "hasSubscription in WHEN USER_CANCELED")
                     // User canceled the purchase
                 }
 
                 else -> {
+                    Log.d("BILLING", "hasSubscription in WHEN ELSE")
                     // Handle other error cases
                 }
             }
@@ -141,6 +155,7 @@ class ChooseSubscription(
         ) { result, purchases ->
             when (result.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
+                    Log.d("BILLING", "checkSubscriptionStatus OK OK")
                     for (purchase in purchases) {
                         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && purchase.products.contains(
                                 subscriptionPlanId
@@ -186,6 +201,7 @@ class ChooseSubscription(
 
         billingClient.queryProductDetailsAsync(queryProductDetailsParams) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                Log.d("querySubscriptionPlans", "checkSubscriptionStatus OK OK")
                 var offerToken = ""
                 val productDetails = productDetailsList.firstOrNull { productDetails ->
                     productDetails.subscriptionOfferDetails?.any {

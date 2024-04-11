@@ -8,27 +8,26 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.MobileAds
 import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.google_ads.AppOpenAdManager
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.RecipeNavGraph
-import com.zelianko.kitchencalculator.subscriptions.ChooseSubscription
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(
+) {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
+        val billingViewModel = ViewModelProvider(this)[BillingViewModel::class.java]
         //Инициализация рекламы гугл
         MobileAds.initialize(this) {}
         //
@@ -41,23 +40,23 @@ class MainActivity : ComponentActivity() {
                 color = MaterialTheme.colorScheme.background
             ) {
 
-                val chooseSubscriptionModel = remember {
-                    ChooseSubscription(this)
-                }
+//                val chooseSubscriptionModel = remember {
+//                    ChooseSubscription(this)
+//                }
 
-                val currentSubscriptionList by chooseSubscriptionModel.subscriptions.collectAsState()
+                val context = LocalContext.current
+                billingViewModel.initBillingClient(context)
+                billingViewModel.checkSubscription(context)
+                val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+                //val currentSubscriptionList by chooseSubscriptionModel.subscriptions.collectAsState()
 
-                if (!currentSubscriptionList.contains(MONTHLY)) {
+                if (isActiveSub.value == false) {
                     AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId)
                 }
-                LaunchedEffect(key1 = true) {
-                    chooseSubscriptionModel.billingSetup()
-                    chooseSubscriptionModel.hasSubscription()
-                }
+
                 RecipeNavGraph(
                     productViewModel = productViewModel,
-                    currentSubscriptionList = currentSubscriptionList,
-                    chooseSubscriptionModel = chooseSubscriptionModel
+                    billingViewModel = billingViewModel
                 )
             }
         }

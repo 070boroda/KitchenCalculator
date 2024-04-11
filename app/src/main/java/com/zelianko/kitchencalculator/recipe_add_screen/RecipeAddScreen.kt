@@ -51,6 +51,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -71,6 +72,7 @@ import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
@@ -78,7 +80,7 @@ import com.zelianko.kitchencalculator.util.UiEvent
 @Composable
 fun RecipeAddScreen(
     viewModel: RecipeAddViewModel = hiltViewModel(),
-    currentSubscriptionList: List<String>,
+    billingViewModel: BillingViewModel,
     onNavigate: (String) -> Unit
 ) {
     val listProducts = viewModel.listProduct
@@ -88,6 +90,8 @@ fun RecipeAddScreen(
     val context = LocalContext.current
     val name_recipt_is_empty = stringResource(id = R.string.name_recipt_is_empty)
     val product_is_empty = stringResource(id = R.string.product_is_empty)
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+
 
     SnackbarHost(hostState = snackState, Modifier)
     //Переход на другой экран
@@ -177,7 +181,7 @@ fun RecipeAddScreen(
 
                     //Если нет подписки и рецептов базе больше или равно пяти не даем создавать
                     //больше
-                    if (!currentSubscriptionList.contains(MONTHLY) && listProducts.size >= 5) {
+                    if (isActiveSub.value == false && listProducts.size >= 5) {
 
                     } else {
                         IconButton(
@@ -199,7 +203,7 @@ fun RecipeAddScreen(
                     }
                 }
                 Spacer(modifier = Modifier.width(20.dp))
-                if (!currentSubscriptionList.contains(MONTHLY)) {
+                if (isActiveSub.value == false) {
                     GoogleBannerAd(textId = StringConstants.BannerAddRecipeId)
                 }
                 RecipeNameTextInputField() { event ->

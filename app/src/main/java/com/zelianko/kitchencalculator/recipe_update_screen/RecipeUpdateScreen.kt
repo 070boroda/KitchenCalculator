@@ -46,6 +46,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -69,6 +70,7 @@ import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHL
 import com.zelianko.kitchencalculator.data.ProductEn
 import com.zelianko.kitchencalculator.data.Recipe
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 
@@ -76,7 +78,7 @@ import com.zelianko.kitchencalculator.util.UiEvent
 @Composable
 fun RecipeUpdateScreen(
     viewModel: RecipeUpdateViewModel = hiltViewModel(),
-    currentSubscriptionList: List<String>,
+    billingViewModel: BillingViewModel,
     onNavigate: (String) -> Unit
 ) {
     val screenState = viewModel.screenState.collectAsState(RecipeUpdateState.Initial)
@@ -95,7 +97,7 @@ fun RecipeUpdateScreen(
 
     when (val currentState = screenState.value) {
         is RecipeUpdateState.RecipeDto -> {
-            RecipeUpdateCurrentScreen(viewModel, currentSubscriptionList, currentState)
+            RecipeUpdateCurrentScreen(viewModel, billingViewModel, currentState)
         }
 
         RecipeUpdateState.Initial -> {
@@ -123,9 +125,11 @@ fun RecipeUpdateScreen(
 @Composable
 fun RecipeUpdateCurrentScreen(
     viewModel: RecipeUpdateViewModel,
-    currentSubscriptionList: List<String>,
+    billingViewModel: BillingViewModel,
     currentState: RecipeUpdateState.RecipeDto,
 ) {
+
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,26 +162,31 @@ fun RecipeUpdateCurrentScreen(
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                modifier = Modifier
-                    .padding(end = 10.dp)
-                    .background(
-                        colorResource(id = R.color.orange_primary),
-                        shape = CircleShape
-                    ),
-                onClick = {
-                    viewModel.onEvent(RecipeUpdateEvent.AddRowProduct)
 
-                }) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                    contentDescription = "plus"
-                )
+            if (isActiveSub.value == false && currentState.products.size >= 5) {
+
+            } else {
+                IconButton(
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .background(
+                            colorResource(id = R.color.orange_primary),
+                            shape = CircleShape
+                        ),
+                    onClick = {
+                        viewModel.onEvent(RecipeUpdateEvent.AddRowProduct)
+
+                    }) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                        contentDescription = "plus"
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.width(20.dp))
 
-        if (!currentSubscriptionList.contains(MONTHLY)) {
+        if (isActiveSub.value == false) {
             GoogleBannerAd(textId = StringConstants.BannerUpdateRecipeId)
         }
         currentState.recipe?.let {

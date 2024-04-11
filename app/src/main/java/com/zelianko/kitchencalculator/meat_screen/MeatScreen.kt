@@ -20,6 +20,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 
 
 /**
@@ -45,8 +47,9 @@ import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 //@Preview(showBackground = true)
 fun MeatScreen(
     paddingValues: PaddingValues,
-    currentSubscriptionList: List<String>
+    billingViewModel: BillingViewModel
 ) {
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +65,7 @@ fun MeatScreen(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (!currentSubscriptionList.contains(StringConstants.MONTHLY)) {
+            if (isActiveSub.value == false) {
                 GoogleBannerAd(textId = StringConstants.BannerSteakScreenId)
             }
             // Child components of the Column

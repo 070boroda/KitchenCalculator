@@ -21,6 +21,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 
 /**
  * Экран температура приготовления продуктов
@@ -42,8 +44,9 @@ import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 @Composable
 fun CokingTemperatureScreen(
     paddingValues: PaddingValues,
-    currentSubscriptionList: List<String>
+    billingViewModel: BillingViewModel
 ) {
+    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
 
     val dataCookingTempLists = listOf(
         DataCookingTemp(R.drawable.bull, stringResource(id = R.string.beef_veal_lamb), "     ", "  ", true),
@@ -81,7 +84,7 @@ fun CokingTemperatureScreen(
     ) {
         LazyColumn(Modifier.padding(8.dp)) {
             item {
-                if (!currentSubscriptionList.contains(StringConstants.MONTHLY)) {
+                if (isActiveSub.value == false) {
                     GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
                 }
                 Row(

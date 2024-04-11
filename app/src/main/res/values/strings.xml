@@ -226,6 +226,49 @@ This kind of roasting is perfect for people who don’t accept raw meat.</string
          in your Google Market account.</string>
     <string name="subscribe">Subscribe</string>
     <string name="month">/month</string>
+    <string name="sous_vide">Sous vide</string>
+    <string name="beef">Beef</string>
+    <string name="raw_20_30">Raw 20–30 mm</string>
+    <string name="raw_30_40">Raw 30-40 mm</string>
+    <string name="rare_20_30">Rare 20-30 mm</string>
+    <string name="rare_30_40">Rare 30-40 mm</string>
+    <string name="medium_rare_20_30">Medium Rare 20-30 mm</string>
+    <string name="medium_rare_30_40">Medium Rare 30-40мм</string>
+    <string name="ribs">Ribs</string>
+    <string name="pork_loin">Pork loin</string>
+    <string name="fillet_30_40">Fillet 30-40 mm</string>
+    <string name="fillet_40_50">Fillet 40-50 mm</string>
+    <string name="neck">Neck</string>
+    <string name="tenderloin_20_30">Tenderlion 20-30 mm</string>
+    <string name="tenderloin_30_40">Tenderlion 30-40 mm</string>
+    <string name="ham">Ham</string>
+    <string name="shoulder">Shoulder</string>
+    <string name="knuckle">Knuckle</string>
+    <string name="kebabs">Kebabs</string>
+    <string name="brisket">Brisket</string>
+    <string name="chicken_sous_vide">Chicken</string>
+    <string name="fillet">Fillet</string>
+    <string name="leg_sous_vide">Legs</string>
+    <string name="duck_fillet">Duck fillet</string>
+    <string name="duck_legs">Duck legs</string>
+    <string name="goose_liver">Goose (liver)</string>
+    <string name="goose_legs">Goose (legs)</string>
+    <string name="halibut">Halibut</string>
+    <string name="tuna">Tuna</string>
+    <string name="perch">Perch</string>
+    <string name="catfish">Catfish</string>
+    <string name="mackerel">Mackerel</string>
+    <string name="egg">Eggs</string>
+    <string name="poached_egg">Poached egg</string>
+    <string name="corn">Corn</string>
+    <string name="turnip">Turnip</string>
+    <string name="sparrowgrass">Sparrowgrass</string>
+    <string name="celery">Celery</string>
+    <string name="fruits">Fruits</string>
+    <string name="pear">Pear</string>
+    <string name="plum">Plum</string>
+    <string name="apple">Apple</string>
+    <string name="berry">Berry</string>
 
 
 </resources>

@@ -9,6 +9,7 @@ class StringConstants {
         const val BannerTimerScreenId = "ca-app-pub-9309082672837567/5706566673"
         const val BannerSteakScreenId = "ca-app-pub-9309082672837567/5124112744"
         const val BannerTimeCookingScreenId = "ca-app-pub-9309082672837567/8988804744"
+        const val BannerSousVideId = "ca-app-pub-9309082672837567/7684188284"
         const val StartAdAppScreenId = "ca-app-pub-9309082672837567/1650204929"
 
 

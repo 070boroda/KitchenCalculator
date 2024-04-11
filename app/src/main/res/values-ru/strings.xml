@@ -145,7 +145,7 @@
     <string name="mussels">Мидии</string>
     <string name="scallop">Морской гребешок</string>
     <string name="octopus">Осьминоги</string>
-    <string name="lobster">Осьминоги</string>
+    <string name="lobster">Омар</string>
     <string name="crayfish">Раки</string>
     <string name="pieces_of_fish">Рыба кусками</string>
     <string name="big_pieces_of_fish">Рыба крупные куски</string>
@@ -230,6 +230,49 @@
         в личном кабинете Google Market.\n</string>
     <string name="subscribe">Подписаться</string>
     <string name="month">/мес.</string>
+    <string name="sous_vide">Су-Вид</string>
+    <string name="beef">Говядина</string>
+    <string name="raw_20_30">Raw Стейк 20–30 мм</string>
+    <string name="raw_30_40">Raw Стейк 30–40 мм</string>
+    <string name="rare_20_30">Rare Стейк 20–30 мм</string>
+    <string name="rare_30_40">Rare Стейк 30–40 мм</string>
+    <string name="medium_rare_20_30">Medium Rare 20–30 mm</string>
+    <string name="medium_rare_30_40">Medium Rare 30–40мм</string>
+    <string name="ribs">Рёбрышки</string>
+    <string name="pork_loin">Корейка</string>
+    <string name="fillet_30_40">Филе 30–40 мм</string>
+    <string name="fillet_40_50">Филе 40–50 мм</string>
+    <string name="neck">Шея</string>
+    <string name="tenderloin_20_30">Вырезка 20–30 мм</string>
+    <string name="tenderloin_30_40">Вырезка 30–40 мм</string>
+    <string name="ham">Окорок</string>
+    <string name="shoulder">Лопатка</string>
+    <string name="knuckle">Рулька</string>
+    <string name="kebabs">Шашлык</string>
+    <string name="brisket">Грудинка</string>
+    <string name="chicken_sous_vide">Курица</string>
+    <string name="fillet">Филе</string>
+    <string name="leg_sous_vide">Ножки</string>
+    <string name="duck_fillet">Утка (филе)</string>
+    <string name="duck_legs">Утка (ножки)</string>
+    <string name="goose_liver">Гусиная печень</string>
+    <string name="goose_legs">Гусь (ножки)</string>
+    <string name="halibut">Палтус</string>
+    <string name="tuna">Тунец</string>
+    <string name="perch">Окунь</string>
+    <string name="catfish">Зубатка</string>
+    <string name="mackerel">Скумбрия</string>
+    <string name="egg">Яйца</string>
+    <string name="poached_egg">Пашот</string>
+    <string name="corn">Кукуруза</string>
+    <string name="turnip">Репа</string>
+    <string name="sparrowgrass">Спаржа</string>
+    <string name="celery">Сельдерей</string>
+    <string name="fruits">Фрукты</string>
+    <string name="pear">Груша</string>
+    <string name="plum">Сливы</string>
+    <string name="apple">Яблоки</string>
+    <string name="berry">Ягоды</string>
 
 
 </resources>

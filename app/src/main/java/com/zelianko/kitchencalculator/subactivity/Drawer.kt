@@ -59,6 +59,8 @@ import com.zelianko.kitchencalculator.meat_screen.MeatScreen
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.NavGraf
 import com.zelianko.kitchencalculator.recipe_list_screen.RecipeListScreen
+import com.zelianko.kitchencalculator.sous_vide.SousVideScreen
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.subscriptions.ChooseSubscription
 import com.zelianko.kitchencalculator.subscriptions.SubscribesScreen
 import com.zelianko.kitchencalculator.timer_screen.TimerScreen
@@ -72,8 +74,7 @@ import kotlinx.coroutines.launch
 fun Drawer(
     productViewModel: ProductViewModel,
     mainNavHostController: NavHostController,
-    currentSubscriptionList: List<String>,
-    chooseSubscriptionModel: ChooseSubscription
+    billingViewModel: BillingViewModel
 ) {
     val items = listOf(
         NavigationItem(
@@ -105,6 +106,12 @@ fun Drawer(
             selectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
             unselectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
             route = Routes.COCKING_TEMPERATURE_SCREEN
+        ),
+        NavigationItem(
+            title = stringResource(R.string.sous_vide),
+            selectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
+            route = Routes.SOUSE_VIDE_SCREEN
         ),
         NavigationItem(
             title = stringResource(R.string.premium),
@@ -255,33 +262,38 @@ fun Drawer(
                     },
                     secondScreenContent = {
                         RecipeListScreen(
-                            currentSubscriptionList = currentSubscriptionList,
+                            billingViewModel = billingViewModel,
                         ) {route ->
                             mainNavHostController.navigate(route)
                         }
                     },
                     timerScreen = {
                         TimerScreen(paddingValues = paddingValues,
-                            currentSubscriptionList = currentSubscriptionList
+                            billingViewModel = billingViewModel
                         )
                     },
                     meatScreen = {
                         MeatScreen(
                            paddingValues = paddingValues,
-                            currentSubscriptionList = currentSubscriptionList
+                            billingViewModel = billingViewModel
                         )
                     },
                     cokingTemperatureScreen = {
                         CokingTemperatureScreen(
                             paddingValues = paddingValues,
-                            currentSubscriptionList = currentSubscriptionList
+                            billingViewModel = billingViewModel
+                        )
+                    },
+                    sousVideScreen ={
+                        SousVideScreen(
+                            paddingValues = paddingValues,
+                            billingViewModel = billingViewModel
                         )
                     },
                     subscribesScreen = {
                         SubscribesScreen (
                             paddingValues = paddingValues,
-                            currentSubscriptionList = currentSubscriptionList,
-                            chooseSubscriptionModel = chooseSubscriptionModel
+                            billingViewModel = billingViewModel
                         )
                     }
 
