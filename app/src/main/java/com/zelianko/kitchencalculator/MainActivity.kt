@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity(
                 //val currentSubscriptionList by chooseSubscriptionModel.subscriptions.collectAsState()
 
                 if (isActiveSub.value == false) {
-                    AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId)
+                    AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId, billingViewModel)
                 }
 
                 RecipeNavGraph(

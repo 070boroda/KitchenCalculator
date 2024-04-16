@@ -13,6 +13,6 @@ class StringConstants {
         const val StartAdAppScreenId = "ca-app-pub-9309082672837567/1650204929"
 
 
-        const val MONTHLY ="monthly_kitch"
+        const val MONTHLY ="every_month_kitch"
     }
 }

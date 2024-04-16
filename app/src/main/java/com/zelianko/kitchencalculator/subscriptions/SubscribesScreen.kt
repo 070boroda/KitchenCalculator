@@ -101,7 +101,7 @@ fun SubscribesScreen(
 
                     }) {
                     Text(
-                        stringResource(id = R.string.subscribe) + textPrice.value + stringResource(
+                        stringResource(id = R.string.subscribe)+ " " + textPrice.value + stringResource(
                             id = R.string.month
                         ),
                         fontSize = 22.sp

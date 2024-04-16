@@ -12,6 +12,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
+import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import java.util.*
 
 
@@ -23,6 +24,7 @@ class AppOpenAdManager : Application.ActivityLifecycleCallbacks {
 
     private var currentActivity: Activity? = null
     private val adUnit: String
+    private val billingViewModel: BillingViewModel
 
     private val lifecycleEventObserver = LifecycleEventObserver { source, event ->
         if (event == Lifecycle.Event.ON_RESUME) {
@@ -33,13 +35,13 @@ class AppOpenAdManager : Application.ActivityLifecycleCallbacks {
         }
     }
 
-    constructor(application: Application, adUnit: String) {
+    constructor(application: Application, adUnit: String, billingViewModel: BillingViewModel) {
         this.adUnit = adUnit
+        this.billingViewModel = billingViewModel
         Log.e("G Start App Ad", "Ad Open ID : $adUnit" )
         application.registerActivityLifecycleCallbacks(this)
         ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleEventObserver)
     }
-
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
@@ -182,6 +184,9 @@ class AppOpenAdManager : Application.ActivityLifecycleCallbacks {
             }
         )
         isShowingAd = true
-        appOpenAd!!.show(activity)
+        //Если нет подписки показываем рекламу
+        if (billingViewModel.isActiveSub.value == false) {
+            appOpenAd!!.show(activity)
+        }
     }
 }

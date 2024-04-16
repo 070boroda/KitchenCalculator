@@ -352,6 +352,8 @@ fun IngredientsRow(
         mutableStateOf(productEn.measureWeight)
     }
 
+    val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
+
     var showSheet by remember { mutableStateOf(false) }
 
     if (showSheet) {
@@ -424,13 +426,15 @@ fun IngredientsRow(
 //                )
 //            },
             onValueChange = { newText ->
-                ingredientWeight = newText
-                productEn.id?.let {
-                    RecipeUpdateEvent.IngredientWeight(
-                        ingredientWeight,
-                        it
-                    )
-                }?.let { onEvent(it) }
+                if (newText.isEmpty() || newText.matches(pattern)) {
+                    ingredientWeight = newText
+                    productEn.id?.let {
+                        RecipeUpdateEvent.IngredientWeight(
+                            ingredientWeight,
+                            it
+                        )
+                    }?.let { onEvent(it) }
+                }
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )

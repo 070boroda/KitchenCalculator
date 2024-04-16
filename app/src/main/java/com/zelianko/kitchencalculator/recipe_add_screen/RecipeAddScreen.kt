@@ -360,6 +360,8 @@ fun IngredientsRow(
 
     var showSheet by remember { mutableStateOf(false) }
 
+    val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
+
     if (showSheet) {
         BottomSheet(
             onDismiss = { showSheet = false },
@@ -427,8 +429,10 @@ fun IngredientsRow(
 //                )
 //            },
             onValueChange = { newText ->
-                ingredientWeight = newText
-                onEvent(RecipeAddEvent.IngredientWeight(ingredientWeight, index))
+                if (newText.isEmpty() || newText.matches(pattern)) {
+                    ingredientWeight = newText
+                    onEvent(RecipeAddEvent.IngredientWeight(ingredientWeight, index))
+                }
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
