@@ -2,6 +2,7 @@ package com.zelianko.kitchencalculator.recipe_update_screen
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -86,11 +87,17 @@ fun RecipeUpdateScreen(
 ) {
     val screenState = viewModel.screenState.collectAsState(RecipeUpdateState.Initial)
 
+    val productIsEmpty = stringResource(id = R.string.product_is_empty)
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { uiEven ->
             when (uiEven) {
                 is UiEvent.Navigate -> {
                     onNavigate(uiEven.route)
+                }
+                is UiEvent.ShowSnackBarIfProductRowIsEmpty -> {
+                    Toast.makeText(context, productIsEmpty, Toast.LENGTH_SHORT).show()
                 }
 
                 else -> {}

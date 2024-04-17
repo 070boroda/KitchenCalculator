@@ -89,8 +89,8 @@ fun RecipeAddScreen(
     val snackState = remember { SnackbarHostState() }
 
     val context = LocalContext.current
-    val name_recipt_is_empty = stringResource(id = R.string.name_recipt_is_empty)
-    val product_is_empty = stringResource(id = R.string.product_is_empty)
+    val nameReciptIsEmpty = stringResource(id = R.string.name_recipt_is_empty)
+    val productIsEmpty = stringResource(id = R.string.product_is_empty)
     val isActiveSub = billingViewModel.isActiveSub.observeAsState()
 
 
@@ -104,11 +104,14 @@ fun RecipeAddScreen(
                 }
 
                 is UiEvent.ShowSnackBarIfNameRecipeIsEmpty -> {
-                    Toast.makeText(context, name_recipt_is_empty, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, nameReciptIsEmpty, Toast.LENGTH_SHORT).show()
                 }
 
                 is UiEvent.ShowSnackBarIfNameProductIsEmpty -> {
-                    Toast.makeText(context, product_is_empty, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, productIsEmpty, Toast.LENGTH_SHORT).show()
+                }
+                is UiEvent.ShowSnackBarIfProductRowIsEmpty -> {
+                    Toast.makeText(context, productIsEmpty, Toast.LENGTH_SHORT).show()
                 }
 
                 else -> {}
@@ -421,13 +424,6 @@ fun IngredientsRow(
             ),
             shape = RoundedCornerShape(12.dp),
             maxLines = 1,
-//            label = {
-//                Text(
-//                    text = "   ",
-//                    style = MaterialTheme.typography.titleSmall,
-//                    color = colorResource(id = R.color.grey)
-//                )
-//            },
             onValueChange = { newText ->
                 if (newText.isEmpty() || newText.matches(pattern)) {
                     ingredientWeight = newText

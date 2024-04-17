@@ -50,6 +50,12 @@ class RecipeAddViewModel @Inject constructor(
             }
 
             is RecipeAddEvent.AddRowProduct -> {
+                //сли последний элементв списке пустой, происм его заполнить
+                val lastElement = _listProduct.get(_listProduct.size - 1)
+                if (lastElement.key.isBlank() || lastElement.value.isBlank() || lastElement.plWeight.isBlank()) {
+                    sendUiEvent(UiEvent.ShowSnackBarIfProductRowIsEmpty)
+                    return
+                }
                 _listProduct.add(ThreeField("", "", ""))
                 Log.d("MyLog", "Add product")
             }

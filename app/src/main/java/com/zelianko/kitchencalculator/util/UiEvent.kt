@@ -5,4 +5,5 @@ sealed class UiEvent {
     data class Navigate(val route: String): UiEvent()
     object ShowSnackBarIfNameRecipeIsEmpty: UiEvent()
     object ShowSnackBarIfNameProductIsEmpty: UiEvent()
+    object ShowSnackBarIfProductRowIsEmpty: UiEvent()
 }
