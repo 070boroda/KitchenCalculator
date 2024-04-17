@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -41,12 +43,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.data.Recipe
 import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
@@ -93,46 +95,53 @@ fun RecipeListScreen(
             GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
         }
 
-        //Передаем евент, что будем делать
-        CustomTextInputField(
-            state = textSearch
-        )
-//TODO нужно попробовать передать ивент во вьюмодел и от туда обрезать список
-//        if (!currentSubscriptionList.contains(MONTHLY)) {
-//            recipeList.value.subList(0, 2);
-//        }
-
-        //Если нет подписки и список рецептов больше трех выводим только три рецепта
-        if (isActiveSub.value == false && recipeList.value.size >= 5) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                val tempList = recipeList.value.subList(0, 4);
-                items(tempList.filter {
-                    it.name.contains(textSearch.value.text, ignoreCase = true)
-                }
-                ) { recipe ->
-                    Spacer(modifier = Modifier.height(12.dp))
-                    RowRecipe(recipe) { event ->
-                        viewModel.onEvent(event)
+        if (recipeList.value.isEmpty()) {
+            Spacer(modifier = Modifier.height(200.dp))
+            Text(
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+                text = stringResource(
+                    id = R.string.add_recipe,
+                ),
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.Black,
+            )
+        } else {
+            //Передаем евент, что будем делать
+            CustomTextInputField(
+                state = textSearch
+            )
+            //Если нет подписки и список рецептов больше трех выводим только три рецепта
+            if (isActiveSub.value == false && recipeList.value.size >= 10) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    val tempList = recipeList.value.subList(0, 9);
+                    items(tempList.filter {
+                        it.name.contains(textSearch.value.text, ignoreCase = true)
+                    }
+                    ) { recipe ->
+                        Spacer(modifier = Modifier.height(12.dp))
+                        RowRecipe(recipe) { event ->
+                            viewModel.onEvent(event)
+                        }
                     }
                 }
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                items(recipeList.value.filter {
-                    it.name.contains(textSearch.value.text, ignoreCase = true)
-                }
-                ) { recipe ->
-                    Spacer(modifier = Modifier.height(12.dp))
-                    RowRecipe(recipe) { event ->
-                        viewModel.onEvent(event)
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    items(recipeList.value.filter {
+                        it.name.contains(textSearch.value.text, ignoreCase = true)
+                    }
+                    ) { recipe ->
+                        Spacer(modifier = Modifier.height(12.dp))
+                        RowRecipe(recipe) { event ->
+                            viewModel.onEvent(event)
+                        }
                     }
                 }
             }
@@ -213,7 +222,8 @@ fun RowRecipe(
         Spacer(
             Modifier
                 .weight(1f)
-                .fillMaxHeight())
+                .fillMaxHeight()
+        )
         IconButton(onClick = {
             Routes.RECIPE_UPDATE_SCREEN + "/${recipe.id}"
             onEvent(RecipeListEvent.OnItemClick(Routes.RECIPE_UPDATE_SCREEN + "/${recipe.id}"))

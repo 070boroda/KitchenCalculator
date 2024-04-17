@@ -273,6 +273,7 @@
     <string name="plum">Сливы</string>
     <string name="apple">Яблоки</string>
     <string name="berry">Ягоды</string>
+    <string name="add_recipe">Добавте рецепт</string>
 
 
 </resources>
