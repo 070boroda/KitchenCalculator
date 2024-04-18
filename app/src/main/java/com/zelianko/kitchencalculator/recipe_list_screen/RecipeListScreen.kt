@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -43,7 +41,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -107,6 +104,7 @@ fun RecipeListScreen(
             )
         } else {
             //Передаем евент, что будем делать
+            Spacer(modifier = Modifier.height(8.dp))
             CustomTextInputField(
                 state = textSearch
             )
@@ -134,10 +132,15 @@ fun RecipeListScreen(
                     contentPadding = PaddingValues(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    items(recipeList.value.filter {
+                    val allItems = recipeList.value.filter {
                         it.name.contains(textSearch.value.text, ignoreCase = true)
                     }
-                    ) { recipe ->
+                    item {
+                        if (allItems.isEmpty()) {
+                            Text(stringResource(R.string.no_recipes_available_upon_request))
+                        }
+                    }
+                    items(allItems) { recipe ->
                         Spacer(modifier = Modifier.height(12.dp))
                         RowRecipe(recipe) { event ->
                             viewModel.onEvent(event)

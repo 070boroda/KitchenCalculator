@@ -274,6 +274,7 @@
     <string name="apple">Яблоки</string>
     <string name="berry">Ягоды</string>
     <string name="add_recipe">Добавте свой первый рецепт</string>
+    <string name="no_recipes_available_upon_request">По запросу нет рецептов</string>
 
 
 </resources>

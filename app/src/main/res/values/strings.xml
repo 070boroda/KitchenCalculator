@@ -15,7 +15,7 @@
     <string name="your_result">Your Result</string>
     <string name="faceted_glass_200">200 ml</string>
     <string name="tea_glass_250">250 ml</string>
-    <string name="search_recipes">Search recipes</string>
+    <string name="search_recipes">Search own recipes</string>
     <string name="create_recipe">"Create recipe"</string>
     <string name="edit_recipe">"Edit recipe"</string>
     <string name="recipe_name">"Recipe name"</string>
@@ -270,6 +270,7 @@ This kind of roasting is perfect for people who don’t accept raw meat.</string
     <string name="apple">Apple</string>
     <string name="berry">Berry</string>
     <string name="add_recipe">Add your first recipe</string>
+    <string name="no_recipes_available_upon_request">No recipes available upon request</string>
 
 
 </resources>
