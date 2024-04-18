@@ -178,7 +178,15 @@ class RecipeAboutViewModel @Inject constructor(
             is DialogEvent.OnConfirm -> {
                 //Пересчет из круглой формы в круглую
                 if (fromFormCircle.value && toFormCircle.value) {
-                    if (fromDiametr.value.toInt() == 0 || toDiametr.value.toInt() == 0) return
+                    if (fromDiametr.value.isBlank() || toDiametr.value.isBlank()) {
+                        sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                        return
+                    }
+
+                    if (fromDiametr.value.toInt() == 0 || toDiametr.value.toInt() == 0) {
+                        sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                        return
+                    }
 
                     val fromTempRadius = fromDiametr.value.toDouble() * fromDiametr.value.toDouble()
                     val toTempRadius = toDiametr.value.toDouble() * toDiametr.value.toDouble()
@@ -189,8 +197,15 @@ class RecipeAboutViewModel @Inject constructor(
                     }
 
                 } else if (toFormRectangle.value && fromFormRectangle.value) {
+                    if (fromWidth.value.isBlank() || fromHeight.value.isBlank()  || toWidth.value.isBlank()  || toHeight.value.isBlank()) {
+                        sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                        return
+                    }
                     //Пересчет из прямоугольной формы в прямоугольную
-                    if (fromWidth.value.toInt() == 0 || fromHeight.value.toInt() == 0 || toWidth.value.toInt() == 0 || toHeight.value.toInt() == 0) return
+                    if (fromWidth.value.toInt() == 0 || fromHeight.value.toInt() == 0 || toWidth.value.toInt() == 0 || toHeight.value.toInt() == 0) {
+                        sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                        return
+                    }
 
                     val fromTempRect = fromWidth.value.toDouble() * fromHeight.value.toDouble()
                     val toTempRect = toWidth.value.toDouble() * toHeight.value.toDouble()
@@ -203,7 +218,15 @@ class RecipeAboutViewModel @Inject constructor(
                 } else {
                     //Пересчет из прямоугольной формы в круглую
                     if (fromFormCircle.value && toFormRectangle.value) {
-                        if (fromDiametr.value.toInt() == 0 || toWidth.value.toInt() == 0 || toHeight.value.toInt() == 0) return
+                        if (fromDiametr.value.isBlank() || toWidth.value.isBlank() || toHeight.value.isBlank()) {
+                            sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                            return
+                        }
+
+                        if (fromDiametr.value.toInt() == 0 || toWidth.value.toInt() == 0 || toHeight.value.toInt() == 0) {
+                            sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                            return
+                        }
 
                         val fromTempCircle =
                             3.14 * ((fromDiametr.value.toDouble() / 2) * (fromDiametr.value.toDouble() / 2))
@@ -219,7 +242,14 @@ class RecipeAboutViewModel @Inject constructor(
 
 
                     } else if (fromFormRectangle.value && toFormCircle.value) {
-                        if (toDiametr.value.toInt() == 0 || fromWidth.value.toInt() == 0 || fromHeight.value.toInt() == 0) return
+                        if (toDiametr.value.isBlank() || fromWidth.value.isBlank() || fromHeight.value.isBlank()) {
+                            sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                            return
+                        }
+                        if (toDiametr.value.toInt() == 0 || fromWidth.value.toInt() == 0 || fromHeight.value.toInt() == 0) {
+                            sendUiEvent(UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty)
+                            return
+                        }
                         val fromTempCircle =
                             3.14 * ((toDiametr.value.toDouble() / 2) * (toDiametr.value.toDouble() / 2))
                         val toTempRectl = fromWidth.value.toDouble() * fromHeight.value.toDouble()
@@ -238,6 +268,8 @@ class RecipeAboutViewModel @Inject constructor(
                     this::countByCoff
                 )
             }
+
+            else -> {}
         }
     }
 

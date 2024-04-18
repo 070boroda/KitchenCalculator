@@ -16,8 +16,8 @@ android {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 24
         targetSdk = 34
-        versionCode = 12
-        versionName = "1.0.0.12"
+        versionCode = 15
+        versionName = "1.0.0.15"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {

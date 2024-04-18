@@ -56,7 +56,7 @@ fun MainDialog(
     val toWidth = remember { dialogController.toWidth }
     val toHeight = remember { dialogController.toHeight }
     val toDiametr = remember { dialogController.toDiametr }
-
+    val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
 
     if (dialogController.openDialog.value) {
         AlertDialog(
@@ -390,6 +390,8 @@ fun RectangleInput(
     onEvent: (DialogEvent) -> Unit,
 
     ) {
+
+    val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
     OutlinedTextField(
         modifier = Modifier
             .height(height)
@@ -406,29 +408,32 @@ fun RectangleInput(
         maxLines = 1,
         textStyle = TextStyle.Default.copy(fontSize = 16.sp),
         onValueChange = { newText ->
-            when (dialogSizeType) {
-                is DialogSizeTypes.FromHeight -> {
-                    onEvent(DialogEvent.HeightSetFrom(newText))
-                }
+            if (newText.isEmpty() || newText.matches(pattern)) {
 
-                is DialogSizeTypes.FromWidth -> {
-                    onEvent(DialogEvent.WidthSetFrom(newText))
-                }
+                when (dialogSizeType) {
+                    is DialogSizeTypes.FromHeight -> {
+                        onEvent(DialogEvent.HeightSetFrom(newText))
+                    }
 
-                is DialogSizeTypes.FromRadius -> {
-                    onEvent(DialogEvent.RadiusSetFrom(newText))
-                }
+                    is DialogSizeTypes.FromWidth -> {
+                        onEvent(DialogEvent.WidthSetFrom(newText))
+                    }
 
-                is DialogSizeTypes.ToHeight -> {
-                    onEvent(DialogEvent.HeightSetTo(newText))
-                }
+                    is DialogSizeTypes.FromRadius -> {
+                        onEvent(DialogEvent.RadiusSetFrom(newText))
+                    }
 
-                is DialogSizeTypes.ToWidth -> {
-                    onEvent(DialogEvent.WidthSetTo(newText))
-                }
+                    is DialogSizeTypes.ToHeight -> {
+                        onEvent(DialogEvent.HeightSetTo(newText))
+                    }
 
-                is DialogSizeTypes.ToRadius -> {
-                    onEvent(DialogEvent.RadiusSetTo(newText))
+                    is DialogSizeTypes.ToWidth -> {
+                        onEvent(DialogEvent.WidthSetTo(newText))
+                    }
+
+                    is DialogSizeTypes.ToRadius -> {
+                        onEvent(DialogEvent.RadiusSetTo(newText))
+                    }
                 }
             }
 
@@ -447,6 +452,8 @@ fun CircleInput(
     onEvent: (DialogEvent) -> Unit,
 
     ) {
+
+    val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
     OutlinedTextField(
         modifier = Modifier
             .height(height)
@@ -463,29 +470,31 @@ fun CircleInput(
         maxLines = 1,
         textStyle = TextStyle.Default.copy(fontSize = 16.sp),
         onValueChange = { newText ->
-            when (dialogSizeType) {
-                is DialogSizeTypes.FromHeight -> {
-                    onEvent(DialogEvent.HeightSetFrom(newText))
-                }
+            if (newText.isEmpty() || newText.matches(pattern)) {
+                when (dialogSizeType) {
+                    is DialogSizeTypes.FromHeight -> {
+                        onEvent(DialogEvent.HeightSetFrom(newText))
+                    }
 
-                is DialogSizeTypes.FromWidth -> {
-                    onEvent(DialogEvent.WidthSetFrom(newText))
-                }
+                    is DialogSizeTypes.FromWidth -> {
+                        onEvent(DialogEvent.WidthSetFrom(newText))
+                    }
 
-                is DialogSizeTypes.FromRadius -> {
-                    onEvent(DialogEvent.RadiusSetFrom(newText))
-                }
+                    is DialogSizeTypes.FromRadius -> {
+                        onEvent(DialogEvent.RadiusSetFrom(newText))
+                    }
 
-                is DialogSizeTypes.ToHeight -> {
-                    onEvent(DialogEvent.HeightSetTo(newText))
-                }
+                    is DialogSizeTypes.ToHeight -> {
+                        onEvent(DialogEvent.HeightSetTo(newText))
+                    }
 
-                is DialogSizeTypes.ToWidth -> {
-                    onEvent(DialogEvent.WidthSetTo(newText))
-                }
+                    is DialogSizeTypes.ToWidth -> {
+                        onEvent(DialogEvent.WidthSetTo(newText))
+                    }
 
-                is DialogSizeTypes.ToRadius -> {
-                    onEvent(DialogEvent.RadiusSetTo(newText))
+                    is DialogSizeTypes.ToRadius -> {
+                        onEvent(DialogEvent.RadiusSetTo(newText))
+                    }
                 }
             }
 

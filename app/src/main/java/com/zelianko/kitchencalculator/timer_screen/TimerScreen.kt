@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,6 +42,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -179,18 +181,42 @@ fun TimerScreen(
 
                 Spacer(modifier = Modifier.height(50.dp))
 
-                Box(
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    key(cookingTimeTimer.value) {
-                        Timer(
-                            totalTime = cookingTimeTimer.value,
-                            handleColor = colorResource(id = R.color.orange_primary),
-                            inactiveBarColor = Color.DarkGray,
-                            activeBarColor = colorResource(id = R.color.orange_primary),
-                            modifier = Modifier.size(250.dp),
-                            ringtone = ringtone,
-                            context = context
+                if (cookingTimeTimer.value != 0L) {
+                    Box(
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        key(cookingTimeTimer.value) {
+                            Timer(
+                                totalTime = cookingTimeTimer.value,
+                                handleColor = colorResource(id = R.color.orange_primary),
+                                inactiveBarColor = Color.DarkGray,
+                                activeBarColor = colorResource(id = R.color.orange_primary),
+                                modifier = Modifier.size(250.dp),
+                                ringtone = ringtone,
+                                context = context
+                            )
+                        }
+                    }
+                } else{
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(horizontal = 30.dp)
+                            .clip(shape = RoundedCornerShape(12.dp)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = colorResource(id = R.color.header_product_result),
+                            contentColor = Color.Black
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.not_find_time_for_cooking),
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -354,8 +380,6 @@ fun ResultCardProduct(
     cookingTime: Long,
     translateMap: HashMap<Int, Int>,
 ) {
-    val hour = 3600L * 1000L
-    val minut = 60L * 1000L
 
     Card(
         modifier = Modifier
@@ -387,15 +411,6 @@ fun ResultCardProduct(
                 )
             )
             Text(
-                //Этот блок текста был со временем, пока оставил только название продукта
-//                text = String.format(
-//                    "%s %s", nameProduct, String.format(
-//                        "%02d:%02d:%02d",
-//                        (cookingTime / hour),
-//                        (cookingTime % hour) / minut,
-//                        (cookingTime % minut) / 1000L
-//                    )
-//                ),
                 text = String.format(
                     "%s", nameProduct
                 ),

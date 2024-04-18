@@ -6,4 +6,5 @@ sealed class UiEvent {
     object ShowSnackBarIfNameRecipeIsEmpty: UiEvent()
     object ShowSnackBarIfNameProductIsEmpty: UiEvent()
     object ShowSnackBarIfProductRowIsEmpty: UiEvent()
+    object ShowSnackBarIfDiametrOrRowIsEmpty: UiEvent()
 }
