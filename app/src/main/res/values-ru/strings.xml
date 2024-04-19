@@ -277,6 +277,7 @@
     <string name="no_recipes_available_upon_request">По запросу нет рецептов</string>
     <string name="not_find_time_for_cooking">Для данного типа приготовления, время \n не найдено</string>
     <string name="аill_radius_width_or_height">Не заполнены обязательные поля</string>
+    <string name="please_tap_to_product">Пожалуйста, нажмите, на продукт</string>
 
 
 </resources>

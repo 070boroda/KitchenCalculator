@@ -165,6 +165,7 @@ fun TimerScreen(
             }
             Spacer(modifier = Modifier.height(5.dp))
 
+            //Если есть продукт и есть или нет время выводим этот блок
             if (cookingProduct.value.id != null) {
                 ResultCardProduct(
                     cookingProduct.value,
@@ -220,6 +221,29 @@ fun TimerScreen(
                         )
                     }
                 }
+            } else {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(horizontal = 30.dp)
+                        .clip(shape = RoundedCornerShape(12.dp)),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorResource(id = R.color.tea_spoon_card),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.please_tap_to_product),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
             }
         }
     }
