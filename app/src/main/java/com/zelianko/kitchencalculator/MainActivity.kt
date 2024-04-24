@@ -13,6 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.MobileAds
+import com.mbridge.msdk.MBridgeConstans
+import com.mbridge.msdk.out.MBridgeSDKFactory
+import com.vungle.ads.VunglePrivacySettings
 import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.google_ads.AppOpenAdManager
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
@@ -30,6 +33,12 @@ class MainActivity : ComponentActivity(
         val billingViewModel = ViewModelProvider(this)[BillingViewModel::class.java]
         //Инициализация рекламы гугл
         MobileAds.initialize(this) {}
+        VunglePrivacySettings.setGDPRStatus(true, "1.0.0")
+        VunglePrivacySettings.setCCPAStatus(true)
+        val sdk = MBridgeSDKFactory.getMBridgeSDK()
+        sdk.setConsentStatus(this, MBridgeConstans.IS_SWITCH_ON)
+        val mBridgeSDK = MBridgeSDKFactory.getMBridgeSDK()
+        mBridgeSDK.setDoNotTrackStatus(false)
         //
 
         setContent {

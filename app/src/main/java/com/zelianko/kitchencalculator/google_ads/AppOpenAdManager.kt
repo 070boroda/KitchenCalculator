@@ -30,6 +30,8 @@ class AppOpenAdManager : Application.ActivityLifecycleCallbacks {
         if (event == Lifecycle.Event.ON_RESUME) {
             Log.e("G Start App Ads", "ON_RESUME: showOpen Ad")
             currentActivity?.let { showAdIfAvailable(it) }
+        } else if (event == Lifecycle.Event.ON_START){
+            currentActivity?.let { showAdIfAvailable(it) }
         } else if (event == Lifecycle.Event.ON_PAUSE) {
             Log.e("G Start App Ads", "paused")
         }

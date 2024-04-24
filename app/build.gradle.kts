@@ -16,8 +16,8 @@ android {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 24
         targetSdk = 34
-        versionCode = 17
-        versionName = "1.0.0.17"
+        versionCode = 18
+        versionName = "1.0.0.18"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
@@ -131,4 +131,6 @@ dependencies {
 
 //Meta
     implementation("com.google.ads.mediation:facebook:6.17.0.0")
+    implementation("com.google.ads.mediation:mintegral:16.7.11.0")
+    implementation("com.google.ads.mediation:vungle:7.3.1.0")
 }
