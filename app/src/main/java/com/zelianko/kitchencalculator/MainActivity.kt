@@ -31,15 +31,20 @@ class MainActivity : ComponentActivity(
         super.onCreate(savedInstanceState)
         val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
         val billingViewModel = ViewModelProvider(this)[BillingViewModel::class.java]
-        //Инициализация рекламы гугл
-        MobileAds.initialize(this) {}
+
         VunglePrivacySettings.setGDPRStatus(true, "1.0.0")
         VunglePrivacySettings.setCCPAStatus(true)
+
+
         val sdk = MBridgeSDKFactory.getMBridgeSDK()
         sdk.setConsentStatus(this, MBridgeConstans.IS_SWITCH_ON)
+        sdk.setCoppaStatus(this,true);
+
         val mBridgeSDK = MBridgeSDKFactory.getMBridgeSDK()
         mBridgeSDK.setDoNotTrackStatus(false)
-        //
+
+        //Инициализация рекламы гугл
+        MobileAds.initialize(this) {}
 
         setContent {
             // KitchenCalculatorTheme {
