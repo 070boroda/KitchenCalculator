@@ -173,9 +173,9 @@ fun RecipeUpdateCurrentScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
 
-            if (isActiveSub.value == false && currentState.products.size >= 5) {
-
-            } else {
+//            if (isActiveSub.value == false && currentState.products.size >= 5) {
+//
+//            } else {
                 IconButton(
                     modifier = Modifier
                         .padding(end = 10.dp)
@@ -192,7 +192,7 @@ fun RecipeUpdateCurrentScreen(
                         contentDescription = "plus"
                     )
                 }
-            }
+//            }
         }
         Spacer(modifier = Modifier.width(20.dp))
 

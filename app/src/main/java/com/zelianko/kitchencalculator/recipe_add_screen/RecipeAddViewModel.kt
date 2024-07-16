@@ -116,6 +116,9 @@ class RecipeAddViewModel @Inject constructor(
                     Log.d("MyLog", idRecipe.toString())
                     listProduct
                         .forEach { ingredient ->
+                            if (ingredient.value.isBlank()) {
+                                ingredient.value = "0.00"
+                            }
                             productRepository.insertProductEn(
                                 ProductEn(
                                     null,

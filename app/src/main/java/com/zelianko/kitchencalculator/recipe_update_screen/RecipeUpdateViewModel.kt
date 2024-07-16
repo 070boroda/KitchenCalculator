@@ -73,13 +73,12 @@ class RecipeUpdateViewModel @Inject constructor(
             }
 
             is RecipeUpdateEvent.AddRowProduct -> {
-                if (!productList.isNullOrEmpty()) {
-                    val lastProduct = productList!!.get(productList!!.size - 1)
-                    if (lastProduct.name.isEmpty() || lastProduct.mass == null) {
-                        sendUiEvent(UiEvent.ShowSnackBarIfProductRowIsEmpty)
-                        return
-                    }
-                }
+//                    val lastProduct = productList!!.get(productList!!.size - 1)
+//                    if (lastProduct.name.isEmpty() || lastProduct.measureWeight == null) {
+//                        sendUiEvent(UiEvent.ShowSnackBarIfProductRowIsEmpty)
+//                        return
+//                    }
+
                 viewModelScope.launch(Dispatchers.IO) {
                     _screenState.emit(RecipeUpdateState.Initial)
                     val pr = ProductEn(null, "", 0.00, "", recipeId)

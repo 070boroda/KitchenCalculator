@@ -109,24 +109,24 @@ fun RecipeListScreen(
                 state = textSearch
             )
             //Если нет подписки и список рецептов больше трех выводим только три рецепта
-            if (isActiveSub.value == false && recipeList.value.size >= 10) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    val tempList = recipeList.value.subList(0, 9);
-                    items(tempList.filter {
-                        it.name.contains(textSearch.value.text, ignoreCase = true)
-                    }
-                    ) { recipe ->
-                        Spacer(modifier = Modifier.height(12.dp))
-                        RowRecipe(recipe) { event ->
-                            viewModel.onEvent(event)
-                        }
-                    }
-                }
-            } else {
+//            if (isActiveSub.value == false && recipeList.value.size >= 10) {
+//                LazyColumn(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentPadding = PaddingValues(8.dp),
+//                    horizontalAlignment = Alignment.CenterHorizontally,
+//                ) {
+//                    val tempList = recipeList.value.subList(0, 9);
+//                    items(tempList.filter {
+//                        it.name.contains(textSearch.value.text, ignoreCase = true)
+//                    }
+//                    ) { recipe ->
+//                        Spacer(modifier = Modifier.height(12.dp))
+//                        RowRecipe(recipe) { event ->
+//                            viewModel.onEvent(event)
+//                        }
+//                    }
+//                }
+//            } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(8.dp),
@@ -149,7 +149,7 @@ fun RecipeListScreen(
                 }
             }
         }
-    }
+//    }
 }
 
 

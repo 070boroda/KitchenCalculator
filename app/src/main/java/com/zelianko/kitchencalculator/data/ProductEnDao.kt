@@ -19,7 +19,7 @@ interface ProductEnDao {
     suspend fun deleteProductEnByRecipeId(recipeId: Long)
 
     @Query("SELECT * FROM product_en AS pr WHERE pr.recipeId = :recipeId ORDER BY pr.id")
-    fun getAllItemsByRecipeId(recipeId: Long): MutableList<ProductEn>
+    suspend fun getAllItemsByRecipeId(recipeId: Long): MutableList<ProductEn>
 
     @Query("SELECT * FROM product_en WHERE product_en.id = :id")
     fun getProductEnById(id: Long): ProductEn
