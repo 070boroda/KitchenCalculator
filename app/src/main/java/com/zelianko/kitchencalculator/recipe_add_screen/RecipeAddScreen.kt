@@ -185,9 +185,9 @@ fun RecipeAddScreen(
 
                     //Если нет подписки и рецептов базе больше или равно пяти не даем создавать
                     //больше
-                    if (isActiveSub.value == false && listProducts.size >= 5) {
-
-                    } else {
+//                    if (isActiveSub.value == false && listProducts.size >= 5) {
+//
+//                    } else {
                         IconButton(
                             modifier = Modifier
                                 .padding(end = 10.dp)
@@ -204,7 +204,7 @@ fun RecipeAddScreen(
                                 contentDescription = "plus"
                             )
                         }
-                    }
+//                    }
                 }
                 Spacer(modifier = Modifier.width(20.dp))
                 if (isActiveSub.value == false) {
