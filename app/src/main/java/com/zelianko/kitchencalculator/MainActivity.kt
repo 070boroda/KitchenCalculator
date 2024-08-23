@@ -1,5 +1,6 @@
 package com.zelianko.kitchencalculator
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -22,6 +23,8 @@ import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.RecipeNavGraph
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.appmetrica.analytics.AppMetrica
+import io.appmetrica.analytics.AppMetricaConfig
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(
@@ -43,8 +46,17 @@ class MainActivity : ComponentActivity(
         val mBridgeSDK = MBridgeSDKFactory.getMBridgeSDK()
         mBridgeSDK.setDoNotTrackStatus(false)
 
+        // Creating an extended library configuration.
+        val config = AppMetricaConfig.newConfigBuilder("59d2d76c-5e34-4fd3-812a-5ba2e2b969e7").build()
+        // Initializing the AppMetrica SDK.
+        AppMetrica.activate(this, config)
+
         //Инициализация рекламы гугл
         MobileAds.initialize(this) {}
+
+        if (savedInstanceState == null) {
+            AppMetrica.reportAppOpen(this)
+        }
 
         setContent {
             // KitchenCalculatorTheme {
@@ -74,5 +86,10 @@ class MainActivity : ComponentActivity(
                 )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        AppMetrica.reportAppOpen(intent)
     }
 }
