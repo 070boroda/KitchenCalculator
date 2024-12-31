@@ -71,8 +71,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.ads.BannerSticky
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
@@ -110,6 +109,7 @@ fun RecipeAddScreen(
                 is UiEvent.ShowSnackBarIfNameProductIsEmpty -> {
                     Toast.makeText(context, productIsEmpty, Toast.LENGTH_SHORT).show()
                 }
+
                 is UiEvent.ShowSnackBarIfProductRowIsEmpty -> {
                     Toast.makeText(context, productIsEmpty, Toast.LENGTH_SHORT).show()
                 }
@@ -188,28 +188,30 @@ fun RecipeAddScreen(
 //                    if (isActiveSub.value == false && listProducts.size >= 5) {
 //
 //                    } else {
-                        IconButton(
-                            modifier = Modifier
-                                .padding(end = 10.dp)
-                                .background(
-                                    colorResource(id = R.color.orange_primary),
-                                    shape = CircleShape
-                                ),
-                            onClick = {
-                                viewModel.onEvent(RecipeAddEvent.AddRowProduct)
+                    IconButton(
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .background(
+                                colorResource(id = R.color.orange_primary),
+                                shape = CircleShape
+                            ),
+                        onClick = {
+                            viewModel.onEvent(RecipeAddEvent.AddRowProduct)
 
-                            }) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                                contentDescription = "plus"
-                            )
-                        }
+                        }) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                            contentDescription = "plus"
+                        )
+                    }
 //                    }
                 }
                 Spacer(modifier = Modifier.width(20.dp))
-                if (isActiveSub.value == false) {
-                    GoogleBannerAd(textId = StringConstants.BannerAddRecipeId)
-                }
+
+                BannerSticky(id = "R-M-13532950-3")
+//                if (isActiveSub.value == false) {
+//                    GoogleBannerAd(textId = StringConstants.BannerAddRecipeId)
+//                }
                 RecipeNameTextInputField() { event ->
                     viewModel.onEvent(event)
                 }

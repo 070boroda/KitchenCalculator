@@ -1,6 +1,5 @@
 package com.zelianko.kitchencalculator.cook_temp_screen
 
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,8 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
+import com.zelianko.kitchencalculator.ads.BannerSticky
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 
 /**
@@ -84,9 +82,10 @@ fun CokingTemperatureScreen(
     ) {
         LazyColumn(Modifier.padding(8.dp)) {
             item {
-                if (isActiveSub.value == false) {
-                    GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
-                }
+                BannerSticky(id = "R-M-13532950-1")
+//                if (isActiveSub.value == false) {
+//                    GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
+//                }
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween

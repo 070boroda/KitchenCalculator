@@ -38,6 +38,10 @@ class MainActivity : ComponentActivity(
         VunglePrivacySettings.setGDPRStatus(true, "1.0.0")
         VunglePrivacySettings.setCCPAStatus(true)
 
+        com.yandex.mobile.ads.common.MobileAds.initialize(this) {}
+
+        com.yandex.mobile.ads.common.MobileAds.enableDebugErrorIndicator(false)
+
 
         val sdk = MBridgeSDKFactory.getMBridgeSDK()
         sdk.setConsentStatus(this, MBridgeConstans.IS_SWITCH_ON)
@@ -52,7 +56,7 @@ class MainActivity : ComponentActivity(
         AppMetrica.activate(this, config)
 
         //Инициализация рекламы гугл
-        MobileAds.initialize(this) {}
+        //MobileAds.initialize(this) {}
 
         if (savedInstanceState == null) {
             AppMetrica.reportAppOpen(this)
@@ -65,10 +69,6 @@ class MainActivity : ComponentActivity(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-
-//                val chooseSubscriptionModel = remember {
-//                    ChooseSubscription(this)
-//                }
 
                 val context = LocalContext.current
                 billingViewModel.initBillingClient(context)

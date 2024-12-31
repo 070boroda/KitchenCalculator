@@ -16,8 +16,8 @@ android {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 24
         targetSdk = 34
-        versionCode = 21
-        versionName = "1.0.0.21"
+        versionCode = 22
+        versionName = "1.0.0.22"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
@@ -74,7 +74,7 @@ dependencies {
     implementation ("androidx.compose.material:material:1.5.4")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.4")
-    implementation("com.yandex.android:mobmetricalib:5.3.0")
+//    implementation("com.yandex.android:mobmetricalib:7.3.0")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
     implementation("androidx.lifecycle:lifecycle-process:2.7.0")
     implementation("androidx.databinding:databinding-runtime:8.3.1")
@@ -129,11 +129,13 @@ dependencies {
     // For testing
     implementation ("androidx.window:window-testing:1.2.0")
 
-//Meta
+    //Meta
     implementation("com.google.ads.mediation:facebook:6.17.0.0")
     implementation("com.google.ads.mediation:mintegral:16.7.11.0")
     implementation("com.google.ads.mediation:vungle:7.3.1.0")
 
     // AppMetrica SDK.
     implementation("io.appmetrica.analytics:analytics:7.0.0")
+
+    implementation ("com.yandex.android:mobileads:7.8.1")
 }

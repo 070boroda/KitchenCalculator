@@ -48,11 +48,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
+import com.zelianko.kitchencalculator.ads.BannerSticky
 import com.zelianko.kitchencalculator.dialog.DialogEvent
 import com.zelianko.kitchencalculator.dialog.MainDialog
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
@@ -83,14 +81,16 @@ fun RecipeAboutScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(uiEven.route)
                 }
+
                 is UiEvent.ShowSnackBarIfDiametrOrRowIsEmpty -> {
                     Toast.makeText(context, nameReciptIsEmpty, Toast.LENGTH_SHORT).show()
                 }
+
                 else -> {}
             }
         }
     }
-    
+
     MainDialog(dialogController = viewModel)
 
 
@@ -147,9 +147,10 @@ fun RecipeAboutScreen(
                 Spacer(modifier = Modifier.width(95.dp))
             }
         }
-        if (isActiveSub.value == false) {
-            GoogleBannerAd(textId = StringConstants.BannerAboutRecipeId)
-        }
+        BannerSticky(id = "R-M-13532950-6")
+//        if (isActiveSub.value == false) {
+//            GoogleBannerAd(textId = StringConstants.BannerAboutRecipeId)
+//        }
         Spacer(modifier = Modifier.size(10.dp))
         Column(
             modifier = Modifier
@@ -165,11 +166,11 @@ fun RecipeAboutScreen(
         Spacer(modifier = Modifier.size(2.dp))
         UsebleCard(
             counter = counter.value,
-            coff =coff.value,
-            onEvent = {event ->
+            coff = coff.value,
+            onEvent = { event ->
                 viewModel.onEvent(event)
             },
-            onEventDialog = {event ->
+            onEventDialog = { event ->
                 viewModel.onDialogEvent(event)
             }
         )
@@ -329,7 +330,7 @@ fun UsebleCard(
                         append(coff.toString())
                     }
                     Text(
-                        text =  str,
+                        text = str,
                         style = MaterialTheme.typography.titleLarge
                     )
                 }

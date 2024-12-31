@@ -45,9 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
+import com.zelianko.kitchencalculator.ads.BannerSticky
 import com.zelianko.kitchencalculator.data.Recipe
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
@@ -88,9 +87,10 @@ fun RecipeListScreen(
             modifier = Modifier
                 .height(20.dp)
         )
-        if (isActiveSub.value == false) {
-            GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
-        }
+        BannerSticky(id = "R-M-13532950-4")
+//        if (isActiveSub.value == false) {
+//            GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
+//        }
 
         if (recipeList.value.isEmpty()) {
             Spacer(modifier = Modifier.height(200.dp))

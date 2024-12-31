@@ -113,12 +113,12 @@ fun Drawer(
             unselectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
             route = Routes.SOUSE_VIDE_SCREEN
         ),
-        NavigationItem(
-            title = stringResource(R.string.premium),
-            selectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
-            unselectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
-            route = Routes.SUBSCRIBES_SCREEN
-        ),
+//        NavigationItem(
+//            title = stringResource(R.string.premium),
+//            selectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
+//            unselectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
+//            route = Routes.SUBSCRIBES_SCREEN
+//        ),
     )
     val navController = rememberNavController()
 
