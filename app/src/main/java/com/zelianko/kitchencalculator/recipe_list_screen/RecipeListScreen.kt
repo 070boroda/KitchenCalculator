@@ -45,12 +45,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.data.Recipe
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
+import com.zelianko.kitchencalculator.yandex_ads.BannerId
+import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
+
 
 @Composable
 fun RecipeListScreen(
@@ -89,7 +90,8 @@ fun RecipeListScreen(
                 .height(20.dp)
         )
         if (isActiveSub.value == false) {
-            GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
+            BannerSticky(id = BannerId.FOUR_BANNER.bannerId)
+//            GoogleBannerAd(textId = StringConstants.BannerListRecipeId)
         }
 
         if (recipeList.value.isEmpty()) {
@@ -127,28 +129,28 @@ fun RecipeListScreen(
 //                    }
 //                }
 //            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    val allItems = recipeList.value.filter {
-                        it.name.contains(textSearch.value.text, ignoreCase = true)
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                val allItems = recipeList.value.filter {
+                    it.name.contains(textSearch.value.text, ignoreCase = true)
+                }
+                item {
+                    if (allItems.isEmpty()) {
+                        Text(stringResource(R.string.no_recipes_available_upon_request))
                     }
-                    item {
-                        if (allItems.isEmpty()) {
-                            Text(stringResource(R.string.no_recipes_available_upon_request))
-                        }
-                    }
-                    items(allItems) { recipe ->
-                        Spacer(modifier = Modifier.height(12.dp))
-                        RowRecipe(recipe) { event ->
-                            viewModel.onEvent(event)
-                        }
+                }
+                items(allItems) { recipe ->
+                    Spacer(modifier = Modifier.height(12.dp))
+                    RowRecipe(recipe) { event ->
+                        viewModel.onEvent(event)
                     }
                 }
             }
         }
+    }
 //    }
 }
 

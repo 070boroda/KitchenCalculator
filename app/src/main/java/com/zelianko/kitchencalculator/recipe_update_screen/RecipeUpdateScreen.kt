@@ -61,7 +61,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,14 +68,13 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
 import com.zelianko.kitchencalculator.data.ProductEn
 import com.zelianko.kitchencalculator.data.Recipe
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
+import com.zelianko.kitchencalculator.yandex_ads.BannerId
+import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 
 
 @Composable
@@ -96,6 +94,7 @@ fun RecipeUpdateScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(uiEven.route)
                 }
+
                 is UiEvent.ShowSnackBarIfProductRowIsEmpty -> {
                     Toast.makeText(context, productIsEmpty, Toast.LENGTH_SHORT).show()
                 }
@@ -176,28 +175,29 @@ fun RecipeUpdateCurrentScreen(
 //            if (isActiveSub.value == false && currentState.products.size >= 5) {
 //
 //            } else {
-                IconButton(
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .background(
-                            colorResource(id = R.color.orange_primary),
-                            shape = CircleShape
-                        ),
-                    onClick = {
-                        viewModel.onEvent(RecipeUpdateEvent.AddRowProduct)
+            IconButton(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .background(
+                        colorResource(id = R.color.orange_primary),
+                        shape = CircleShape
+                    ),
+                onClick = {
+                    viewModel.onEvent(RecipeUpdateEvent.AddRowProduct)
 
-                    }) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                        contentDescription = "plus"
-                    )
-                }
+                }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                    contentDescription = "plus"
+                )
+            }
 //            }
         }
         Spacer(modifier = Modifier.width(20.dp))
 
         if (isActiveSub.value == false) {
-            GoogleBannerAd(textId = StringConstants.BannerUpdateRecipeId)
+            BannerSticky(id = BannerId.FIVE_BANNER.bannerId)
+//            GoogleBannerAd(textId = StringConstants.BannerUpdateRecipeId)
         }
         currentState.recipe?.let {
             RecipeNameTextInputField(
@@ -561,7 +561,8 @@ fun WeightList(
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                 }
-                Text(text = it,
+                Text(
+                    text = it,
                     style = TextStyle(
                         color = Color.Black,
                         fontSize = 20.sp

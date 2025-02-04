@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -35,9 +34,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
+import com.zelianko.kitchencalculator.yandex_ads.BannerId
+import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 
 
 /**
@@ -66,7 +65,8 @@ fun MeatScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (isActiveSub.value == false) {
-                GoogleBannerAd(textId = StringConstants.BannerSteakScreenId)
+                BannerSticky(id = BannerId.TWO_BANNER.bannerId)
+//                GoogleBannerAd(textId = StringConstants.BannerSteakScreenId)
             }
             // Child components of the Column
             MeatCard(
