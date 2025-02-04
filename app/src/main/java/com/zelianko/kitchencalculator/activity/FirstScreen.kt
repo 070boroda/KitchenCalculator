@@ -41,6 +41,8 @@ import com.zelianko.kitchencalculator.subactivity.DropListConditionFrom
 import com.zelianko.kitchencalculator.subactivity.DropListConditionTo
 import com.zelianko.kitchencalculator.subactivity.DropListProduct
 import com.zelianko.kitchencalculator.subactivity.ResultCardProduct
+import com.zelianko.kitchencalculator.yandex_ads.BannerId
+import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 
 /**
  * Пересчет массы продуктов
@@ -72,6 +74,13 @@ fun FirstScreen(
                 .background(Color.Transparent),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)
+            ) { BannerSticky(id = BannerId.ONE_BANNER.bannerId) }
+
             Spacer(modifier = Modifier.height(5.dp))
             Row(
                 modifier = Modifier
@@ -117,17 +126,17 @@ fun FirstScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-               horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally)
+                horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally)
             ) {
 
                 CardFirstScreenTop(
                     title = R.string.tea_glass,
                     titleGramm = R.string.tea_glass_250,
                     value = if (selectedItemString.value?.teaGlass.toString()
-                                    .equals("null")
-                           ) "0" else selectedItemString.value?.teaGlass.toString() + stringResource(
-                                id = R.string.g
-                            ),
+                            .equals("null")
+                    ) "0" else selectedItemString.value?.teaGlass.toString() + stringResource(
+                        id = R.string.g
+                    ),
                     colorCard = colorResource(
                         id = R.color.tea_glass_card
                     )

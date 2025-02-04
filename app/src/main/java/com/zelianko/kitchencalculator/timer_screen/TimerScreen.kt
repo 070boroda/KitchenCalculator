@@ -47,13 +47,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
 import com.zelianko.kitchencalculator.data.CookingTime
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subactivity.Timer
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.util.GroupProduct
 import com.zelianko.kitchencalculator.util.TypeCooking
+import com.zelianko.kitchencalculator.yandex_ads.BannerId
+import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 
 @Composable
 fun TimerScreen(
@@ -119,7 +119,8 @@ fun TimerScreen(
             Spacer(modifier = Modifier.height(5.dp))
 
             if (isActiveSub.value == false) {
-                GoogleBannerAd(textId = StringConstants.BannerTimerScreenId)
+                BannerSticky(id = BannerId.SEVEN_BANNER.bannerId)
+//                GoogleBannerAd(textId = StringConstants.BannerTimerScreenId)
             }
             //список групп продуктов
             Row(
@@ -198,7 +199,7 @@ fun TimerScreen(
                             )
                         }
                     }
-                } else{
+                } else {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

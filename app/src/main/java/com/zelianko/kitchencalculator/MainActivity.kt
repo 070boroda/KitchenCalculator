@@ -47,12 +47,13 @@ class MainActivity : ComponentActivity(
         mBridgeSDK.setDoNotTrackStatus(false)
 
         // Creating an extended library configuration.
+        com.yandex.mobile.ads.common.MobileAds.initialize(this) {}
         val config = AppMetricaConfig.newConfigBuilder("59d2d76c-5e34-4fd3-812a-5ba2e2b969e7").build()
         // Initializing the AppMetrica SDK.
         AppMetrica.activate(this, config)
 
         //Инициализация рекламы гугл
-        MobileAds.initialize(this) {}
+//        MobileAds.initialize(this) {}
 
         if (savedInstanceState == null) {
             AppMetrica.reportAppOpen(this)

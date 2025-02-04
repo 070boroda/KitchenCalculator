@@ -33,9 +33,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
+import com.zelianko.kitchencalculator.yandex_ads.BannerId
+import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 
 /**
  * Су-вид экран
@@ -49,75 +49,422 @@ fun SousVideScreen(
 
     val dataCookingTempLists = listOf(
         SousVideTemp(R.drawable.bull, stringResource(id = R.string.beef), "     ", "  ", true),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.raw_20_30), "15-30 min.", "50 \u2103", false),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.raw_30_40), "25-30 min", "50 \u2103", false),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.rare_20_30), "40-120 min.", "55 \u2103", false),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.rare_30_40), "65-120 min", "55 \u2103", false),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.medium_rare_20_30), "45-180 min.", "58 \u2103", false),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.medium_rare_30_40), "80-180 min", "58 \u2103", false),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.ribs), "60-240 min", "58 \u2103", false),
-        SousVideTemp(R.drawable.bull, stringResource(id = R.string.tongue), "18-24 hours", "70 \u2103", false),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.raw_20_30),
+            "15-30 min.",
+            "50 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.raw_30_40),
+            "25-30 min",
+            "50 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.rare_20_30),
+            "40-120 min.",
+            "55 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.rare_30_40),
+            "65-120 min",
+            "55 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.medium_rare_20_30),
+            "45-180 min.",
+            "58 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.medium_rare_30_40),
+            "80-180 min",
+            "58 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.ribs),
+            "60-240 min",
+            "58 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.tongue),
+            "18-24 hours",
+            "70 \u2103",
+            false
+        ),
 
 
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.pork_temp), "     ", "  ", true),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.pork_loin), "150-600 min", "80 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.fillet_30_40), "65-120 min", "60 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.fillet_40_50), "100-120 min", "60 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.neck), "600 min", "75 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.tenderloin_20_30), "35-170 min", "60 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.tenderloin_30_40), "60-170 min", "60 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.ham), "20 hourse", "65 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.shoulder), "600 min", "80 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.knuckle), "300-420 min", "70 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.kebabs), "120 min", "70 \u2103", false),
-        SousVideTemp(R.drawable.pig_temp, stringResource(id = R.string.brisket), "300 min", "70 \u2103", false),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.pork_temp),
+            "     ",
+            "  ",
+            true
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.pork_loin),
+            "150-600 min",
+            "80 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.fillet_30_40),
+            "65-120 min",
+            "60 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.fillet_40_50),
+            "100-120 min",
+            "60 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.neck),
+            "600 min",
+            "75 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.tenderloin_20_30),
+            "35-170 min",
+            "60 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.tenderloin_30_40),
+            "60-170 min",
+            "60 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.ham),
+            "20 hourse",
+            "65 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.shoulder),
+            "600 min",
+            "80 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.knuckle),
+            "300-420 min",
+            "70 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.kebabs),
+            "120 min",
+            "70 \u2103",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.brisket),
+            "300 min",
+            "70 \u2103",
+            false
+        ),
 
-        SousVideTemp(R.drawable.chicken, stringResource(id = R.string.chicken_sous_vide), "     ", "  ", true),
-        SousVideTemp(R.drawable.chicken, stringResource(id = R.string.fillet), "40-70 min", "65 ℃", false),
-        SousVideTemp(R.drawable.chicken, stringResource(id = R.string.leg_sous_vide), "180 min", "65 ℃", false),
+        SousVideTemp(
+            R.drawable.chicken,
+            stringResource(id = R.string.chicken_sous_vide),
+            "     ",
+            "  ",
+            true
+        ),
+        SousVideTemp(
+            R.drawable.chicken,
+            stringResource(id = R.string.fillet),
+            "40-70 min",
+            "65 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.chicken,
+            stringResource(id = R.string.leg_sous_vide),
+            "180 min",
+            "65 ℃",
+            false
+        ),
 
-        SousVideTemp(R.drawable.duck, stringResource(id = R.string.goose_duck), "     ", "  ", true),
-        SousVideTemp(R.drawable.duck, stringResource(id = R.string.duck_fillet), "90-150 min", "58 ℃", false),
-        SousVideTemp(R.drawable.duck, stringResource(id = R.string.duck_legs), "130-240 min", "80 ℃", false),
-        SousVideTemp(R.drawable.duck, stringResource(id = R.string.goose_liver), "30-45 min", "55 ℃", false),
-        SousVideTemp(R.drawable.duck, stringResource(id = R.string.goose_legs), "70-130 min", "58 ℃", false),
+        SousVideTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.goose_duck),
+            "     ",
+            "  ",
+            true
+        ),
+        SousVideTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.duck_fillet),
+            "90-150 min",
+            "58 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.duck_legs),
+            "130-240 min",
+            "80 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.goose_liver),
+            "30-45 min",
+            "55 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.goose_legs),
+            "70-130 min",
+            "58 ℃",
+            false
+        ),
 
         SousVideTemp(R.drawable.fish, stringResource(id = R.string.fish), "    ", "  ", true),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.salmon), "15-20 min", "50 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.halibut), "15-30 min", "52 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.tuna), "20-50 min", "58 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.perch), "15-60 min", "52 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.catfish), "60 min", "50 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.mackerel), "10-15 min", "52 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.octopus), "240 min", "85 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.shrimp_grey), "25 min", "50 ℃", false),
-        SousVideTemp(R.drawable.fish, stringResource(id = R.string.lobster), "30-60 min", "58 ℃", false),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.salmon),
+            "15-20 min",
+            "50 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.halibut),
+            "15-30 min",
+            "52 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.tuna),
+            "20-50 min",
+            "58 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.perch),
+            "15-60 min",
+            "52 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.catfish),
+            "60 min",
+            "50 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.mackerel),
+            "10-15 min",
+            "52 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.octopus),
+            "240 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.shrimp_grey),
+            "25 min",
+            "50 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fish,
+            stringResource(id = R.string.lobster),
+            "30-60 min",
+            "58 ℃",
+            false
+        ),
 
-        SousVideTemp(R.drawable.baseline_egg_24, stringResource(id = R.string.egg), "    ", "  ", true),
-        SousVideTemp(R.drawable.baseline_egg_24, stringResource(id = R.string.soft_boiled_egg), "60 min", "65 ℃", false),
-        SousVideTemp(R.drawable.baseline_egg_24, stringResource(id = R.string.hard_boiled_egg), "80 min", "68 ℃", false),
-        SousVideTemp(R.drawable.baseline_egg_24, stringResource(id = R.string.poached_egg), "60 min", "62 ℃", false),
+        SousVideTemp(
+            R.drawable.baseline_egg_24,
+            stringResource(id = R.string.egg),
+            "    ",
+            "  ",
+            true
+        ),
+        SousVideTemp(
+            R.drawable.baseline_egg_24,
+            stringResource(id = R.string.soft_boiled_egg),
+            "60 min",
+            "65 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.baseline_egg_24,
+            stringResource(id = R.string.hard_boiled_egg),
+            "80 min",
+            "68 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.baseline_egg_24,
+            stringResource(id = R.string.poached_egg),
+            "60 min",
+            "62 ℃",
+            false
+        ),
 
 
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.vegetables), "    ", "  ", true),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.cabbage), "60 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.carrot), "50 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.corn), "60 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.string_beans), "120 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.mushrooms), "15 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.potatoes), "50 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.turnip), "60 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.sparrowgrass), "35-55 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.celery), "90 min", "85 ℃", false),
-        SousVideTemp(R.drawable.vegetables_salad_svgrepo_com, stringResource(id = R.string.pumpkin), "10-95 min", "85 ℃", false),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.vegetables),
+            "    ",
+            "  ",
+            true
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.cabbage),
+            "60 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.carrot),
+            "50 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.corn),
+            "60 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.string_beans),
+            "120 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.mushrooms),
+            "15 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.potatoes),
+            "50 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.turnip),
+            "60 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.sparrowgrass),
+            "35-55 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.celery),
+            "90 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.vegetables_salad_svgrepo_com,
+            stringResource(id = R.string.pumpkin),
+            "10-95 min",
+            "85 ℃",
+            false
+        ),
 
-        SousVideTemp(R.drawable.fruits_banana_svgrepo_com, stringResource(id = R.string.fruits), "    ", "  ", true),
-        SousVideTemp(R.drawable.fruits_banana_svgrepo_com, stringResource(id = R.string.cherry), "25 min", "70 ℃", false),
-        SousVideTemp(R.drawable.fruits_banana_svgrepo_com, stringResource(id = R.string.pear), "25 min", "85 ℃", false),
-        SousVideTemp(R.drawable.fruits_banana_svgrepo_com, stringResource(id = R.string.plum), "25 min", "70 ℃", false),
-        SousVideTemp(R.drawable.fruits_banana_svgrepo_com, stringResource(id = R.string.apple), "25-35 min", "85 ℃", false),
-        SousVideTemp(R.drawable.fruits_banana_svgrepo_com, stringResource(id = R.string.berry), "45 min", "70 ℃", false),
-
+        SousVideTemp(
+            R.drawable.fruits_banana_svgrepo_com,
+            stringResource(id = R.string.fruits),
+            "    ",
+            "  ",
+            true
+        ),
+        SousVideTemp(
+            R.drawable.fruits_banana_svgrepo_com,
+            stringResource(id = R.string.cherry),
+            "25 min",
+            "70 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fruits_banana_svgrepo_com,
+            stringResource(id = R.string.pear),
+            "25 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fruits_banana_svgrepo_com,
+            stringResource(id = R.string.plum),
+            "25 min",
+            "70 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fruits_banana_svgrepo_com,
+            stringResource(id = R.string.apple),
+            "25-35 min",
+            "85 ℃",
+            false
+        ),
+        SousVideTemp(
+            R.drawable.fruits_banana_svgrepo_com,
+            stringResource(id = R.string.berry),
+            "45 min",
+            "70 ℃",
+            false
+        ),
 
 
 //                Фрукты ФРУКТЫ	Время приготовления	Температура приготовления
@@ -141,7 +488,8 @@ fun SousVideScreen(
         LazyColumn(Modifier.padding(8.dp)) {
             item {
                 if (isActiveSub.value == false) {
-                    GoogleBannerAd(textId = StringConstants.BannerSousVideId)
+                    BannerSticky(id = BannerId.SEVEN_BANNER.bannerId)
+//                    GoogleBannerAd(textId = StringConstants.BannerSousVideId)
                 }
                 Row(
                     Modifier.fillMaxWidth(),

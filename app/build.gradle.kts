@@ -16,8 +16,8 @@ android {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 24
         targetSdk = 34
-        versionCode = 21
-        versionName = "1.0.0.21"
+        versionCode = 22
+        versionName = "1.0.0.22"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
@@ -61,7 +61,7 @@ android {
 
 dependencies {
 
-  //  implementation ("com.yandex.android:mobileads:6.1.0")
+    implementation ("com.yandex.android:mobileads:7.9.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
@@ -74,7 +74,7 @@ dependencies {
     implementation ("androidx.compose.material:material:1.5.4")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.4")
-    implementation("com.yandex.android:mobmetricalib:5.3.0")
+//    implementation("com.yandex.android:mobmetricalib:5.3.0")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
     implementation("androidx.lifecycle:lifecycle-process:2.7.0")
     implementation("androidx.databinding:databinding-runtime:8.3.1")

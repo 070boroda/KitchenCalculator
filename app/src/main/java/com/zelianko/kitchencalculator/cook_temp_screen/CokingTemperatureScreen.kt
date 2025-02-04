@@ -1,6 +1,5 @@
 package com.zelianko.kitchencalculator.cook_temp_screen
 
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,9 +33,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
-import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.google_ads.GoogleBannerAd
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
+import com.zelianko.kitchencalculator.yandex_ads.BannerId
+import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 
 /**
  * Экран температура приготовления продуктов
@@ -49,28 +48,112 @@ fun CokingTemperatureScreen(
     val isActiveSub = billingViewModel.isActiveSub.observeAsState()
 
     val dataCookingTempLists = listOf(
-        DataCookingTemp(R.drawable.bull, stringResource(id = R.string.beef_veal_lamb), "     ", "  ", true),
-        DataCookingTemp(R.drawable.bull, stringResource(id = R.string.rare_blood), "52-55", "58", false),
-        DataCookingTemp(R.drawable.bull, stringResource(id = R.string.medium_rare), "55-60", "63", false),
-        DataCookingTemp(R.drawable.bull, stringResource(id = R.string.medium), "60-65", "70", false),
-        DataCookingTemp(R.drawable.bull, stringResource(id = R.string.well_done), "70", "75", false),
+        DataCookingTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.beef_veal_lamb),
+            "     ",
+            "  ",
+            true
+        ),
+        DataCookingTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.rare_blood),
+            "52-55",
+            "58",
+            false
+        ),
+        DataCookingTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.medium_rare),
+            "55-60",
+            "63",
+            false
+        ),
+        DataCookingTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.medium),
+            "60-65",
+            "70",
+            false
+        ),
+        DataCookingTemp(
+            R.drawable.bull,
+            stringResource(id = R.string.well_done),
+            "70",
+            "75",
+            false
+        ),
 
-        DataCookingTemp(R.drawable.pig_temp, stringResource(id = R.string.pork_temp), "     ", "  ", true),
-        DataCookingTemp(R.drawable.pig_temp, stringResource(id = R.string.medium), "60-65", "70", false),
-        DataCookingTemp(R.drawable.pig_temp, stringResource(id = R.string.well_done), "70", "75", false),
+        DataCookingTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.pork_temp),
+            "     ",
+            "  ",
+            true
+        ),
+        DataCookingTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.medium),
+            "60-65",
+            "70",
+            false
+        ),
+        DataCookingTemp(
+            R.drawable.pig_temp,
+            stringResource(id = R.string.well_done),
+            "70",
+            "75",
+            false
+        ),
 
-        DataCookingTemp(R.drawable.chicken, stringResource(id = R.string.chicken), "     ", "  ", true),
-        DataCookingTemp(R.drawable.chicken, stringResource(id = R.string.whole_baked), "72-75", "82", false),
-        DataCookingTemp(R.drawable.chicken, stringResource(id = R.string.breast), "68-70", "75", false),
+        DataCookingTemp(
+            R.drawable.chicken,
+            stringResource(id = R.string.chicken),
+            "     ",
+            "  ",
+            true
+        ),
+        DataCookingTemp(
+            R.drawable.chicken,
+            stringResource(id = R.string.whole_baked),
+            "72-75",
+            "82",
+            false
+        ),
+        DataCookingTemp(
+            R.drawable.chicken,
+            stringResource(id = R.string.breast),
+            "68-70",
+            "75",
+            false
+        ),
         DataCookingTemp(R.drawable.chicken, stringResource(id = R.string.legs), "75", "82", false),
 
-        DataCookingTemp(R.drawable.duck, stringResource(id = R.string.goose_duck), "     ", "  ", true),
-        DataCookingTemp(R.drawable.duck, stringResource(id = R.string.whole_baked), "68-70", "75", false),
-        DataCookingTemp(R.drawable.duck, stringResource(id = R.string.breast), "60-65", "70", false),
+        DataCookingTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.goose_duck),
+            "     ",
+            "  ",
+            true
+        ),
+        DataCookingTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.whole_baked),
+            "68-70",
+            "75",
+            false
+        ),
+        DataCookingTemp(
+            R.drawable.duck,
+            stringResource(id = R.string.breast),
+            "60-65",
+            "70",
+            false
+        ),
 
         DataCookingTemp(R.drawable.fish, stringResource(id = R.string.fish), "    ", "  ", true),
         DataCookingTemp(R.drawable.fish, stringResource(id = R.string.fish), "60", "63", false),
-        )
+    )
 
     val column1Weight = 3f
     val column2Weight = 2.6f
@@ -85,7 +168,8 @@ fun CokingTemperatureScreen(
         LazyColumn(Modifier.padding(8.dp)) {
             item {
                 if (isActiveSub.value == false) {
-                    GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
+                    BannerSticky(id = BannerId.ONE_BANNER.bannerId)
+//                    GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
                 }
                 Row(
                     Modifier.fillMaxWidth(),
