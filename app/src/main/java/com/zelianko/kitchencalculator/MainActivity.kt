@@ -13,12 +13,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.ads.MobileAds
-import com.mbridge.msdk.MBridgeConstans
-import com.mbridge.msdk.out.MBridgeSDKFactory
-import com.vungle.ads.VunglePrivacySettings
+//import com.google.android.gms.ads.MobileAds
+//import com.mbridge.msdk.MBridgeConstans
+//import com.mbridge.msdk.out.MBridgeSDKFactory
+//import com.vungle.ads.VunglePrivacySettings
 import com.zelianko.kitchencalculator.constants.StringConstants
-import com.zelianko.kitchencalculator.google_ads.AppOpenAdManager
+//import com.zelianko.kitchencalculator.google_ads.AppOpenAdManager
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.RecipeNavGraph
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
@@ -35,16 +35,16 @@ class MainActivity : ComponentActivity(
         val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
         val billingViewModel = ViewModelProvider(this)[BillingViewModel::class.java]
 
-        VunglePrivacySettings.setGDPRStatus(true, "1.0.0")
-        VunglePrivacySettings.setCCPAStatus(true)
-
-
-        val sdk = MBridgeSDKFactory.getMBridgeSDK()
-        sdk.setConsentStatus(this, MBridgeConstans.IS_SWITCH_ON)
-        sdk.setCoppaStatus(this,true);
-
-        val mBridgeSDK = MBridgeSDKFactory.getMBridgeSDK()
-        mBridgeSDK.setDoNotTrackStatus(false)
+//        VunglePrivacySettings.setGDPRStatus(true, "1.0.0")
+//        VunglePrivacySettings.setCCPAStatus(true)
+//
+//
+//        val sdk = MBridgeSDKFactory.getMBridgeSDK()
+//        sdk.setConsentStatus(this, MBridgeConstans.IS_SWITCH_ON)
+//        sdk.setCoppaStatus(this,true);
+//
+//        val mBridgeSDK = MBridgeSDKFactory.getMBridgeSDK()
+//        mBridgeSDK.setDoNotTrackStatus(false)
 
         // Creating an extended library configuration.
         com.yandex.mobile.ads.common.MobileAds.initialize(this) {}
@@ -77,9 +77,9 @@ class MainActivity : ComponentActivity(
                 val isActiveSub = billingViewModel.isActiveSub.observeAsState()
                 //val currentSubscriptionList by chooseSubscriptionModel.subscriptions.collectAsState()
 
-                if (isActiveSub.value == false) {
-                    AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId, billingViewModel)
-                }
+//                if (isActiveSub.value == false) {
+//                    AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId, billingViewModel)
+//                }
 
                 RecipeNavGraph(
                     productViewModel = productViewModel,

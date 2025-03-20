@@ -32,7 +32,9 @@
         <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-9309082672837567~2773598805"/>
+            android:value="ca-app-pub-9966962268328280~6259853258"/>
+        <meta-data android:name="applovin.sdk.key"
+            android:value="MmHLJLwlhhLwuWZiNeyeLte3zfmk4GImmOIOs6U5eCW31mzSvyzXbhJuoTTGhgAmLvAnTNibCSqHrppumwVLAW"/>
 
     </application>
 

@@ -19,7 +19,7 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenu
+import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenuMaterial3
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 
@@ -37,8 +37,8 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
         stringResource(id = R.string.faceted_glass),
         stringResource(id = R.string.oz)
     )
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val blue = Color(0xFF146AFC)
+//    val keyboardController = LocalSoftwareKeyboardController.current
+//    val blue = Color(0xFF146AFC)
 
     Column(
         modifier = Modifier
@@ -57,7 +57,7 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
             color = Color.Black,
             fontWeight = FontWeight.Bold
         )
-        SearchableExpandedDropDownMenu(
+        SearchableExpandedDropDownMenuMaterial3(
             listOfItems = products,
             modifier = Modifier
                 .fillMaxWidth(),
@@ -77,9 +77,9 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
                 DropDownItem(drItem)
             },
             defaultItem = {},
-            onSearchTextFieldClicked = {
-                keyboardController?.show()
-            }
+//            onSearchTextFieldClicked = {
+//                keyboardController?.show()
+//            }
         )
     }
 }
