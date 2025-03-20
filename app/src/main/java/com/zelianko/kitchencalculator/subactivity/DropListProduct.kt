@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenu
+import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenuMaterial3
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 
@@ -35,13 +35,13 @@ fun DropListProduct(
             id = pr.keyName
         )
     })
-    val keyboardController = LocalSoftwareKeyboardController.current
-//    val context = LocalContext.current
+//    val keyboardController = LocalSoftwareKeyboardController.current
+////    val context = LocalContext.current
 
     var selectedItem by rememberSaveable {
         mutableStateOf("")
     }
-    SearchableExpandedDropDownMenu(
+    SearchableExpandedDropDownMenuMaterial3(
         listOfItems = products,
         modifier = Modifier.fillMaxWidth(),
         placeholder = {
@@ -67,9 +67,9 @@ fun DropListProduct(
             DropDownItem(drItem.toString())
         },
         defaultItem = {},
-        onSearchTextFieldClicked = {
-            keyboardController?.show()
-        },
+//        onSearchTextFieldClicked = {
+//            keyboardController?.show()
+//        },
 
     )
 }

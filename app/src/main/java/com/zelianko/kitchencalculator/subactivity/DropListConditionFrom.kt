@@ -3,7 +3,6 @@ package com.zelianko.kitchencalculator.subactivity
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -13,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenu
+//import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenu
+import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenuMaterial3
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 
@@ -34,8 +33,8 @@ fun DropListConditionFrom(productViewModel: ProductViewModel) {
         stringResource(id = R.string.faceted_glass),
         stringResource(id = R.string.oz)
     )
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val blue = Color(0xFF146AFC)
+//    val keyboardController = LocalSoftwareKeyboardController.current
+//    val blue = Color(0xFF146AFC)
 
 
     Column(
@@ -52,7 +51,8 @@ fun DropListConditionFrom(productViewModel: ProductViewModel) {
             color = Color.Black,
             fontWeight = FontWeight.Bold
         )
-        SearchableExpandedDropDownMenu(
+
+        SearchableExpandedDropDownMenuMaterial3(
             listOfItems = products,
             modifier = Modifier
                 .fillMaxSize(),
@@ -72,9 +72,9 @@ fun DropListConditionFrom(productViewModel: ProductViewModel) {
                 DropDownItem(drItem)
             },
             defaultItem = {},
-            onSearchTextFieldClicked = {
-                keyboardController?.show()
-            }
+//            onSearchTextFieldClicked = {
+//                keyboardController?.show()
+//            }
         )
     }
 }

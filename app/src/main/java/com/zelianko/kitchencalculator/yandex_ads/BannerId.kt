@@ -2,25 +2,25 @@ package com.zelianko.kitchencalculator.yandex_ads
 
 enum class BannerId {
     ONE_BANNER {
-        override val bannerId = "R-M-13532950-2"
+        override val bannerId = "R-M-14504374-1"
     },
     TWO_BANNER {
-        override val bannerId = "R-M-13532950-3"
+        override val bannerId = "R-M-14504374-1"
     },
     THREE_BANNER {
-        override val bannerId = "R-M-13532950-4"
+        override val bannerId = "R-M-14504374-1"
     },
     FOUR_BANNER {
-        override val bannerId = "R-M-13532950-5"
+        override val bannerId = "R-M-14504374-1"
     },
     FIVE_BANNER {
-        override val bannerId = "R-M-13532950-6"
+        override val bannerId = "R-M-14504374-1"
     },
     SIX_BANNER {
-        override val bannerId = "R-M-13532950-7"
+        override val bannerId = "R-M-14504374-1"
     },
     SEVEN_BANNER {
-        override val bannerId = "R-M-13532950-8"
+        override val bannerId = "R-M-14504374-1"
     };
 
     abstract val bannerId: String
