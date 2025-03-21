@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "130330609326",
+    "project_id": "kitchen-calculator-1e65f",
+    "storage_bucket": "kitchen-calculator-1e65f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:130330609326:android:8c5b14acdefd9b5aa34f3f",
+        "android_client_info": {
+          "package_name": "com.zelianko.kitchencalculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkXZqmZMET4FKqmxQEjZh3cYy62G3OCgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

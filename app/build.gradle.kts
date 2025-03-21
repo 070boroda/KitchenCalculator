@@ -6,6 +6,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id("com.google.gms.google-services")
 //    id ("org.jetbrains.kotlin.plugin.compose")
     //id("com.google.devtools.ksp")
 }
@@ -18,8 +19,8 @@ android {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 24
         targetSdk = 35
-        versionCode = 23
-        versionName = "1.0.0.23"
+        versionCode = 24
+        versionName = "1.0.0.24"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
@@ -142,4 +143,8 @@ dependencies {
 
     // AppMetrica SDK.
     implementation("io.appmetrica.analytics:analytics:7.7.0")
+
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
