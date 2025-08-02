@@ -3,17 +3,19 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.2.0"
     id("com.google.gms.google-services")
-//    id ("org.jetbrains.kotlin.plugin.compose")
-    //id("com.google.devtools.ksp")
+    id("com.google.devtools.ksp")
 }
 
 android {
     namespace = "com.zelianko.kitchencalculator"
     compileSdk = 35
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 
     defaultConfig {
         applicationId = "com.zelianko.kitchencalculator"
@@ -23,11 +25,7 @@ android {
         versionName = "1.0.0.30"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        kapt {
-            arguments{
-                arg("room.schemaLocation", "$projectDir")
-            }
-        }
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -46,12 +44,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs = freeCompilerArgs + listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
-        )
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            freeCompilerArgs.addAll(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
+            )
+        }
     }
     buildFeatures {
         compose = true
@@ -105,13 +105,13 @@ dependencies {
     //Dagger hilt
     implementation("com.google.dagger:hilt-android:2.57")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    kapt("com.google.dagger:hilt-compiler:2.57")
-    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    ksp("com.google.dagger:hilt-compiler:2.57")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
 
     //Room
     implementation("androidx.room:room-runtime:2.7.2")
     implementation("androidx.room:room-ktx:2.7.2")
-    kapt("androidx.room:room-compiler:2.7.2")
+    ksp("androidx.room:room-compiler:2.7.2")
 
     //Coil
     implementation("io.coil-kt:coil-compose:2.7.0")
