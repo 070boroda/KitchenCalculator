@@ -12,13 +12,16 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import java.time.LocalDate
 
 @Composable
 fun LottieLoader(
     isPlaying: Boolean,
     changeIsPlaying: (isPlaying: Boolean) -> Unit
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.Asset("numerology.json"))
+    val name = if(LocalDate.now().dayOfWeek.value % 2 == 0) "food_two.json" else "food_two.json"
+    val composition by rememberLottieComposition(LottieCompositionSpec
+        .Asset(name))
     val progress by animateLottieCompositionAsState(
         composition = composition,
         isPlaying = isPlaying

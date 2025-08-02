@@ -88,7 +88,7 @@ fun RecipeListScreen(
     ) {
         Spacer(
             modifier = Modifier
-                .height(20.dp)
+                .height(55.dp)
         )
         if (isActiveSub == false) {
             BannerSticky(id = BannerId.FOUR_BANNER.bannerId)
