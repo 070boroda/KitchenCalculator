@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -67,14 +68,13 @@ import com.zelianko.kitchencalculator.timer_screen.TimerScreen
 import com.zelianko.kitchencalculator.util.Routes
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Drawer(
     productViewModel: ProductViewModel,
     mainNavHostController: NavHostController,
-    billingViewModel: BillingViewModel
+//    billingViewModel: BillingViewModel
 ) {
     val items = listOf(
         NavigationItem(
@@ -113,12 +113,12 @@ fun Drawer(
             unselectedIcon = ImageVector.vectorResource(R.drawable.thermometer_svgrepo_com),
             route = Routes.SOUSE_VIDE_SCREEN
         ),
-        NavigationItem(
-            title = stringResource(R.string.premium),
-            selectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
-            unselectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
-            route = Routes.SUBSCRIBES_SCREEN
-        ),
+//        NavigationItem(
+//            title = stringResource(R.string.premium),
+//            selectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
+//            unselectedIcon = ImageVector.vectorResource(R.drawable.baseline_monetization_on_24),
+//            route = Routes.SUBSCRIBES_SCREEN
+//        ),
     )
     val navController = rememberNavController()
 
@@ -129,7 +129,7 @@ fun Drawer(
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable {
-            mutableStateOf(0)
+            mutableIntStateOf(0)
         }
         var selectedItem by rememberSaveable {
             mutableStateOf(items.get(selectedItemIndex).title)
@@ -262,38 +262,38 @@ fun Drawer(
                     },
                     secondScreenContent = {
                         RecipeListScreen(
-                            billingViewModel = billingViewModel,
+//                            billingViewModel = billingViewModel,
                         ) {route ->
                             mainNavHostController.navigate(route)
                         }
                     },
                     timerScreen = {
                         TimerScreen(paddingValues = paddingValues,
-                            billingViewModel = billingViewModel
+//                            billingViewModel = billingViewModel
                         )
                     },
                     meatScreen = {
                         MeatScreen(
                            paddingValues = paddingValues,
-                            billingViewModel = billingViewModel
+//                            billingViewModel = billingViewModel
                         )
                     },
                     cokingTemperatureScreen = {
                         CokingTemperatureScreen(
                             paddingValues = paddingValues,
-                            billingViewModel = billingViewModel
+//                            billingViewModel = billingViewModel
                         )
                     },
                     sousVideScreen ={
                         SousVideScreen(
                             paddingValues = paddingValues,
-                            billingViewModel = billingViewModel
+//                            billingViewModel = billingViewModel
                         )
                     },
                     subscribesScreen = {
                         SubscribesScreen (
                             paddingValues = paddingValues,
-                            billingViewModel = billingViewModel
+//                            billingViewModel = billingViewModel
                         )
                     }
 

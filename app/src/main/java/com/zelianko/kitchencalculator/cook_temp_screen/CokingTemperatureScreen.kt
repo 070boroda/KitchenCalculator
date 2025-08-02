@@ -43,9 +43,9 @@ import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 @Composable
 fun CokingTemperatureScreen(
     paddingValues: PaddingValues,
-    billingViewModel: BillingViewModel
+//    billingViewModel: BillingViewModel
 ) {
-    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+    val isActiveSub = false
 
     val dataCookingTempLists = listOf(
         DataCookingTemp(
@@ -167,7 +167,7 @@ fun CokingTemperatureScreen(
     ) {
         LazyColumn(Modifier.padding(8.dp)) {
             item {
-                if (isActiveSub.value == false) {
+                if (isActiveSub == false) {
                     BannerSticky(id = BannerId.ONE_BANNER.bannerId)
 //                    GoogleBannerAd(textId = StringConstants.BannerTimeCookingScreenId)
                 }

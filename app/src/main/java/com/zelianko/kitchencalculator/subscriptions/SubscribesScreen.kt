@@ -1,5 +1,6 @@
 package com.zelianko.kitchencalculator.subscriptions
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -32,16 +33,20 @@ import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHL
 /**
  * Экран подписки
  */
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun SubscribesScreen(
     paddingValues: PaddingValues,
-    billingViewModel: BillingViewModel
+//    billingViewModel: BillingViewModel
 ) {
-    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+    val isActiveSub = false
 
-    val textPrice = billingViewModel.textPrice.observeAsState("")
-    val tokenOffer = billingViewModel.offerToken.observeAsState("")
-    val productDetails = billingViewModel.productDetails.observeAsState()
+//    val textPrice = billingViewModel.textPrice.observeAsState("")
+//    val tokenOffer = billingViewModel.offerToken.observeAsState("")
+//    val productDetails = billingViewModel.productDetails.observeAsState()
+    val textPrice = "00"
+    val tokenOffer = ""
+    val productDetails = ""
 
     val activity = LocalContext.current as Activity
 
@@ -68,7 +73,7 @@ fun SubscribesScreen(
 
             Spacer(modifier = Modifier.size(120.dp))
 
-            if (isActiveSub.value == true) {
+            if (isActiveSub == true) {
                 Text(
                     text = "Premium is already available",
                     modifier = Modifier.padding(top = 5.dp),
@@ -91,17 +96,17 @@ fun SubscribesScreen(
                         contentColor = Color.White
                     ),
                     onClick = {
-                        productDetails.value?.let {
-                            billingViewModel.launchPurchaseFlow(
-                                it,
-                                activity,
-                                tokenOffer.value
-                            )
-                        }
+//                        productDetails.value?.let {
+//                            billingViewModel.launchPurchaseFlow(
+//                                it,
+//                                activity,
+//                                tokenOffer.value
+//                            )
+//                        }
 
                     }) {
                     Text(
-                        stringResource(id = R.string.subscribe)+ " " + textPrice.value + stringResource(
+                        stringResource(id = R.string.subscribe)+ " " + textPrice + stringResource(
                             id = R.string.month
                         ),
                         fontSize = 22.sp

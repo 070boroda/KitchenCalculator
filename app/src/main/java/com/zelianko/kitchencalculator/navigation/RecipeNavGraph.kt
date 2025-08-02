@@ -18,23 +18,23 @@ import com.zelianko.kitchencalculator.util.Routes
 @Composable
 fun RecipeNavGraph(
     productViewModel: ProductViewModel,
-    billingViewModel: BillingViewModel
+//    billingViewModel: BillingViewModel
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.RECIPE_LIST_SCREEN) {
         composable(Routes.RECIPE_ABOUT_SCREEN + "/{recipeId}") {
-            RecipeAboutScreen(billingViewModel = billingViewModel  )
+            RecipeAboutScreen()
             {
                 navController.popBackStack()
             }
         }
         composable(Routes.RECIPE_ADD_SCREEN) {
-            RecipeAddScreen (billingViewModel =  billingViewModel) {
+            RecipeAddScreen () {
                 navController.navigate(it)
             }
         }
         composable(Routes.RECIPE_UPDATE_SCREEN + "/{recipeId}") {
-            RecipeUpdateScreen (billingViewModel =  billingViewModel){
+            RecipeUpdateScreen (){
                 navController.popBackStack()
             }
         }
@@ -42,7 +42,7 @@ fun RecipeNavGraph(
             Drawer(
                 productViewModel = productViewModel,
                 mainNavHostController = navController,
-                billingViewModel =  billingViewModel
+//                billingViewModel =  billingViewModel
             )
         }
     }

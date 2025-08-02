@@ -46,9 +46,9 @@ import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 //@Preview(showBackground = true)
 fun MeatScreen(
     paddingValues: PaddingValues,
-    billingViewModel: BillingViewModel
+//    billingViewModel: BillingViewModel
 ) {
-    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+    val isActiveSub = false
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +64,7 @@ fun MeatScreen(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (isActiveSub.value == false) {
+            if (isActiveSub == false) {
                 BannerSticky(id = BannerId.TWO_BANNER.bannerId)
 //                GoogleBannerAd(textId = StringConstants.BannerSteakScreenId)
             }

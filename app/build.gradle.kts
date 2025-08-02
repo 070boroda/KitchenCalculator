@@ -118,6 +118,8 @@ dependencies {
 
     implementation("org.apache.commons:commons-lang3:3.18.0")
 
+    implementation("com.airbnb.android:lottie-compose:6.6.7")
+
     //Google Ads
 //    implementation ("com.google.android.gms:play-services-ads:23.0.0")
 

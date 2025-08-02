@@ -43,9 +43,9 @@ import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 @Composable
 fun SousVideScreen(
     paddingValues: PaddingValues,
-    billingViewModel: BillingViewModel
+//    billingViewModel: BillingViewModel
 ) {
-    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+    val isActiveSub = false
 
     val dataCookingTempLists = listOf(
         SousVideTemp(R.drawable.bull, stringResource(id = R.string.beef), "     ", "  ", true),
@@ -487,7 +487,7 @@ fun SousVideScreen(
     ) {
         LazyColumn(Modifier.padding(8.dp)) {
             item {
-                if (isActiveSub.value == false) {
+                if (isActiveSub == false) {
                     BannerSticky(id = BannerId.SEVEN_BANNER.bannerId)
 //                    GoogleBannerAd(textId = StringConstants.BannerSousVideId)
                 }

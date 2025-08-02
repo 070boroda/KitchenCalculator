@@ -58,11 +58,12 @@ import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 @Composable
 fun TimerScreen(
     paddingValues: PaddingValues,
-    billingViewModel: BillingViewModel,
+//    billingViewModel: BillingViewModel,
     viewModel: TimerScreenViewModel = hiltViewModel(),
 ) {
 
-    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+    val isActiveSub = false
+//    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
 
     val listGroupProduct = listOf(
         TwoField(stringResource(id = R.string.pasta), GroupProduct.PASTA),
@@ -118,7 +119,7 @@ fun TimerScreen(
         ) {
             Spacer(modifier = Modifier.height(5.dp))
 
-            if (isActiveSub.value == false) {
+            if (isActiveSub == false) {
                 BannerSticky(id = BannerId.SEVEN_BANNER.bannerId)
 //                GoogleBannerAd(textId = StringConstants.BannerTimerScreenId)
             }

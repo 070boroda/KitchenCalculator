@@ -80,7 +80,7 @@ import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 @Composable
 fun RecipeUpdateScreen(
     viewModel: RecipeUpdateViewModel = hiltViewModel(),
-    billingViewModel: BillingViewModel,
+//    billingViewModel: BillingViewModel,
     onNavigate: (String) -> Unit
 ) {
     val screenState = viewModel.screenState.collectAsState(RecipeUpdateState.Initial)
@@ -106,7 +106,9 @@ fun RecipeUpdateScreen(
 
     when (val currentState = screenState.value) {
         is RecipeUpdateState.RecipeDto -> {
-            RecipeUpdateCurrentScreen(viewModel, billingViewModel, currentState)
+            RecipeUpdateCurrentScreen(viewModel,
+//                billingViewModel,
+                currentState)
         }
 
         RecipeUpdateState.Initial -> {
@@ -134,11 +136,12 @@ fun RecipeUpdateScreen(
 @Composable
 fun RecipeUpdateCurrentScreen(
     viewModel: RecipeUpdateViewModel,
-    billingViewModel: BillingViewModel,
+//    billingViewModel: BillingViewModel,
     currentState: RecipeUpdateState.RecipeDto,
 ) {
 
-    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+//    val isActiveSub = billingViewModel.isActiveSub.observeAsState()
+    val isActiveSub = false
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -195,7 +198,7 @@ fun RecipeUpdateCurrentScreen(
         }
         Spacer(modifier = Modifier.width(20.dp))
 
-        if (isActiveSub.value == false) {
+        if (isActiveSub == false) {
             BannerSticky(id = BannerId.FIVE_BANNER.bannerId)
 //            GoogleBannerAd(textId = StringConstants.BannerUpdateRecipeId)
         }

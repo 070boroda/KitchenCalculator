@@ -29,22 +29,10 @@ import io.appmetrica.analytics.AppMetricaConfig
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(
 ) {
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
-        val billingViewModel = ViewModelProvider(this)[BillingViewModel::class.java]
-
-//        VunglePrivacySettings.setGDPRStatus(true, "1.0.0")
-//        VunglePrivacySettings.setCCPAStatus(true)
-//
-//
-//        val sdk = MBridgeSDKFactory.getMBridgeSDK()
-//        sdk.setConsentStatus(this, MBridgeConstans.IS_SWITCH_ON)
-//        sdk.setCoppaStatus(this,true);
-//
-//        val mBridgeSDK = MBridgeSDKFactory.getMBridgeSDK()
-//        mBridgeSDK.setDoNotTrackStatus(false)
+//        val billingViewModel = ViewModelProvider(this)[BillingViewModel::class.java]
 
         // Creating an extended library configuration.
         com.yandex.mobile.ads.common.MobileAds.initialize(this) {}
@@ -52,38 +40,19 @@ class MainActivity : ComponentActivity(
         // Initializing the AppMetrica SDK.
         AppMetrica.activate(this, config)
 
-        //Инициализация рекламы гугл
-//        MobileAds.initialize(this) {}
-
         if (savedInstanceState == null) {
             AppMetrica.reportAppOpen(this)
         }
 
         setContent {
-            // KitchenCalculatorTheme {
-            // A surface container using the 'background' color from the theme
+
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-
-//                val chooseSubscriptionModel = remember {
-//                    ChooseSubscription(this)
-//                }
-
-                val context = LocalContext.current
-                billingViewModel.initBillingClient(context)
-                billingViewModel.checkSubscription(context)
-                val isActiveSub = billingViewModel.isActiveSub.observeAsState()
-                //val currentSubscriptionList by chooseSubscriptionModel.subscriptions.collectAsState()
-
-//                if (isActiveSub.value == false) {
-//                    AppOpenAdManager(this.application, StringConstants.StartAdAppScreenId, billingViewModel)
-//                }
-
                 RecipeNavGraph(
                     productViewModel = productViewModel,
-                    billingViewModel = billingViewModel
+//                    billingViewModel = billingViewModel
                 )
             }
         }
