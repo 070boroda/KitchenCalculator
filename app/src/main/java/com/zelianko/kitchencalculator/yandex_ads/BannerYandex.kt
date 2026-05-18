@@ -1,9 +1,11 @@
 package com.zelianko.kitchencalculator.yandex_ads
 
-
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.window.layout.WindowMetrics
 import androidx.window.layout.WindowMetricsCalculator
 import com.yandex.mobile.ads.banner.BannerAdSize
 import com.yandex.mobile.ads.banner.BannerAdView
@@ -12,59 +14,59 @@ import kotlin.math.roundToInt
 
 @Composable
 fun BannerSticky(id: String) {
-    AndroidView(factory = { context ->
+    val context = LocalContext.current
+    val bannerAdView = remember(context, id) {
+        createBannerAdView(context, id, sticky = true, divider = 0)
+    }
 
-        val windowMetrics: WindowMetrics =
-            WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context)
-        val bounds = windowMetrics.bounds
+    AndroidView(factory = { bannerAdView })
 
-        var adWithPixels = context.resources.displayMetrics.widthPixels.toFloat()
-
-        if (adWithPixels == 0f) {
-            adWithPixels = bounds.width().toFloat()
-        }
-
-        val density = context.resources.displayMetrics.density
-        val adWith = (adWithPixels / density).toInt()
-
-
-        BannerAdView(context).apply {
-            setAdUnitId(id)
-            setAdSize(BannerAdSize.stickySize(context, adWith))
-            val adRequest = AdRequest.Builder().build()
-            loadAd(adRequest)
-        }
-    })
+    DisposableEffect(bannerAdView) {
+        onDispose { bannerAdView.destroy() }
+    }
 }
 
-//demo-banner-yandex
 @Composable
 fun BannerInline(id: String, divider: Int) {
-    AndroidView(factory = { context ->
+    val context = LocalContext.current
+    val bannerAdView = remember(context, id, divider) {
+        createBannerAdView(context, id, sticky = false, divider = divider)
+    }
 
-        val windowMetrics: WindowMetrics =
-            WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context)
-        val bounds = windowMetrics.bounds
+    AndroidView(factory = { bannerAdView })
 
-        var adWithPixels = context.resources.displayMetrics.widthPixels.toFloat()
+    DisposableEffect(bannerAdView) {
+        onDispose { bannerAdView.destroy() }
+    }
+}
 
-        if (adWithPixels == 0f) {
-            adWithPixels = bounds.width().toFloat()
-        }
+private fun createBannerAdView(
+    context: Context,
+    adUnitId: String,
+    sticky: Boolean,
+    divider: Int,
+): BannerAdView {
+    val density = context.resources.displayMetrics.density
 
-        val density = context.resources.displayMetrics.density
-        val adWith = (adWithPixels / density).toInt()
+    var widthPx = context.resources.displayMetrics.widthPixels.toFloat()
+    if (widthPx == 0f) {
+        val bounds = WindowMetricsCalculator.getOrCreate()
+            .computeCurrentWindowMetrics(context).bounds
+        widthPx = bounds.width().toFloat()
+    }
+    val widthDp = (widthPx / density).toInt()
 
-        val screenHeight =
-            context.resources.displayMetrics.run { heightPixels / density }.roundToInt()
-        val maxAdHeight = screenHeight / divider
-
-
-        BannerAdView(context).apply {
-            setAdUnitId(id)
-            setAdSize(BannerAdSize.inlineSize(context, adWith, maxAdHeight))
-            val adRequest = AdRequest.Builder().build()
-            loadAd(adRequest)
-        }
-    })
+    return BannerAdView(context).apply {
+        setAdSize(
+            if (sticky) {
+                BannerAdSize.sticky(context, widthDp)
+            } else {
+                val screenHeightDp =
+                    (context.resources.displayMetrics.heightPixels / density).roundToInt()
+                val maxAdHeight = if (divider > 0) screenHeightDp / divider else screenHeightDp
+                BannerAdSize.inline(context, widthDp, maxAdHeight)
+            }
+        )
+        loadAd(AdRequest.Builder(adUnitId).build())
+    }
 }

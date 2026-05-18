@@ -35,6 +35,45 @@
     <string name="start">Старт</string>
     <string name="stop">Стоп</string>
     <string name="restart">Сброс</string>
+    <string name="cancel">Отмена</string>
+    <string name="resume">Продолжить</string>
+    <string name="pause">Пауза</string>
+
+    <!-- Accessibility -->
+    <string name="cd_save">Сохранить</string>
+    <string name="cd_delete">Удалить</string>
+    <string name="cd_edit">Редактировать</string>
+    <string name="cd_back">Назад</string>
+    <string name="cd_menu">Меню</string>
+    <string name="cd_check">Подтвердить</string>
+    <string name="cd_close">Закрыть</string>
+    <string name="cd_recipe_photo">Фото рецепта</string>
+    <string name="cd_add_photo">Добавить фото</string>
+    <string name="cd_product_image">Изображение продукта</string>
+    <string name="cd_decoration">Декоративный элемент</string>
+    <string name="cd_app_logo">Логотип приложения</string>
+    <string name="cd_add_product">Добавить продукт</string>
+    <string name="cd_decrease_portion">Уменьшить порцию</string>
+    <string name="cd_increase_portion">Увеличить порцию</string>
+    <string name="cd_more_actions">Ещё действия</string>
+    <string name="cd_unit">Единица измерения</string>
+
+    <string name="delete_recipe_title">Удалить рецепт?</string>
+    <string name="delete_recipe_message">Действие нельзя отменить.</string>
+    <string name="delete">Удалить</string>
+    <string name="recipe_deleted">Рецепт удалён</string>
+    <string name="undo">Отменить</string>
+    <string name="recipe_saved">Рецепт сохранён</string>
+    <string name="unit">Ед.</string>
+    <string name="amount">Кол-во</string>
+    <string name="add_product_action">Добавить продукт</string>
+    <string name="description_hint">Заметки (по желанию)</string>
+    <string name="description_label">Описание</string>
+    <string name="share">Поделиться</string>
+    <string name="share_recipe">Поделиться рецептом</string>
+    <string name="cd_share">Поделиться</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="shared_via">Отправлено из Kitchen Calculator</string>
 
     <string name="pasta">Паста</string>
     <string name="meat">Мясо</string>

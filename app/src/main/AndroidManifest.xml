@@ -4,6 +4,10 @@
 
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
@@ -21,7 +25,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.KitchenCalculator">
+            android:theme="@style/Theme.KitchenCalculator.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +33,17 @@
             </intent-filter>
         </activity>
 
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <service
+            android:name=".timer_screen.TimerService"
+            android:exported="false"
+            android:foregroundServiceType="shortService" />
+
+        <!--
+          Yandex Mobile Ads SDK 8.x транзитивно подтягивает Google Play Services Ads
+          (для медиации/AdMob). Его MobileAdsInitProvider обязательно требует валидный
+          AdMob APPLICATION_ID — даже если AdMob напрямую не используется.
+          Подставь сюда свой AdMob ID или тестовый ca-app-pub-3940256099942544~3347511713.
+        -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9966962268328280~6259853258"/>

@@ -1,151 +1,129 @@
 package com.zelianko.kitchencalculator.recipe_add_screen
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zelianko.kitchencalculator.data.ProductEn
 import com.zelianko.kitchencalculator.data.ProductEnRepository
 import com.zelianko.kitchencalculator.data.Recipe
+import com.zelianko.kitchencalculator.data.RecipeDescription
+import com.zelianko.kitchencalculator.data.RecipeDescriptionRepository
 import com.zelianko.kitchencalculator.data.RecipeRepository
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.apache.commons.lang3.StringUtils
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+data class RecipeAddUiState(
+    val name: String = "",
+    val imageUri: String = "",
+    val description: String = "",
+    val products: List<ProductDraft> = listOf(ProductDraft.empty()),
+    val isSaving: Boolean = false,
+)
 
 @HiltViewModel
 class RecipeAddViewModel @Inject constructor(
     private val recipeRepository: RecipeRepository,
-    private val productRepository: ProductEnRepository
+    private val productRepository: ProductEnRepository,
+    private val descriptionRepository: RecipeDescriptionRepository,
 ) : ViewModel() {
 
-    var _listProduct = mutableStateListOf(ThreeField("", "", ""))
-    val listProduct: List<ThreeField<String>>
-        get() = _listProduct
-
-    var nameRecipeText = mutableStateOf("")
-        private set
-    var imageUri = mutableStateOf("")
-        private set
+    private val _state = MutableStateFlow(RecipeAddUiState())
+    val state: StateFlow<RecipeAddUiState> = _state.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onEvent(event: RecipeAddEvent) {
         when (event) {
-            is RecipeAddEvent.RecipeNameTextEnter -> {
-                nameRecipeText.value = event.text
-                Log.d("MyLog", nameRecipeText.value)
-            }
+            is RecipeAddEvent.RecipeNameTextEnter ->
+                _state.update { it.copy(name = event.text) }
 
-            is RecipeAddEvent.RecipeImageEnter -> {
-                imageUri.value = event.uri
-                Log.d("MyLog", imageUri.value)
-            }
+            is RecipeAddEvent.RecipeImageEnter ->
+                _state.update { it.copy(imageUri = event.uri) }
 
-            is RecipeAddEvent.AddRowProduct -> {
-                //сли последний элементв списке пустой, происм его заполнить
-                val lastElement = _listProduct.get(_listProduct.size - 1)
-                if (lastElement.key.isBlank() || lastElement.value.isBlank() || lastElement.plWeight.isBlank()) {
-                    sendUiEvent(UiEvent.ShowSnackBarIfProductRowIsEmpty)
-                    return
-                }
-                _listProduct.add(ThreeField("", "", ""))
-                Log.d("MyLog", "Add product")
-            }
+            is RecipeAddEvent.RecipeDescriptionEnter ->
+                _state.update { it.copy(description = event.text) }
 
-            is RecipeAddEvent.RecipeProductEnter -> {
-                if (StringUtils.isBlank(event.value.value) or StringUtils.isBlank(event.value.key)) return
-                _listProduct[event.index] = event.value
-            }
+            is RecipeAddEvent.IngredientName ->
+                _state.update { it.copy(products = it.products.updateAt(event.index) { p -> p.copy(name = event.text) }) }
+
+            is RecipeAddEvent.IngredientWeight ->
+                _state.update { it.copy(products = it.products.updateAt(event.index) { p -> p.copy(amount = event.weight) }) }
+
+            is RecipeAddEvent.MeasureWeight ->
+                _state.update { it.copy(products = it.products.updateAt(event.index) { p -> p.copy(unit = event.value) }) }
+
+            is RecipeAddEvent.AddRowProduct ->
+                _state.update { it.copy(products = it.products + ProductDraft.empty()) }
 
             is RecipeAddEvent.DismissItem -> {
-                if (_listProduct.size == 1) return
-                _listProduct.removeLast()
-                Log.d("MyLog", "djsakl")
-            }
-
-            is RecipeAddEvent.IngredientName -> {
-                if (event.text.isBlank()) return
-                listProduct[event.index].key = event.text
-            }
-
-            is RecipeAddEvent.IngredientWeight -> {
-
-                if (event.weight.isBlank()) return
-                listProduct[event.index].value = event.weight
-            }
-            //
-            is RecipeAddEvent.MeasureWeight -> {
-
-                if (event.value.isBlank()) return
-                listProduct[event.index].plWeight = event.value
-            }
-
-            //Сохраняем рецепт выходим из экрана
-            is RecipeAddEvent.OnItemSave -> {
-                if (nameRecipeText.value.isBlank()) {
-                    sendUiEvent(UiEvent.ShowSnackBarIfNameRecipeIsEmpty)
-                    return
+                _state.update { current ->
+                    val newList = current.products.toMutableList().apply {
+                        if (event.index in indices) removeAt(event.index)
+                        if (isEmpty()) add(ProductDraft.empty())
+                    }
+                    current.copy(products = newList)
                 }
-
-                Log.d("MyLog", nameRecipeText.value)
-                if (listProduct.isEmpty()) {
-                    sendUiEvent(UiEvent.ShowSnackBarIfNameProductIsEmpty)
-                    return
-                }
-                if (listProduct.size == 1 && (listProduct[0].key.isBlank() || listProduct[0].value.isBlank())) {
-                    sendUiEvent(UiEvent.ShowSnackBarIfNameProductIsEmpty)
-                    return
-                }
-
-                viewModelScope.launch(Dispatchers.IO) {
-                    val idRecipe = recipeRepository.insertRecipe(
-                        Recipe(
-                            null,
-                            nameRecipeText.value,
-                            imageUri.value
-                        )
-                    )
-                    Log.d("MyLog", idRecipe.toString())
-                    listProduct
-                        .forEach { ingredient ->
-                            if (ingredient.value.isBlank()) {
-                                ingredient.value = "0.00"
-                            }
-                            productRepository.insertProductEn(
-                                ProductEn(
-                                    null,
-                                    ingredient.key,
-                                    ingredient.value.toDouble(),
-                                    ingredient.plWeight,
-                                    idRecipe
-                                )
-                            )
-
-                        }
-                }
-                sendUiEvent(UiEvent.Navigate(Routes.RECIPE_LIST_SCREEN))
             }
-            is RecipeAddEvent.OnItemClick -> {
+
+            is RecipeAddEvent.OnItemSave -> saveRecipe()
+
+            is RecipeAddEvent.OnItemClick ->
                 sendUiEvent(UiEvent.Navigate(event.route))
+        }
+    }
+
+    private fun saveRecipe() {
+        val current = _state.value
+        if (current.name.isBlank()) {
+            sendUiEvent(UiEvent.ShowSnackBarIfNameRecipeIsEmpty)
+            return
+        }
+        val cleaned = current.products.filter { it.name.isNotBlank() }
+        if (cleaned.isEmpty()) {
+            sendUiEvent(UiEvent.ShowSnackBarIfNameProductIsEmpty)
+            return
+        }
+
+        viewModelScope.launch {
+            _state.update { it.copy(isSaving = true) }
+            withContext(Dispatchers.IO) {
+                val recipeId = recipeRepository.insertRecipe(
+                    Recipe(id = null, name = current.name, imageUrl = current.imageUri)
+                )
+                cleaned.forEach { draft ->
+                    productRepository.insertProductEn(draft.toEntity(recipeId))
+                }
+                if (current.description.isNotBlank()) {
+                    descriptionRepository.upsert(
+                        RecipeDescription(recipeId = recipeId, description = current.description)
+                    )
+                }
             }
+            _state.update { it.copy(isSaving = false) }
+            sendUiEvent(UiEvent.RecipeSaved)
+            sendUiEvent(UiEvent.Navigate(Routes.RECIPE_LIST_SCREEN))
         }
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
+        viewModelScope.launch { _uiEvent.send(event) }
     }
-}
 
-data class ThreeField<T>(var key: T, var value: T, var plWeight: T) {
-
+    private inline fun List<ProductDraft>.updateAt(
+        index: Int,
+        transform: (ProductDraft) -> ProductDraft,
+    ): List<ProductDraft> {
+        if (index !in indices) return this
+        return toMutableList().also { it[index] = transform(it[index]) }
+    }
 }

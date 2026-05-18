@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zelianko.kitchencalculator.data.ProductEnRepository
+import com.zelianko.kitchencalculator.data.RecipeDescriptionRepository
 import com.zelianko.kitchencalculator.data.RecipeRepository
 import com.zelianko.kitchencalculator.dialog.DialogController
 import com.zelianko.kitchencalculator.dialog.DialogEvent
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class RecipeAboutViewModel @Inject constructor(
     private val recipeRepository: RecipeRepository,
     private val productRepository: ProductEnRepository,
+    private val descriptionRepository: RecipeDescriptionRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), DialogController {
 
@@ -43,6 +45,9 @@ class RecipeAboutViewModel @Inject constructor(
 
     private var _uriImage = MutableStateFlow("")
     val uriImage: StateFlow<String> = _uriImage.asStateFlow()
+
+    private val _description = MutableStateFlow("")
+    val description: StateFlow<String> = _description.asStateFlow()
 
     private var _productList = MutableStateFlow<List<ProductDto>>(emptyList())
     val productList: StateFlow<List<ProductDto>> = _productList.asStateFlow()
@@ -78,15 +83,19 @@ class RecipeAboutViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _recipeName.emit(recipeRepository.getRecipeById(recipeId).name)
-            _uriImage.emit(recipeRepository.getRecipeById(recipeId).imageUrl)
+            val recipe = recipeRepository.getRecipeById(recipeId)
+            _recipeName.emit(recipe.name)
+            _uriImage.emit(recipe.imageUrl)
+            _description.emit(
+                descriptionRepository.getByRecipeId(recipeId)?.description.orEmpty()
+            )
             _productList.value = productRepository.getAllItemsByRecipeId(recipeId)
                 .map {
                     ProductDto(
                         name = it.name,
                         mass = it.mass,
                         countMass = (it.mass * _counter.value),
-                        measureWeight = it.measureWeight
+                        measureWeight = it.measureWeight,
                     )
                 }
         }
@@ -96,23 +105,15 @@ class RecipeAboutViewModel @Inject constructor(
         when (event) {
             is RecipeAboutEvent.CounterUp -> {
                 _counter.value = _counter.value + 0.5
-                _productList.value.forEach(
-                    this::countWeight
-                )
-                _coff.update {
-                    1.0
-                }
+                _coff.value = 1.0
+                recalcByCounter()
             }
 
             is RecipeAboutEvent.CounterDown -> {
-                if (_counter.value != 0.0) {
+                if (_counter.value > 0.5) {
                     _counter.value = _counter.value - 0.5
-                    _productList.value.forEach(
-                        this::countWeight
-                    )
-                    _coff.update {
-                        1.0
-                    }
+                    _coff.value = 1.0
+                    recalcByCounter()
                 }
             }
 
@@ -121,6 +122,25 @@ class RecipeAboutViewModel @Inject constructor(
             }
         }
     }
+
+    private fun recalcByCounter() {
+        _productList.update { list ->
+            list.map { p ->
+                p.copy(countMass = roundTo2(p.mass * _counter.value))
+            }
+        }
+    }
+
+    private fun recalcByCoff() {
+        _productList.update { list ->
+            list.map { p ->
+                p.copy(countMass = roundTo2(p.mass * _coff.value))
+            }
+        }
+    }
+
+    private fun roundTo2(value: Double): Double =
+        Math.round(value * 100.0) / 100.0
 
 
     //Work with dialog
@@ -264,9 +284,7 @@ class RecipeAboutViewModel @Inject constructor(
                     }
                 }
                 openDialog.value = !openDialog.value
-                _productList.value.forEach(
-                    this::countByCoff
-                )
+                recalcByCoff()
             }
 
             else -> {}
@@ -280,19 +298,11 @@ class RecipeAboutViewModel @Inject constructor(
         }
     }
 
-    private fun countByCoff(product: ProductDto) {
-        product.countMass = Math.round((product.mass * _coff.value) * 100.00) / 100.00
-    }
-
-    private fun countWeight(product: ProductDto) {
-        product.countMass = Math.round((product.mass * _counter.value) * 100.00) / 100.00
-    }
-
-    inner class ProductDto(
-        var name: String,
-        var mass: Double,
-        var countMass: Double,
-        var measureWeight: String
+    data class ProductDto(
+        val name: String,
+        val mass: Double,
+        val countMass: Double,
+        val measureWeight: String,
     )
 }
 

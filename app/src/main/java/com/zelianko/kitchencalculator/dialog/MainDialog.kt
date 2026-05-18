@@ -14,10 +14,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -59,7 +59,7 @@ fun MainDialog(
     val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
 
     if (dialogController.openDialog.value) {
-        AlertDialog(
+        BasicAlertDialog(
             onDismissRequest = {
                 dialogController.onDialogEvent(DialogEvent.OnCancel)
             },
@@ -89,7 +89,7 @@ fun MainDialog(
                     )
 
                 }
-                Divider()
+                HorizontalDivider()
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -283,7 +283,7 @@ fun MainDialog(
                             modifier = Modifier
                                 .offset(x = (-55).dp),
                             imageVector = ImageVector.vectorResource(R.drawable.down_arrow_img),
-                            contentDescription = "down_arrow_img",
+                            contentDescription = null, // декоративная стрелка дропдауна
                             tint = colorResource(id = R.color.grey)
                         )
 

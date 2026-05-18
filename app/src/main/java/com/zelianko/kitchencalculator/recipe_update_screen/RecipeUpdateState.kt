@@ -1,12 +1,19 @@
 package com.zelianko.kitchencalculator.recipe_update_screen
 
-import com.zelianko.kitchencalculator.data.ProductEn
-import com.zelianko.kitchencalculator.data.Recipe
+import com.zelianko.kitchencalculator.recipe_add_screen.ProductDraft
 
-sealed class RecipeUpdateState {
-
-    object Initial : RecipeUpdateState()
-    object Loading: RecipeUpdateState()
-
-    data class RecipeDto(var recipe: Recipe?, var products: MutableList<ProductEn>) : RecipeUpdateState()
-}
+/**
+ * UI state экрана редактирования рецепта.
+ *
+ * `isLoaded` нужен, чтобы UI знал, дочитал ли init корутины из БД — иначе
+ * экран мигает пустыми полями до завершения загрузки.
+ */
+data class RecipeUpdateUiState(
+    val recipeId: Long? = null,
+    val name: String = "",
+    val imageUri: String = "",
+    val description: String = "",
+    val products: List<ProductDraft> = emptyList(),
+    val isLoaded: Boolean = false,
+    val isSaving: Boolean = false,
+)

@@ -27,4 +27,9 @@
     <color name="grey_light">#D9D9D9</color>
     <color name="dismiss_color">#66FFA4A4</color>
 
+    <color name="doneness_chip_bg">#FFB88C8F</color>
+    <color name="doneness_chip_text">#FF473E3D</color>
+
+    <color name="splash_background">#FFEA6313</color>
+
 </resources>

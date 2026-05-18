@@ -5,7 +5,7 @@ pluginManagement {
         gradlePluginPortal()
     }
     plugins {
-        id("com.google.devtools.ksp") version "1.9.22-1.0.17" // Актуальная версия KSP
+        id("com.google.devtools.ksp") version "2.3.2" // Актуальная версия KSP
     }
 }
 dependencyResolutionManagement {

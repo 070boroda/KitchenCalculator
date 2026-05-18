@@ -30,11 +30,11 @@ import com.zelianko.kitchencalculator.modelview.ProductViewModel
 fun DropListProduct(
     productViewModel: ProductViewModel
 ) {
-    val products = ArrayList(productViewModel.mapProduct.value?.values?.map { pr ->
-        stringResource(
-            id = pr.keyName
-        )
-    })
+    val products = ArrayList(
+        productViewModel.mapProduct.value?.values
+            ?.map { pr -> stringResource(id = pr.keyName) }
+            ?: emptyList()
+    )
 //    val keyboardController = LocalSoftwareKeyboardController.current
 ////    val context = LocalContext.current
 

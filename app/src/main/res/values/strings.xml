@@ -34,6 +34,45 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="restart">Restart</string>
+    <string name="cancel">Cancel</string>
+    <string name="resume">Resume</string>
+    <string name="pause">Pause</string>
+
+    <!-- Accessibility -->
+    <string name="cd_save">Save</string>
+    <string name="cd_delete">Delete</string>
+    <string name="cd_edit">Edit</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_check">Confirm</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_recipe_photo">Recipe photo</string>
+    <string name="cd_add_photo">Add photo</string>
+    <string name="cd_product_image">Product image</string>
+    <string name="cd_decoration">Decoration</string>
+    <string name="cd_app_logo">App logo</string>
+    <string name="cd_add_product">Add product</string>
+    <string name="cd_decrease_portion">Decrease portion</string>
+    <string name="cd_increase_portion">Increase portion</string>
+    <string name="cd_more_actions">More actions</string>
+    <string name="cd_unit">Unit of measurement</string>
+
+    <string name="delete_recipe_title">Delete recipe?</string>
+    <string name="delete_recipe_message">This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="recipe_deleted">Recipe deleted</string>
+    <string name="undo">Undo</string>
+    <string name="recipe_saved">Recipe saved</string>
+    <string name="unit">Unit</string>
+    <string name="amount">Amount</string>
+    <string name="add_product_action">Add product</string>
+    <string name="description_hint">Notes (optional)</string>
+    <string name="description_label">Description</string>
+    <string name="share">Share</string>
+    <string name="share_recipe">Share recipe</string>
+    <string name="cd_share">Share</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="shared_via">Shared via Kitchen Calculator</string>
 
 
     <string name="pasta">Pasta</string>

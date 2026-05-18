@@ -138,7 +138,7 @@ fun MeatCard(
                 modifier = Modifier
                     .fillMaxSize(),
                 painter = painterResource(id = imageId),
-                contentDescription = null,
+                contentDescription = stringResource(id = stringId),
                 contentScale = ContentScale.Crop,
             )
         }

@@ -40,9 +40,6 @@ fun CustomTextInput(inputText: MutableState<String>) {
             .padding(start = 8.dp)
     ){
         val textState = inputText
-        val maxLength = 110
-        val blue = Color(0xFF146AFC)
-
         val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
 
         Text(

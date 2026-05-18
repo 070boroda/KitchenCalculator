@@ -1,19 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 12+ правила для:
+   * cloud-backup — Auto Backup в Google Drive (квота 25 МБ на пакет),
+   * device-transfer — D2D перенос при настройке нового телефона.
+  Содержание: пользовательские рецепты (Room) + DataStore preferences.
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <include domain="database" path="recipe_db" />
+        <include domain="database" path="recipe_db-shm" />
+        <include domain="database" path="recipe_db-wal" />
+        <include domain="file" path="datastore/" />
+        <include domain="sharedpref" path="." />
+
+        <exclude domain="sharedpref" path="appmetrica.xml" />
+        <exclude domain="file" path="AppMetrica" />
+        <exclude domain="file" path="appmetrica_native_crashes" />
+        <exclude domain="file" path="YandexMetricaConfig" />
     </cloud-backup>
-    <!--
+
     <device-transfer>
-        <include .../>
-        <exclude .../>
+        <include domain="database" path="recipe_db" />
+        <include domain="database" path="recipe_db-shm" />
+        <include domain="database" path="recipe_db-wal" />
+        <include domain="file" path="datastore/" />
+        <include domain="sharedpref" path="." />
     </device-transfer>
-    -->
 </data-extraction-rules>

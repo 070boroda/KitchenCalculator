@@ -1,0 +1,118 @@
+[versions]
+agp = "9.1.1"
+kotlin = "2.2.10"
+ksp = "2.3.2"
+hilt = "2.57"
+hiltNavigation = "1.2.0"
+googleServices = "4.4.3"
+
+# AndroidX
+coreKtx = "1.16.0"
+lifecycle = "2.9.2"
+activityCompose = "1.10.1"
+navigationCompose = "2.9.3"
+datastore = "1.1.7"
+window = "1.4.0"
+splashScreen = "1.0.1"
+material = "1.8.3"
+materialIcons = "1.7.8"
+databinding = "8.12.0"
+
+# Compose
+composeBom = "2025.07.00"
+
+# Room
+room = "2.7.2"
+
+# Test
+junit = "4.13.2"
+androidxTestJunit = "1.3.0"
+espresso = "3.7.0"
+
+# Third-party
+yandexAds = "8.0.0.0"
+appMetrica = "7.10.0"
+firebaseBom = "34.0.0"
+firebaseCrashlyticsBuildtools = "3.0.5"
+billing = "7.1.1"
+sheetsComposeDialogs = "1.3.0"
+searchableDropdown = "1.1.0"
+coil = "2.7.0"
+commonsLang = "3.18.0"
+lottie = "6.6.7"
+
+[libraries]
+# AndroidX core
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
+androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-databinding-runtime = { module = "androidx.databinding:databinding-runtime", version.ref = "databinding" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
+
+# Compose
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "material" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIcons" }
+androidx-compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "material" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+# Window
+androidx-window = { module = "androidx.window:window", version.ref = "window" }
+androidx-window-java = { module = "androidx.window:window-java", version.ref = "window" }
+
+# Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigation" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigation" }
+
+# Room
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+# Yandex / AppMetrica
+yandex-mobileads-mediation = { module = "com.yandex.android:mobileads-mediation", version.ref = "yandexAds" }
+appmetrica-analytics = { module = "io.appmetrica.analytics:analytics", version.ref = "appMetrica" }
+
+# Firebase
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics-buildtools = { module = "com.google.firebase:firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+
+# Billing
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
+billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "billing" }
+
+# Third-party UI
+sheets-compose-dialogs-core = { module = "com.maxkeppeler.sheets-compose-dialogs:core", version.ref = "sheetsComposeDialogs" }
+sheets-compose-dialogs-calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "sheetsComposeDialogs" }
+searchable-dropdown-menu = { module = "com.github.Breens-Mbaka:Searchable-Dropdown-Menu-Jetpack-Compose", version.ref = "searchableDropdown" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang" }
+
+# Test
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

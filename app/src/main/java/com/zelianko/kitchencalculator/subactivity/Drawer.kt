@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -74,6 +75,8 @@ import kotlinx.coroutines.launch
 fun Drawer(
     productViewModel: ProductViewModel,
     mainNavHostController: NavHostController,
+    openTimerOnStart: Boolean = false,
+    onTimerOpened: () -> Unit = {},
 //    billingViewModel: BillingViewModel
 ) {
     val items = listOf(
@@ -135,6 +138,19 @@ fun Drawer(
             mutableStateOf(items.get(selectedItemIndex).title)
         }
 
+        // Если открыли приложение тапом по уведомлению таймера — навигируем
+        // напрямую на экран таймера, минуя список рецептов.
+        LaunchedEffect(openTimerOnStart) {
+            if (!openTimerOnStart) return@LaunchedEffect
+            val timerIndex = items.indexOfFirst { it.route == Routes.TIMER_SCREEN }
+            if (timerIndex >= 0) {
+                selectedItemIndex = timerIndex
+                selectedItem = items[timerIndex].title
+                navController.navigate(Routes.TIMER_SCREEN)
+            }
+            onTimerOpened()
+        }
+
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet(
@@ -147,7 +163,7 @@ fun Drawer(
                         Column(modifier = Modifier.fillMaxSize()) {
                             Image(
                                 painter = painterResource(id = R.drawable.background_header_menu),
-                                contentDescription = "Menu",
+                                contentDescription = null, // декоративный фон меню
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(250.dp),
@@ -221,7 +237,7 @@ fun Drawer(
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.Menu,
-                                        contentDescription = "Menu"
+                                        contentDescription = stringResource(id = R.string.cd_menu)
                                     )
                                 }
                             },
@@ -240,7 +256,7 @@ fun Drawer(
                                         }) {
                                         Icon(
                                             imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                                            contentDescription = "plus"
+                                            contentDescription = stringResource(id = R.string.create_recipe)
                                         )
                                     }
                                 }

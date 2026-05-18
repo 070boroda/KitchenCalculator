@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -194,7 +194,7 @@ fun CokingTemperatureScreen(
                         title = true
                     )
                 }
-                Divider(
+                HorizontalDivider(
                     color = Color.LightGray,
                     modifier = Modifier
                         .height(1.dp)
@@ -228,7 +228,7 @@ fun CokingTemperatureScreen(
 
                         Image(
                             imageVector = ImageVector.vectorResource(invoice.icon),
-                            contentDescription = "Android"
+                            contentDescription = invoice.nameProduct
                         )
 //                    TableCell(
 //                        text = invoice.invoice,
@@ -245,7 +245,7 @@ fun CokingTemperatureScreen(
                         )
                     }
                 }
-                Divider(
+                HorizontalDivider(
                     color = Color.LightGray,
                     modifier = Modifier
                         .height(1.dp)
@@ -285,12 +285,8 @@ fun RowScope.StatusCell(
     alignment: TextAlign = TextAlign.Center,
 ) {
 
-    val color = when (text) {
-        else -> Color(0xFFB88C8F)
-    }
-    val textColor = when (text) {
-        else -> Color(0xFF473E3D)
-    }
+    val color = colorResource(id = R.color.doneness_chip_bg)
+    val textColor = colorResource(id = R.color.doneness_chip_text)
 
     Text(
         text = text,

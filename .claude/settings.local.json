@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\StudioProject\\\\KitchenCalculator\" -Recurse -Name)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\StudioProject\\\\KitchenCalculator\" -Recurse | Where-Object {$_.Extension -match '\\\\.\\(kt|gradle|xml\\)$'} | Select-Object -First 50 FullName)",
+      "WebFetch(domain:ads.yandex.com)"
+    ]
+  }
+}

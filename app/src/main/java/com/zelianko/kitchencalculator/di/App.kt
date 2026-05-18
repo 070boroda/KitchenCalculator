@@ -4,9 +4,12 @@ import android.app.Application
 import androidx.room.Room
 import com.zelianko.kitchencalculator.data.CookingTimeRepository
 import com.zelianko.kitchencalculator.data.CookingTimeRepositoryImpl
+import com.zelianko.kitchencalculator.data.MIGRATION_1_2
 import com.zelianko.kitchencalculator.data.MainDb
 import com.zelianko.kitchencalculator.data.ProductEnRepository
 import com.zelianko.kitchencalculator.data.ProductEnRepositoryImp
+import com.zelianko.kitchencalculator.data.RecipeDescriptionRepository
+import com.zelianko.kitchencalculator.data.RecipeDescriptionRepositoryImpl
 import com.zelianko.kitchencalculator.data.RecipeRepository
 import com.zelianko.kitchencalculator.data.RecipeRepositoryImpl
 import dagger.Module
@@ -24,7 +27,7 @@ class App {
     fun provideMainDb(app: Application): MainDb {
         return Room.databaseBuilder(app, MainDb::class.java, "recipe_db")
             .createFromAsset("main.db")
-//            .addMigrations(MIGRATION_6_7, MIGRATION_8_9)
+            .addMigrations(MIGRATION_1_2)
             .build()
     }
 
@@ -44,5 +47,11 @@ class App {
     @Singleton
     fun provideCokingTimeRepo(db: MainDb): CookingTimeRepository {
         return CookingTimeRepositoryImpl(db.cookingTimeDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRecipeDescriptionRepo(db: MainDb): RecipeDescriptionRepository {
+        return RecipeDescriptionRepositoryImpl(db.recipeDescriptionDao)
     }
 }
