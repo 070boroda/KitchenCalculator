@@ -47,11 +47,11 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun KitchenCalculatorTheme(
-    // Тёмная тема пока выключена принудительно — фоны экранов жёстко взяты из
-    // colors.xml (без values-night/), при системной dark теме получалась каша:
-    // светлый фон + почти-белый onSurface текст. Включим после того, как все
-    // экраны переедут на MaterialTheme.colorScheme.* + появится night-палитра.
-    darkTheme: Boolean = false,
+    // Палитра определена в Color.kt (light/dark), XML-фоны переопределены в
+    // values-night/colors.xml. Если на тёмной теме где-то остался hardcoded
+    // Color.Black-текст поверх R.color.grey_light/all_background — заменять
+    // точечно на MaterialTheme.colorScheme.onBackground / onSurface.
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
     // Динамические цвета по умолчанию выключены — у приложения свой бренд (оранжевый).
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit

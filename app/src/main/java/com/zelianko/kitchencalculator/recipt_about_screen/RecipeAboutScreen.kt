@@ -180,7 +180,7 @@ fun RecipeAboutScreen(
                     Text(
                         text = description,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = Dimens.SpacingL, vertical = Dimens.SpacingXs),
@@ -198,7 +198,7 @@ fun RecipeAboutScreen(
                     Text(
                         text = stringResource(id = R.string.ingredients),
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
                 Spacer(modifier = Modifier.height(Dimens.SpacingXs))
@@ -232,13 +232,13 @@ private fun IngredientRow(ingredient: RecipeAboutViewModel.ProductDto) {
         Text(
             text = ingredient.name,
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = "${formatNumber(ingredient.mass)} ${ingredient.measureWeight}",
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.width(Dimens.SpacingS))
         Text(

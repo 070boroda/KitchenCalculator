@@ -13,8 +13,10 @@ import android.os.IBinder
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.glance.appwidget.updateAll
 import com.zelianko.kitchencalculator.MainActivity
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.widget.TimerWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -93,6 +95,7 @@ class TimerService : Service() {
             )
         }
         startInForeground(totalMillis)
+        refreshWidget()
         runTicker()
     }
 
@@ -100,24 +103,28 @@ class TimerService : Service() {
         tickJob?.cancel()
         TimerController.update { it.copy(isRunning = false) }
         updateNotification(running = false)
+        refreshWidget()
     }
 
     private fun resumeTimer() {
         if (TimerController.state.value.remainingMillis <= 0L) return
         TimerController.update { it.copy(isRunning = true, isFinished = false) }
         updateNotification(running = true)
+        refreshWidget()
         runTicker()
     }
 
     private fun stopTimer() {
         tickJob?.cancel()
         TimerController.update { TimerState() }
+        refreshWidget()
     }
 
     private fun runTicker() {
         tickJob?.cancel()
         tickJob = scope.launch {
             var lastTick = SystemClock.elapsedRealtime()
+            var lastSecondShown = TimerController.state.value.remainingMillis / 1000L
             while (TimerController.state.value.remainingMillis > 0L &&
                 TimerController.state.value.isRunning
             ) {
@@ -127,6 +134,12 @@ class TimerService : Service() {
                 lastTick = now
                 TimerController.update {
                     it.copy(remainingMillis = (it.remainingMillis - elapsed).coerceAtLeast(0L))
+                }
+                // Widget — обновляем не чаще раза в секунду, чтобы не дёргать систему.
+                val curSecond = TimerController.state.value.remainingMillis / 1000L
+                if (curSecond != lastSecondShown) {
+                    lastSecondShown = curSecond
+                    refreshWidget()
                 }
             }
             if (TimerController.state.value.remainingMillis <= 0L &&
@@ -142,7 +155,18 @@ class TimerService : Service() {
             it.copy(isRunning = false, isFinished = true, remainingMillis = 0L)
         }
         postFinishedNotification()
+        refreshWidget()
         stopSelfAndForeground()
+    }
+
+    private fun refreshWidget() {
+        scope.launch {
+            runCatching {
+                // updateAll вызывает provideGlance для всех экземпляров виджета.
+                // Если их не размещали — это no-op.
+                TimerWidget().updateAll(this@TimerService)
+            }
+        }
     }
 
     private fun startInForeground(totalMillis: Long) {
@@ -267,6 +291,12 @@ class TimerService : Service() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
+        // Чистим устаревший канал (если пользователь обновился со старой сборки,
+        // где у нас не было звука alarm на канале).
+        if (nm.getNotificationChannel(OLD_CHANNEL_ID_FINISHED) != null) {
+            nm.deleteNotificationChannel(OLD_CHANNEL_ID_FINISHED)
+        }
+
         if (nm.getNotificationChannel(CHANNEL_ID_ONGOING) == null) {
             nm.createNotificationChannel(
                 NotificationChannel(
@@ -277,12 +307,28 @@ class TimerService : Service() {
             )
         }
         if (nm.getNotificationChannel(CHANNEL_ID_FINISHED) == null) {
+            // На Android 8+ звук и вибро задаются на канале, а не на notification.
+            // setSound/setDefaults в NotificationCompat.Builder для этого канала
+            // игнорируются после его создания — поэтому конфигурируем здесь.
+            val audioAttrs = android.media.AudioAttributes.Builder()
+                .setUsage(android.media.AudioAttributes.USAGE_ALARM)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
             nm.createNotificationChannel(
                 NotificationChannel(
                     CHANNEL_ID_FINISHED,
                     getString(R.string.app_name),
                     NotificationManager.IMPORTANCE_HIGH,
-                )
+                ).apply {
+                    setSound(
+                        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
+                        audioAttrs,
+                    )
+                    enableVibration(true)
+                    vibrationPattern = longArrayOf(0, 400, 200, 400, 200, 400)
+                    setBypassDnd(false)
+                    lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
+                }
             )
         }
     }
@@ -310,7 +356,11 @@ class TimerService : Service() {
         const val EXTRA_TOTAL_MILLIS = "extra_total_millis"
 
         private const val CHANNEL_ID_ONGOING = "timer_ongoing"
-        private const val CHANNEL_ID_FINISHED = "timer_finished"
+        // v2 — у v1 был дефолтный звук канала вместо alarm, а изменить параметры
+        // существующего канала система не даёт. Бамп id = новый канал с правильной
+        // конфигурацией.
+        private const val CHANNEL_ID_FINISHED = "timer_finished_v2"
+        private const val OLD_CHANNEL_ID_FINISHED = "timer_finished"
         private const val NOTIFICATION_ID_ONGOING = 1001
         private const val NOTIFICATION_ID_FINISHED = 1002
 

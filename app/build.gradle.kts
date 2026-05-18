@@ -31,11 +31,16 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            // В debug не минимизируем — быстрее сборка и читаемые стеки.
+            isMinifyEnabled = false
         }
     }
     compileOptions {
@@ -72,6 +77,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.databinding.runtime)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

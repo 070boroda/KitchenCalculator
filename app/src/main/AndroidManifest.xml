@@ -25,7 +25,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.KitchenCalculator.Splash">
+            android:theme="@style/Theme.KitchenCalculator.Splash"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +38,17 @@
             android:name=".timer_screen.TimerService"
             android:exported="false"
             android:foregroundServiceType="shortService" />
+
+        <receiver
+            android:name=".widget.TimerWidgetReceiver"
+            android:exported="false"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/timer_widget_info" /></receiver>
 
         <!--
           Yandex Mobile Ads SDK 8.x транзитивно подтягивает Google Play Services Ads

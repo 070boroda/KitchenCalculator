@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ fun CustomTextInput(inputText: MutableState<String>) {
                 .fillMaxWidth()
                 .padding(start = 24.dp, bottom = 4.dp),
             textAlign = TextAlign.Start,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
@@ -59,13 +60,15 @@ fun CustomTextInput(inputText: MutableState<String>) {
                 .padding(start = 24.dp),
             value = textState.value,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            textStyle = androidx.compose.ui.text.TextStyle(fontSize = 20.sp),
+            textStyle = androidx.compose.ui.text.TextStyle(
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+            ),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = colorResource(id = R.color.all_background),
-                cursorColor = Color.Black,
-                disabledLabelColor = Color.White,
-                focusedBorderColor = Color.Black
-            ) ,
+                cursorColor = MaterialTheme.colorScheme.onSurface,
+                focusedBorderColor = MaterialTheme.colorScheme.onSurface,
+            ),
             onValueChange = {
                 if (it.isEmpty() || it.matches(pattern)) textState.value = it
             },

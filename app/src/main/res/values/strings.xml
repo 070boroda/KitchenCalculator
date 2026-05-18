@@ -68,6 +68,8 @@
     <string name="add_product_action">Add product</string>
     <string name="description_hint">Notes (optional)</string>
     <string name="description_label">Description</string>
+    <string name="widget_description">Cooking timer</string>
+    <string name="widget_no_timer">No active timer</string>
     <string name="share">Share</string>
     <string name="share_recipe">Share recipe</string>
     <string name="cd_share">Share</string>

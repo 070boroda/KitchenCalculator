@@ -1,14 +1,12 @@
 package com.zelianko.kitchencalculator.dialog
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,8 +15,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -37,18 +35,18 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.ui.theme.Dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainDialog(
-    dialogController: DialogController
-) {
-
+fun MainDialog(dialogController: DialogController) {
     val fromWidth = remember { dialogController.fromWidth }
     val fromHeight = remember { dialogController.fromHeight }
     val fromDiametr = remember { dialogController.fromDiametr }
@@ -56,449 +54,240 @@ fun MainDialog(
     val toWidth = remember { dialogController.toWidth }
     val toHeight = remember { dialogController.toHeight }
     val toDiametr = remember { dialogController.toDiametr }
-    val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
 
-    if (dialogController.openDialog.value) {
-        BasicAlertDialog(
-            onDismissRequest = {
-                dialogController.onDialogEvent(DialogEvent.OnCancel)
-            },
-            modifier = Modifier
-                .height(311.dp)
-                .width(314.dp),
+    if (!dialogController.openDialog.value) return
+
+    BasicAlertDialog(
+        onDismissRequest = { dialogController.onDialogEvent(DialogEvent.OnCancel) },
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.SpacingL),
+    ) {
+        Card(
+            shape = RoundedCornerShape(Dimens.RadiusL),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
         ) {
-            Card(
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White,
-                )
+                    .fillMaxWidth()
+                    .padding(Dimens.SpacingL),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Row(
-                    modifier = Modifier
-                        .height(35.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.form_in_recipe),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.Black
-                    )
+                Text(
+                    text = stringResource(id = R.string.form_in_recipe),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Black,
+                )
+                Spacer(modifier = Modifier.height(Dimens.SpacingM))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(Dimens.SpacingM))
 
-                }
+                // FROM-секция
+                FormSection(
+                    title = stringResource(id = R.string.from),
+                    isCircle = dialogController.fromFormCircle.value,
+                    onShapeChange = {
+                        dialogController.onDialogEvent(DialogEvent.OnChangeFromForm)
+                    },
+                    diameterValue = fromDiametr.value,
+                    widthValue = fromWidth.value,
+                    heightValue = fromHeight.value,
+                    onDiameter = {
+                        dialogController.onDialogEvent(DialogEvent.RadiusSetFrom(it))
+                    },
+                    onWidth = {
+                        dialogController.onDialogEvent(DialogEvent.WidthSetFrom(it))
+                    },
+                    onHeight = {
+                        dialogController.onDialogEvent(DialogEvent.HeightSetFrom(it))
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(Dimens.SpacingS))
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.down_arrow_img),
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.grey),
+                    modifier = Modifier.size(28.dp),
+                )
+                Spacer(modifier = Modifier.height(Dimens.SpacingS))
+
+                // TO-секция
+                FormSection(
+                    title = stringResource(id = R.string.convert_to),
+                    isCircle = dialogController.toFormCircle.value,
+                    onShapeChange = {
+                        dialogController.onDialogEvent(DialogEvent.OnChangeFromTo)
+                    },
+                    diameterValue = toDiametr.value,
+                    widthValue = toWidth.value,
+                    heightValue = toHeight.value,
+                    onDiameter = {
+                        dialogController.onDialogEvent(DialogEvent.RadiusSetTo(it))
+                    },
+                    onWidth = {
+                        dialogController.onDialogEvent(DialogEvent.WidthSetTo(it))
+                    },
+                    onHeight = {
+                        dialogController.onDialogEvent(DialogEvent.HeightSetTo(it))
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(Dimens.SpacingL))
                 HorizontalDivider()
                 Row(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(157.dp)
-                        // .background(Color.Black)
-                    ) {
-                        Spacer(modifier = Modifier.size(50.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Spacer(modifier = Modifier.size(20.dp))
-                            RadioButton(
-                                modifier = Modifier.size(18.dp),
-                                selected = dialogController.fromFormCircle.value,
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = colorResource(id = R.color.orange_primary),
-                                    unselectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledSelectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledUnselectedColor = colorResource(id = R.color.orange_primary)
-                                ),
-                                onClick = {
-                                    dialogController.onDialogEvent(DialogEvent.OnChangeFromForm)
-                                }
-                            )
-                            Spacer(modifier = Modifier.size(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.round),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-                        }
-                        Spacer(modifier = Modifier.size(16.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Spacer(modifier = Modifier.size(20.dp))
-                            RadioButton(
-                                modifier = Modifier.size(18.dp),
-                                selected = dialogController.fromFormRectangle.value,
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = colorResource(id = R.color.orange_primary),
-                                    unselectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledSelectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledUnselectedColor = colorResource(id = R.color.orange_primary)
-                                ),
-                                onClick = {
-                                    dialogController.onDialogEvent(DialogEvent.OnChangeFromForm)
-                                }
-                            )
-                            Spacer(modifier = Modifier.size(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.rectangle),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-                        }
-
-                        //Второй блок
-                        Spacer(modifier = Modifier.size(50.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Spacer(modifier = Modifier.size(20.dp))
-                            RadioButton(
-                                modifier = Modifier.size(18.dp),
-                                selected = dialogController.toFormCircle.value,
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = colorResource(id = R.color.orange_primary),
-                                    unselectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledSelectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledUnselectedColor = colorResource(id = R.color.orange_primary)
-                                ),
-                                onClick = {
-                                    dialogController.onDialogEvent(DialogEvent.OnChangeFromTo)
-                                }
-                            )
-                            Spacer(modifier = Modifier.size(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.round),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-                        }
-                        Spacer(modifier = Modifier.size(16.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Spacer(modifier = Modifier.size(20.dp))
-                            RadioButton(
-                                modifier = Modifier.size(18.dp),
-                                selected = dialogController.toFormRectangle.value,
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = colorResource(id = R.color.orange_primary),
-                                    unselectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledSelectedColor = colorResource(id = R.color.orange_primary),
-                                    disabledUnselectedColor = colorResource(id = R.color.orange_primary)
-                                ),
-                                onClick = {
-                                    dialogController.onDialogEvent(DialogEvent.OnChangeFromTo)
-                                }
-                            )
-                            Spacer(modifier = Modifier.size(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.rectangle),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(157.dp)
-                            .padding(end = 10.dp),
-                        horizontalAlignment = Alignment.End
-                    ) {
-
-                        if (dialogController.fromFormRectangle.value) {
-                            Spacer(modifier = Modifier.size(30.dp))
-                            Text(
-                                modifier = Modifier
-                                    .offset((-5).dp),
-                                text = stringResource(id = R.string.dlinna_shirina),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 25.dp),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RectangleInput(
-                                    height = 55.dp,
-                                    width = 55.dp,
-                                    input = fromWidth.value,
-                                    dialogSizeType = DialogSizeTypes.FromWidth
-                                ) { event ->
-                                    dialogController.onDialogEvent(event)
-                                }
-                                RectangleInput(
-                                    height = 55.dp,
-                                    width = 55.dp,
-                                    input = fromHeight.value,
-                                    dialogSizeType = DialogSizeTypes.FromHeight
-                                ) { event ->
-                                    dialogController.onDialogEvent(event)
-                                }
-                            }
-                        } else {
-                            Spacer(modifier = Modifier.size(30.dp))
-                            Text(
-                                modifier = Modifier
-                                    .offset((-37).dp),
-                                text = stringResource(id = R.string.diameter),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 25.dp),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                CircleInput(
-                                    height = 60.dp,
-                                    width = 60.dp,
-                                    input = fromDiametr.value,
-                                    dialogSizeType = DialogSizeTypes.FromRadius
-                                ) { event ->
-                                    dialogController.onDialogEvent(event)
-                                }
-
-                            }
-                            // Spacer(modifier = Modifier.size(5.dp))
-                        }
-                        Spacer(modifier = Modifier.size(3.dp))
-                        Icon(
-                            modifier = Modifier
-                                .offset(x = (-55).dp),
-                            imageVector = ImageVector.vectorResource(R.drawable.down_arrow_img),
-                            contentDescription = null, // декоративная стрелка дропдауна
-                            tint = colorResource(id = R.color.grey)
+                    TextButton(onClick = {
+                        dialogController.onDialogEvent(DialogEvent.OnCancel)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.no),
+                            color = Color.Black,
                         )
-
-                        Spacer(modifier = Modifier.size(3.dp))
-                        if (dialogController.toFormRectangle.value) {
-                            Text(
-                                modifier = Modifier
-                                    .offset((-5).dp),
-                                text = stringResource(id = R.string.dlinna_shirina),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 25.dp),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RectangleInput(
-                                    height = 55.dp,
-                                    width = 55.dp,
-                                    input = toWidth.value,
-                                    dialogSizeType = DialogSizeTypes.ToWidth
-                                ) { event ->
-                                    dialogController.onDialogEvent(event)
-                                }
-                                RectangleInput(
-                                    height = 55.dp,
-                                    width = 55.dp,
-                                    input = toHeight.value,
-                                    dialogSizeType = DialogSizeTypes.ToHeight
-                                ) { event ->
-                                    dialogController.onDialogEvent(event)
-                                }
-                            }
-                        } else {
-                            Text(
-                                modifier = Modifier
-                                    .offset((-37).dp),
-                                text = stringResource(id = R.string.diameter),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 25.dp),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                CircleInput(
-                                    height = 60.dp,
-                                    width = 60.dp,
-                                    input = toDiametr.value,
-                                    dialogSizeType = DialogSizeTypes.ToRadius
-                                ) { event ->
-                                    dialogController.onDialogEvent(event)
-                                }
-
-                            }
-                            // Spacer(modifier = Modifier.size(5.dp))
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextButton(onClick = {
-                                dialogController.onDialogEvent(DialogEvent.OnCancel)
-                            }) {
-                                Text(
-                                    text = stringResource(id = R.string.no),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.Black
-                                )
-                            }
-                            TextButton(onClick = {
-                                dialogController.onDialogEvent(DialogEvent.OnConfirm)
-                            }) {
-                                Text(
-                                    text = stringResource(id = R.string.yes),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.Black
-                                )
-                            }
-                        }
+                    }
+                    TextButton(onClick = {
+                        dialogController.onDialogEvent(DialogEvent.OnConfirm)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.yes),
+                            color = colorResource(id = R.color.table_spoon),
+                            fontWeight = FontWeight.Bold,
+                        )
                     }
                 }
-
             }
         }
     }
 }
 
 @Composable
-fun RectangleInput(
-    input: String,
-    height: Dp = 54.dp,
-    width: Dp = 67.dp,
-    dialogSizeType: DialogSizeTypes,
-    onEvent: (DialogEvent) -> Unit,
-
+private fun FormSection(
+    title: String,
+    isCircle: Boolean,
+    onShapeChange: () -> Unit,
+    diameterValue: String,
+    widthValue: String,
+    heightValue: String,
+    onDiameter: (String) -> Unit,
+    onWidth: (String) -> Unit,
+    onHeight: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
-    val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
-    OutlinedTextField(
-        modifier = Modifier
-            .height(height)
-            .width(width),
-        value = input,
-        colors = OutlinedTextFieldDefaults.colors(
-            cursorColor = colorResource(id = R.color.grey_light),
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedBorderColor = colorResource(id = R.color.orange_primary),
-            unfocusedBorderColor = colorResource(id = R.color.orange_primary)
-        ),
-        shape = RoundedCornerShape(12.dp),
-        maxLines = 1,
-        textStyle = TextStyle.Default.copy(fontSize = 16.sp),
-        onValueChange = { newText ->
-            if (newText.isEmpty() || newText.matches(pattern)) {
-
-                when (dialogSizeType) {
-                    is DialogSizeTypes.FromHeight -> {
-                        onEvent(DialogEvent.HeightSetFrom(newText))
-                    }
-
-                    is DialogSizeTypes.FromWidth -> {
-                        onEvent(DialogEvent.WidthSetFrom(newText))
-                    }
-
-                    is DialogSizeTypes.FromRadius -> {
-                        onEvent(DialogEvent.RadiusSetFrom(newText))
-                    }
-
-                    is DialogSizeTypes.ToHeight -> {
-                        onEvent(DialogEvent.HeightSetTo(newText))
-                    }
-
-                    is DialogSizeTypes.ToWidth -> {
-                        onEvent(DialogEvent.WidthSetTo(newText))
-                    }
-
-                    is DialogSizeTypes.ToRadius -> {
-                        onEvent(DialogEvent.RadiusSetTo(newText))
-                    }
-                }
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = Dimens.SpacingXs),
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingS),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ShapeOption(
+                label = stringResource(id = R.string.round),
+                selected = isCircle,
+                onClick = { if (!isCircle) onShapeChange() },
+                modifier = Modifier.weight(1f),
+            )
+            ShapeOption(
+                label = stringResource(id = R.string.rectangle),
+                selected = !isCircle,
+                onClick = { if (isCircle) onShapeChange() },
+                modifier = Modifier.weight(1f),
+            )
+        }
+        Spacer(modifier = Modifier.height(Dimens.SpacingS))
+        if (isCircle) {
+            DimensionField(
+                label = stringResource(id = R.string.diameter),
+                value = diameterValue,
+                onValueChange = onDiameter,
+            )
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingS),
+            ) {
+                DimensionField(
+                    label = stringResource(id = R.string.dlinna_shirina),
+                    value = widthValue,
+                    onValueChange = onWidth,
+                    modifier = Modifier.weight(1f),
+                )
+                DimensionField(
+                    label = stringResource(id = R.string.dlinna_shirina),
+                    value = heightValue,
+                    onValueChange = onHeight,
+                    modifier = Modifier.weight(1f),
+                )
             }
-
-        },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
+        }
+    }
 }
 
+@Composable
+private fun ShapeOption(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = onClick,
+            colors = RadioButtonDefaults.colors(
+                selectedColor = colorResource(id = R.color.orange_primary),
+                unselectedColor = colorResource(id = R.color.orange_primary),
+            ),
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Black,
+        )
+    }
+}
 
 @Composable
-fun CircleInput(
-    input: String,
-    height: Dp = 54.dp,
-    width: Dp = 67.dp,
-    dialogSizeType: DialogSizeTypes,
-    onEvent: (DialogEvent) -> Unit,
-
-    ) {
-
+private fun DimensionField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
     OutlinedTextField(
-        modifier = Modifier
-            .height(height)
-            .width(width),
-        value = input,
-        colors = OutlinedTextFieldDefaults.colors(
-            cursorColor = colorResource(id = R.color.grey_light),
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedBorderColor = colorResource(id = R.color.orange_primary),
-            unfocusedBorderColor = colorResource(id = R.color.orange_primary)
-        ),
-        shape = RoundedCornerShape(50.dp),
-        maxLines = 1,
-        textStyle = TextStyle.Default.copy(fontSize = 16.sp),
-        onValueChange = { newText ->
-            if (newText.isEmpty() || newText.matches(pattern)) {
-                when (dialogSizeType) {
-                    is DialogSizeTypes.FromHeight -> {
-                        onEvent(DialogEvent.HeightSetFrom(newText))
-                    }
-
-                    is DialogSizeTypes.FromWidth -> {
-                        onEvent(DialogEvent.WidthSetFrom(newText))
-                    }
-
-                    is DialogSizeTypes.FromRadius -> {
-                        onEvent(DialogEvent.RadiusSetFrom(newText))
-                    }
-
-                    is DialogSizeTypes.ToHeight -> {
-                        onEvent(DialogEvent.HeightSetTo(newText))
-                    }
-
-                    is DialogSizeTypes.ToWidth -> {
-                        onEvent(DialogEvent.WidthSetTo(newText))
-                    }
-
-                    is DialogSizeTypes.ToRadius -> {
-                        onEvent(DialogEvent.RadiusSetTo(newText))
-                    }
-                }
-            }
-
+        value = value,
+        onValueChange = { if (it.isEmpty() || it.matches(pattern)) onValueChange(it) },
+        modifier = modifier
+            .fillMaxWidth()
+            .height(60.dp),
+        label = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall,
+            )
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = colorResource(id = R.color.orange_primary),
+            unfocusedBorderColor = colorResource(id = R.color.orange_primary),
+        ),
+        shape = RoundedCornerShape(Dimens.RadiusM),
+        singleLine = true,
+        textStyle = TextStyle.Default.copy(fontSize = 16.sp),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
     )
 }

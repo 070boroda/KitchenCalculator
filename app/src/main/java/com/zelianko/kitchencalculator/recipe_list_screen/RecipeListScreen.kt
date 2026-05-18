@@ -219,6 +219,41 @@ private fun CustomTextInputField(state: MutableState<TextFieldValue>) {
     )
 }
 
+/**
+ * Кружок-аватар рецепта: если у рецепта есть фото — показываем его кропом,
+ * иначе — заглушку (иконка my_recipe на тонированном фоне), чтобы строка
+ * списка не выглядела пустой.
+ */
+@Composable
+private fun RecipeAvatar(recipe: Recipe) {
+    val size = 48.dp
+    if (recipe.imageUrl.isBlank()) {
+        Box(
+            modifier = Modifier
+                .size(size)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_my_recipe),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.size(24.dp),
+            )
+        }
+    } else {
+        AsyncImage(
+            model = recipe.imageUrl,
+            contentDescription = recipe.name,
+            modifier = Modifier
+                .size(size)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop,
+        )
+    }
+}
+
 @Composable
 private fun RowRecipe(
     recipe: Recipe,
@@ -227,20 +262,13 @@ private fun RowRecipe(
     Row(
         modifier = Modifier
             .height(56.dp)
-            .width(332.dp),
+            .width(332.dp)
+            .clickable {
+                onEvent(RecipeListEvent.OnItemClick(Routes.RECIPE_ABOUT_SCREEN + "/${recipe.id}"))
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        AsyncImage(
-            model = recipe.imageUrl,
-            contentDescription = recipe.name,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .clickable {
-                    onEvent(RecipeListEvent.OnItemClick(Routes.RECIPE_ABOUT_SCREEN + "/${recipe.id}"))
-                },
-            contentScale = ContentScale.Crop,
-        )
+        RecipeAvatar(recipe = recipe)
         Spacer(modifier = Modifier.width(Dimens.SpacingL))
         Box(modifier = Modifier.weight(1f)) {
             Text(

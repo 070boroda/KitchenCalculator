@@ -22,6 +22,7 @@ import com.zelianko.kitchencalculator.datastore.AppPreferences
 import com.zelianko.kitchencalculator.lottie.LottieLoader
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.navigation.RecipeNavGraph
+import com.zelianko.kitchencalculator.timer_screen.TimerController
 import com.zelianko.kitchencalculator.ui.theme.KitchenCalculatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 import io.appmetrica.analytics.AppMetrica
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        pendingOpenTimer = intent.shouldOpenTimer()
+        pendingOpenTimer = intent.shouldOpenTimer() || isTimerRunning()
 
         val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
 
@@ -93,13 +94,19 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         AppMetrica.reportAppOpen(intent)
-        if (intent.shouldOpenTimer()) {
+        if (intent.shouldOpenTimer() || isTimerRunning()) {
             pendingOpenTimer = true
         }
     }
 
     private fun Intent.shouldOpenTimer(): Boolean =
         getBooleanExtra(EXTRA_OPEN_TIMER, false)
+
+    /** Активен ли таймер прямо сейчас — есть totalMillis и не финиш. */
+    private fun isTimerRunning(): Boolean {
+        val state = TimerController.state.value
+        return state.totalMillis > 0L && !state.isFinished
+    }
 
     companion object {
         const val EXTRA_OPEN_TIMER = "extra_open_timer"

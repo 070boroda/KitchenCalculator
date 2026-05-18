@@ -69,6 +69,8 @@
     <string name="add_product_action">Добавить продукт</string>
     <string name="description_hint">Заметки (по желанию)</string>
     <string name="description_label">Описание</string>
+    <string name="widget_description">Таймер готовки</string>
+    <string name="widget_no_timer">Нет активного таймера</string>
     <string name="share">Поделиться</string>
     <string name="share_recipe">Поделиться рецептом</string>
     <string name="cd_share">Поделиться</string>

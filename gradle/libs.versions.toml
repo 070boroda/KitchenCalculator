@@ -14,6 +14,7 @@ navigationCompose = "2.9.3"
 datastore = "1.1.7"
 window = "1.4.0"
 splashScreen = "1.0.1"
+glance = "1.1.1"
 material = "1.8.3"
 materialIcons = "1.7.8"
 databinding = "8.12.0"
@@ -53,6 +54,8 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-databinding-runtime = { module = "androidx.databinding:databinding-runtime", version.ref = "databinding" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
+androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
 
 # Compose
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
