@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.zelianko.kitchencalculator"
-    compileSdk = 35
+    compileSdk = 36
 
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
@@ -18,9 +18,9 @@ android {
     defaultConfig {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 29
-        targetSdk = 35
-        versionCode = 33
-        versionName = "1.0.0.33"
+        targetSdk = 36
+        versionCode = 35
+        versionName = "1.0.0.35"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
