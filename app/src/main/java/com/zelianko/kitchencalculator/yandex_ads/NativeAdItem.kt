@@ -6,7 +6,13 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.yandex.mobile.ads.common.AdBindingResult
 import com.yandex.mobile.ads.common.AdRequest
@@ -82,9 +89,19 @@ fun NativeAdRecipeItem(
 @SuppressLint("InflateParams")
 @Composable
 private fun NativeAdCard(nativeAd: NativeAd, modifier: Modifier = Modifier) {
-    AndroidView(
+    Card(
         modifier = modifier,
-        factory = { context ->
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+    ) {
+        AndroidView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            factory = { context ->
             val view = LayoutInflater.from(context)
                 .inflate(R.layout.view_native_ad_recipe, null, false) as NativeAdView
 
@@ -119,8 +136,9 @@ private fun NativeAdCard(nativeAd: NativeAd, modifier: Modifier = Modifier) {
             })
 
             view
-        }
-    )
+            }
+        )
+    }
 }
 
 private const val TAG = "NativeAdRecipeItem"

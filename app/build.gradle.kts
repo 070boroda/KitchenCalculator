@@ -19,8 +19,8 @@ android {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 29
         targetSdk = 36
-        versionCode = 35
-        versionName = "1.0.0.35"
+        versionCode = 36
+        versionName = "1.0.0.36"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -122,6 +122,10 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.lottie.compose)
     implementation(libs.commons.lang3)
+
+    // Google Play In-App Review
+    implementation(libs.play.review)
+    implementation(libs.play.review.ktx)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

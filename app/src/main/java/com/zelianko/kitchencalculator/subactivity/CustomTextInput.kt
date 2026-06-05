@@ -4,42 +4,33 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.text.isDigitsOnly
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.ui.theme.Dimens
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun CustomTextInput(inputText: MutableState<String>) {
-    Column (
-        modifier =
-        Modifier
-            .width(160.dp)
-            .padding(start = 8.dp)
-    ){
+fun CustomTextInput(
+    inputText: MutableState<String>,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
         val textState = inputText
         val pattern = remember { Regex("[\\d]*[.]?[\\d]*") }
 
@@ -47,23 +38,16 @@ fun CustomTextInput(inputText: MutableState<String>) {
             text = stringResource(id = R.string.quantity),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 24.dp, bottom = 4.dp),
+                .padding(bottom = Dimens.SpacingXs),
             textAlign = TextAlign.Start,
             color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.titleSmall,
         )
         OutlinedTextField(
-            modifier = Modifier
-                .width(150.dp)
-                .height(54.dp)
-                .padding(start = 24.dp),
+            modifier = Modifier.fillMaxWidth(),
             value = textState.value,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            textStyle = androidx.compose.ui.text.TextStyle(
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
+            textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = colorResource(id = R.color.all_background),
                 cursorColor = MaterialTheme.colorScheme.onSurface,
@@ -72,7 +56,7 @@ fun CustomTextInput(inputText: MutableState<String>) {
             onValueChange = {
                 if (it.isEmpty() || it.matches(pattern)) textState.value = it
             },
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(Dimens.RadiusS),
             singleLine = true,
         )
     }

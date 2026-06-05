@@ -8,10 +8,21 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -24,10 +35,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -52,9 +64,12 @@ fun Timer(
     inactiveBarColor: Color,
     activeBarColor: Color,
     modifier: Modifier = Modifier,
-    strokeWidth: Dp = 5.dp,
+    strokeWidth: Dp = 14.dp,
     ringtone: Ringtone,
     context: Context,
+    groupKey: Int? = null,
+    cookingTypeKey: Int? = null,
+    productId: Long? = null,
 ) {
     val state by TimerController.state.collectAsStateWithLifecycle()
     val appContext = LocalContext.current.applicationContext
@@ -82,7 +97,7 @@ fun Timer(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            TimerController.start(appContext, totalTime)
+            TimerController.start(appContext, totalTime, groupKey, cookingTypeKey, productId)
         }
     }
 
@@ -90,25 +105,42 @@ fun Timer(
     val hour = 3600L * 1000L
     val minut = 60L * 1000L
 
-    Box(
+    // Брендовый градиент активной дуги: основной тон → его осветлённая версия.
+    val activeBrush = remember(activeBarColor) {
+        Brush.sweepGradient(
+            listOf(
+                activeBarColor,
+                lerp(activeBarColor, Color.White, 0.45f),
+                activeBarColor,
+            )
+        )
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      Box(
         contentAlignment = Alignment.Center,
         modifier = modifier.onSizeChanged { size = it }
     ) {
-        Canvas(modifier = modifier) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val arcSize = Size(size.width.toFloat(), size.height.toFloat())
+            // Фоновая (неактивная) дорожка.
             drawArc(
                 color = inactiveBarColor,
                 startAngle = -215f,
                 sweepAngle = 250f,
                 useCenter = false,
-                size = Size(size.width.toFloat(), size.height.toFloat()),
+                size = arcSize,
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
+            // Активная дуга с градиентом.
             drawArc(
-                color = activeBarColor,
+                brush = activeBrush,
                 startAngle = -215f,
                 sweepAngle = 250f * progress,
                 useCenter = false,
-                size = Size(size.width.toFloat(), size.height.toFloat()),
+                size = arcSize,
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
             val center = Offset(size.width / 2f, size.height / 2f)
@@ -116,58 +148,119 @@ fun Timer(
             val r = size.width / 2f
             val a = cos(beta) * r
             val b = sin(beta) * r
-            drawPoints(
-                listOf(Offset(center.x + a, center.y + b)),
-                pointMode = PointMode.Points,
-                color = handleColor,
-                strokeWidth = (strokeWidth * 3f).toPx(),
-                cap = StrokeCap.Round
-            )
+            val handleCenter = Offset(center.x + a, center.y + b)
+            val handleRadius = strokeWidth.toPx() * 1.1f
+            // Белая «обводка» бегунка + цветная сердцевина — выглядит объёмно.
+            drawCircle(color = Color.White, radius = handleRadius, center = handleCenter)
+            drawCircle(color = handleColor, radius = handleRadius * 0.6f, center = handleCenter)
         }
-        Text(
-            text = String.format(
-                "%02d:%02d:%02d",
-                (currentTime / hour),
-                (currentTime % hour) / minut,
-                (currentTime % minut) / 1000L
-            ),
-            fontSize = 44.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-        Button(
-            onClick = {
-                ringtone.stop()
-                when {
-                    // Финиш — стартуем новый таймер с текущим выбранным временем.
-                    isFinished -> startWithPermission(
-                        appContext, totalTime, postNotificationsLauncher
-                    )
-                    // Сервис активен и идёт — ставим на паузу.
-                    isTimerRunning -> TimerController.pause(appContext)
-                    // Сервис активен и на паузе — возобновляем.
-                    serviceActive -> TimerController.resume(appContext)
-                    // Никакого активного таймера — запускаем с totalTime.
-                    else -> startWithPermission(
-                        appContext, totalTime, postNotificationsLauncher
-                    )
-                }
-            },
-            modifier = Modifier
-                .width(120.dp)
-                .align(Alignment.BottomCenter),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (!isTimerRunning) Color.Green else Color.Red
-            )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = when {
-                    isTimerRunning -> stringResource(id = R.string.stop)
-                    isFinished -> stringResource(id = R.string.restart)
-                    serviceActive -> stringResource(id = R.string.resume)
-                    else -> stringResource(id = R.string.start)
-                }
+                text = stringResource(id = R.string.cooking_time),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = String.format(
+                    "%02d:%02d:%02d",
+                    (currentTime / hour),
+                    (currentTime % hour) / minut,
+                    (currentTime % minut) / 1000L
+                ),
+                fontSize = 46.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+      }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Кнопки управления — под кругом, чтобы не перекрывать бегунок.
+        // Равные по ширине через weight → адаптивны под любой экран.
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Button(
+                onClick = {
+                    ringtone.stop()
+                    when {
+                        // Финиш — стартуем новый таймер с текущим выбранным временем.
+                        isFinished -> startWithPermission(
+                            appContext, totalTime, groupKey, cookingTypeKey, productId,
+                            postNotificationsLauncher
+                        )
+                        // Сервис активен и идёт — ставим на паузу.
+                        isTimerRunning -> TimerController.pause(appContext)
+                        // Сервис активен и на паузе — возобновляем.
+                        serviceActive -> TimerController.resume(appContext)
+                        // Никакого активного таймера — запускаем с totalTime.
+                        else -> startWithPermission(
+                            appContext, totalTime, groupKey, cookingTypeKey, productId,
+                            postNotificationsLauncher
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 52.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isTimerRunning) {
+                        Color(0xFFE53935)
+                    } else {
+                        activeBarColor
+                    },
+                    contentColor = Color.White,
+                )
+            ) {
+                Text(
+                    text = when {
+                        isTimerRunning -> stringResource(id = R.string.stop)
+                        isFinished -> stringResource(id = R.string.restart)
+                        serviceActive -> stringResource(id = R.string.resume)
+                        else -> stringResource(id = R.string.start)
+                    },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    softWrap = false,
+                )
+            }
+
+            // Кнопка полного сброса — видна, пока таймер активен (идёт или на паузе),
+            // чтобы не ждать долгий отсчёт до конца.
+            if (serviceActive) {
+                OutlinedButton(
+                    onClick = {
+                        ringtone.stop()
+                        TimerController.stop(appContext)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = 52.dp),
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.reset),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                }
+            }
         }
     }
 }
@@ -175,6 +268,9 @@ fun Timer(
 private fun startWithPermission(
     context: Context,
     totalTime: Long,
+    groupKey: Int?,
+    cookingTypeKey: Int?,
+    productId: Long?,
     launcher: androidx.activity.result.ActivityResultLauncher<String>,
 ) {
     val needsPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
@@ -184,6 +280,6 @@ private fun startWithPermission(
     if (needsPermission) {
         launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
     } else {
-        TimerController.start(context, totalTime)
+        TimerController.start(context, totalTime, groupKey, cookingTypeKey, productId)
     }
 }

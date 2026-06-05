@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,8 +48,7 @@ fun DropListProduct(
         placeholder = {
             Text(
                 text = stringResource(id = R.string.choose_product),
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                style = MaterialTheme.typography.titleMedium,
             )
         },
         onDropDownItemSelected = { item ->
@@ -78,14 +78,14 @@ fun DropListProduct(
 fun DropDownItem(test: String) {
     Row(
         modifier = Modifier
-            .padding(8.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 10.dp)
             .wrapContentSize(),
     ) {
         Text(
-            test,
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic,
-            fontSize = 18.sp
+            text = test,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

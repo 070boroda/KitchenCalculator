@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -120,6 +121,19 @@ class TimerScreenViewModel @Inject constructor(
     private val _cookingTimeForTimer = MutableStateFlow(25L)
     val cookingTimeForTimer: StateFlow<Long> = _cookingTimeForTimer.asStateFlow()
 
+    /**
+     * Текущий выбор пользователя (по ключам). Поднят в VM, чтобы переживать
+     * навигацию и корректно подсвечивать chips при возврате на экран.
+     */
+    private val _selectedGroupKey = MutableStateFlow(GroupProduct.CHICKEN_AND_MEAT)
+    val selectedGroupKey: StateFlow<Int> = _selectedGroupKey.asStateFlow()
+
+    private val _selectedTypeKey = MutableStateFlow(TypeCooking.FRY)
+    val selectedTypeKey: StateFlow<Int> = _selectedTypeKey.asStateFlow()
+
+    private val _selectedProductId = MutableStateFlow<Long?>(null)
+    val selectedProductId: StateFlow<Long?> = _selectedProductId.asStateFlow()
+
     init {
         viewModelScope.launch {
             cookingTimeRepository.getAllCookingTimeByGroup(GroupProduct.CHICKEN_AND_MEAT).collect {
@@ -131,6 +145,7 @@ class TimerScreenViewModel @Inject constructor(
     fun onEvent(event: TimerScreenEvent) {
         when (event) {
             is TimerScreenEvent.ChooseGroup -> {
+                _selectedGroupKey.value = event.groupNumber
                 viewModelScope.launch {
                     cookingTimeRepository.getAllCookingTimeByGroup(event.groupNumber).collect {
                         _cookingTimeList.value = it
@@ -141,12 +156,14 @@ class TimerScreenViewModel @Inject constructor(
 
             is TimerScreenEvent.ChooseCookingType -> {
                 _numberCookingType.value = event.cookingTypeNumber
+                _selectedTypeKey.value = event.cookingTypeNumber
                 viewModelScope.launch {
                     _cookingTimeForTimer.emit(getCookingTimer())
                 }
             }
 
             is TimerScreenEvent.ChooseProduct -> {
+                _selectedProductId.value = event.idProduct
                 viewModelScope.launch {
                     _cookingProduct.update {
                         event.idProduct?.let { it1 ->
@@ -158,6 +175,31 @@ class TimerScreenViewModel @Inject constructor(
                     _cookingTimeForTimer.emit(getCookingTimer())
                 }
             }
+        }
+    }
+
+    /**
+     * Восстанавливает выбор по контексту работающего таймера: подгружает группу,
+     * выставляет тип приготовления и продукт. Вызывается при возврате на экран,
+     * когда таймер ещё крутится в фоне.
+     */
+    fun restoreSelectionFromTimer(groupKey: Int?, cookingTypeKey: Int?, productId: Long?) {
+        if (groupKey != null) _selectedGroupKey.value = groupKey
+        if (cookingTypeKey != null) {
+            _selectedTypeKey.value = cookingTypeKey
+            _numberCookingType.value = cookingTypeKey
+        }
+        if (productId != null) _selectedProductId.value = productId
+
+        viewModelScope.launch {
+            if (groupKey != null) {
+                _cookingTimeList.value =
+                    cookingTimeRepository.getAllCookingTimeByGroup(groupKey).firstOrNull().orEmpty()
+            }
+            if (productId != null) {
+                _cookingProduct.value = cookingTimeRepository.getCookingTimeById(productId)
+            }
+            _cookingTimeForTimer.emit(getCookingTimer())
         }
     }
 

@@ -9,31 +9,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.ui.theme.Dimens
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.yandex_ads.BannerId
 import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
@@ -119,39 +116,40 @@ fun MeatCard(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = 6.dp)
-            .clip(shape = RoundedCornerShape(12.dp)),
+            .padding(horizontal = Dimens.SpacingS),
+        shape = RoundedCornerShape(Dimens.RadiusL),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.orange_primary),
+            containerColor = colorResource(id = R.color.card_surface),
             contentColor = Color.Black
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Spacer(modifier = Modifier.height(10.dp))
-        Card(
+        Column(
             modifier = Modifier
-                .width(350.dp)
-                .height(180.dp)
-                .align(Alignment.CenterHorizontally)
-                .clip(shape = RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .padding(Dimens.SpacingM),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Image(
+            Card(
                 modifier = Modifier
-                    .fillMaxSize(),
-                painter = painterResource(id = imageId),
-                contentDescription = stringResource(id = stringId),
-                contentScale = ContentScale.Crop,
+                    .fillMaxWidth()
+                    .height(180.dp),
+                shape = RoundedCornerShape(Dimens.RadiusM),
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(id = imageId),
+                    contentDescription = stringResource(id = stringId),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+            Spacer(modifier = Modifier.height(Dimens.SpacingM))
+            Text(
+                text = stringResource(id = stringId).trimIndent(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
-
-        Spacer(modifier = Modifier.height(5.dp))
-        Text(
-            text = stringResource(id = stringId).trimIndent(),
-            textAlign = TextAlign.Center,
-            style = TextStyle(
-                color = Color.Black,
-                fontSize = 18.sp
-            ),
-        )
-        Spacer(modifier = Modifier.height(8.dp))
     }
 }

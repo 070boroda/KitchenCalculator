@@ -177,3 +177,10 @@
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
+
+# ============================================================================
+# ru.ok.tracer — транзитивно приходит через медиацию Yandex Ads.
+# В META-INF/services объявлен ServiceLoader на отсутствующий класс
+# TracerLiteManifest — глушим warning R8.
+# ============================================================================
+-dontwarn ru.ok.tracer.**

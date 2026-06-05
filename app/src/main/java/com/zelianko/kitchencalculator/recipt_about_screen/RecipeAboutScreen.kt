@@ -203,9 +203,24 @@ fun RecipeAboutScreen(
                 }
                 Spacer(modifier = Modifier.height(Dimens.SpacingXs))
             }
-            items(listProducts, key = { it.name }) { ingredient ->
-                IngredientRow(ingredient)
-                Spacer(modifier = Modifier.height(Dimens.SpacingXs))
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Dimens.SpacingL),
+                    shape = RoundedCornerShape(Dimens.RadiusL),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorResource(id = R.color.card_surface),
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                ) {
+                    Column(modifier = Modifier.padding(vertical = Dimens.SpacingS)) {
+                        listProducts.forEach { ingredient ->
+                            IngredientRow(ingredient)
+                            Spacer(modifier = Modifier.height(Dimens.SpacingXs))
+                        }
+                    }
+                }
             }
             item {
                 // Запас под bottomBar, чтобы последний ингредиент не прятался.
@@ -220,7 +235,7 @@ private fun IngredientRow(ingredient: RecipeAboutViewModel.ProductDto) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimens.SpacingL),
+            .padding(horizontal = Dimens.SpacingM, vertical = Dimens.SpacingXs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
@@ -266,7 +281,7 @@ private fun PortionCard(
             .fillMaxWidth()
             .height(150.dp),
         shape = RoundedCornerShape(Dimens.RadiusM),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.card_surface)),
     ) {
         Column(
             modifier = Modifier
@@ -283,7 +298,7 @@ private fun PortionCard(
                 Text(
                     text = stringResource(id = R.string.for_portion),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
@@ -300,7 +315,7 @@ private fun PortionCard(
                     Text(
                         text = "X ${formatNumber(counter)}",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.width(Dimens.SpacingS))
                     IconButton(

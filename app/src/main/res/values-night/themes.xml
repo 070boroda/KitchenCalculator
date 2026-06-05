@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Тёмный вариант базовой темы. Нужен, чтобы inflated XML-вью (нативная реклама
+         Yandex) с ?android:attr/textColorPrimary/Secondary рисовали светлый текст
+         в ночном режиме. Цвета Compose-экранов задаёт KitchenCalculatorTheme. -->
+    <style name="Theme.KitchenCalculator" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>

@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,13 +28,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
 import com.zelianko.kitchencalculator.subactivity.CardFirstScreenTop
@@ -81,97 +80,131 @@ fun FirstScreen(
     ) {
         BannerSticky(id = BannerId.ONE_BANNER.bannerId)
 
-        Spacer(modifier = Modifier.height(Dimens.SpacingS))
+        Spacer(modifier = Modifier.height(Dimens.SpacingM))
 
-        // Selector продукта
-        Row(
+        // Selector продукта в карточке
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
-                .padding(horizontal = Dimens.SpacingS)
-                .clip(RoundedCornerShape(Dimens.RadiusM))
-                .background(Color.White),
+                .padding(horizontal = Dimens.SpacingL),
+            shape = RoundedCornerShape(Dimens.RadiusM),
+            colors = CardDefaults.cardColors(
+                containerColor = colorResource(id = R.color.input_background),
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         ) {
-            DropListProduct(productViewModel = productViewModel)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+            ) {
+                DropListProduct(productViewModel = productViewModel)
+            }
         }
 
-        Spacer(modifier = Modifier.height(Dimens.SpacingM))
+        Spacer(modifier = Modifier.height(Dimens.SpacingL))
 
         // Имя выбранного продукта
         val nameRes = selectedProduct?.keyName
         Text(
             text = if (nameRes != null) stringResource(nameRes)
             else stringResource(id = R.string.choose_product),
+            style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.Bold,
-            fontSize = 28.sp,
+            textAlign = TextAlign.Center,
         )
 
-        Spacer(modifier = Modifier.height(Dimens.SpacingS))
+        Spacer(modifier = Modifier.height(Dimens.SpacingM))
 
-        // Карточки мер — 2x2 сетка
+        // Карточки мер — 2x2 сетка, на всю ширину с равными колонками
         val gramSuffix = stringResource(id = R.string.g)
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingM, Alignment.CenterHorizontally),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Dimens.SpacingL),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingM),
         ) {
             CardFirstScreenTop(
                 title = R.string.tea_glass,
                 titleGramm = R.string.tea_glass_250,
                 value = massString(selectedProduct?.teaGlass, gramSuffix),
                 colorCard = colorResource(id = R.color.tea_glass_card),
+                modifier = Modifier.weight(1f),
             )
             CardFirstScreenTop(
                 title = R.string.table_spoon,
                 titleGramm = 0,
                 value = massString(selectedProduct?.tableSpoon, gramSuffix),
                 colorCard = colorResource(id = R.color.table_spoon_card),
+                modifier = Modifier.weight(1f),
             )
         }
         Spacer(modifier = Modifier.height(Dimens.SpacingM))
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingM, Alignment.CenterHorizontally),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Dimens.SpacingL),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingM),
         ) {
             CardFirstScreenTop(
                 title = R.string.faceted_glass,
                 titleGramm = R.string.faceted_glass_200,
                 value = massString(selectedProduct?.facetedGlass, gramSuffix),
                 colorCard = colorResource(id = R.color.faceted_glass_card),
+                modifier = Modifier.weight(1f),
             )
             CardFirstScreenTop(
                 title = R.string.tea_spoon,
                 titleGramm = 0,
                 value = massString(selectedProduct?.teaSpoon, gramSuffix),
                 colorCard = colorResource(id = R.color.tea_spoon_card),
+                modifier = Modifier.weight(1f),
             )
         }
 
         if (selectedProduct != null) {
             Spacer(modifier = Modifier.height(Dimens.SpacingL))
 
-            // Ввод количества и единицы "Из"
-            Row(
+            // Блок пересчёта: ввод количества + единицы "из"/"в" в одной карточке
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = Dimens.SpacingS),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                    .padding(horizontal = Dimens.SpacingL),
+                shape = RoundedCornerShape(Dimens.RadiusL),
+                colors = CardDefaults.cardColors(
+                    containerColor = colorResource(id = R.color.card_surface),
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
             ) {
-                CustomTextInput(inputText)
-                DropListConditionFrom(productViewModel)
-            }
-            Spacer(modifier = Modifier.height(Dimens.SpacingS))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Dimens.SpacingS)
-                    .height(80.dp),
-            ) {
-                DropListConditionTo(productViewModel)
+                Column(
+                    modifier = Modifier.padding(
+                        horizontal = Dimens.SpacingM,
+                        vertical = Dimens.SpacingM,
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingM),
+                        verticalAlignment = Alignment.Top,
+                    ) {
+                        CustomTextInput(
+                            inputText = inputText,
+                            modifier = Modifier.weight(1f),
+                        )
+                        DropListConditionFrom(
+                            productViewModel = productViewModel,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(Dimens.SpacingM))
+                    DropListConditionTo(
+                        productViewModel = productViewModel,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(Dimens.SpacingM))
+            Spacer(modifier = Modifier.height(Dimens.SpacingL))
 
             if (inputText.value.isNotEmpty() && selectedItemFrom.isNotEmpty() && selectedItemTo.isNotEmpty()) {
                 ResultCardProduct(resultCount, selectedItemTo)

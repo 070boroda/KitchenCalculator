@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +52,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -98,19 +101,24 @@ fun RecipeListScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            Spacer(modifier = Modifier.height(Dimens.SpacingS))
-            BannerSticky(id = BannerId.FOUR_BANNER.bannerId)
-
             if (recipeList.value.isEmpty()) {
-                Spacer(modifier = Modifier.height(120.dp))
-                Text(
-                    text = stringResource(id = R.string.add_recipe),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-            } else {
                 Spacer(modifier = Modifier.height(Dimens.SpacingS))
-                CustomTextInputField(state = textSearch)
+                BannerSticky(id = BannerId.FOUR_BANNER.bannerId)
+                EmptyRecipesState(modifier = Modifier.weight(1f))
+            } else {
+                // Поиск закреплён в самом верху — он не внутри прокручиваемого
+                // списка и стоит ВЫШЕ баннера, поэтому асинхронная загрузка
+                // баннера (высота 0 → ~50dp) больше не «толкает» поле вниз.
+                Spacer(modifier = Modifier.height(Dimens.SpacingS))
+                CustomTextInputField(
+                    state = textSearch,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Dimens.SpacingM),
+                )
+                Spacer(modifier = Modifier.height(Dimens.SpacingS))
+                BannerSticky(id = BannerId.FOUR_BANNER.bannerId)
+                Spacer(modifier = Modifier.height(Dimens.SpacingS))
 
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
@@ -137,10 +145,12 @@ fun RecipeListScreen(
                                 }
                             },
                         )
-                        // Native ad после каждого пятого рецепта.
+                        // Native ad: первый блок — сразу после первого рецепта,
+                        // далее после каждого пятого. Так нативка видна на экране
+                        // даже когда рецептов мало (раньше требовалось минимум 5).
                         // adKey зависит от слота, не от номера рецепта — Yandex SDK
                         // переиспользует объявление при ре-композиции одного и того же узла.
-                        if ((index + 1) % NATIVE_AD_INTERVAL == 0) {
+                        if (index == 0 || (index + 1) % NATIVE_AD_INTERVAL == 0) {
                             Spacer(modifier = Modifier.height(Dimens.SpacingS))
                             NativeAdRecipeItem(
                                 adUnitId = NativeAdUnitId.RECIPE_LIST,
@@ -185,22 +195,70 @@ fun RecipeListScreen(
     }
 }
 
+/**
+ * Современный empty-state для пустого списка рецептов: крупная иконка в
+ * тонированном круге, заголовок и поясняющая подпись — всё по центру экрана.
+ */
 @Composable
-private fun CustomTextInputField(state: MutableState<TextFieldValue>) {
+private fun EmptyRecipesState(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.SpacingXl),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(120.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_my_recipe),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.size(56.dp),
+            )
+        }
+        Spacer(modifier = Modifier.height(Dimens.SpacingL))
+        Text(
+            text = stringResource(id = R.string.add_recipe),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(modifier = Modifier.height(Dimens.SpacingS))
+        Text(
+            text = stringResource(id = R.string.add_recipe_hint),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun CustomTextInputField(
+    state: MutableState<TextFieldValue>,
+    modifier: Modifier = Modifier,
+) {
     OutlinedTextField(
-        modifier = Modifier
-            .height(60.dp)
-            .width(335.dp),
+        modifier = modifier,
         value = state.value,
+        singleLine = true,
+        textStyle = MaterialTheme.typography.bodyLarge,
         colors = OutlinedTextFieldDefaults.colors(
-            cursorColor = Color.White,
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.White,
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = colorResource(id = R.color.input_background),
+            unfocusedContainerColor = colorResource(id = R.color.input_background),
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = Color.Transparent,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
         ),
         shape = RoundedCornerShape(Dimens.RadiusM),
-        maxLines = 1,
         leadingIcon = {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_find),
@@ -208,10 +266,21 @@ private fun CustomTextInputField(state: MutableState<TextFieldValue>) {
                 tint = colorResource(id = R.color.grey),
             )
         },
-        label = {
+        trailingIcon = {
+            if (state.value.text.isNotEmpty()) {
+                IconButton(onClick = { state.value = TextFieldValue("") }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(id = R.string.cancel),
+                        tint = colorResource(id = R.color.grey),
+                    )
+                }
+            }
+        },
+        placeholder = {
             Text(
                 text = stringResource(id = R.string.search_recipes),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = colorResource(id = R.color.grey),
             )
         },

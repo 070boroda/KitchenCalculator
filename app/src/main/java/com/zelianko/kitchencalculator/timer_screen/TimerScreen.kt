@@ -18,38 +18,32 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.data.CookingTime
 import com.zelianko.kitchencalculator.subactivity.Timer
-import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
+import com.zelianko.kitchencalculator.ui.theme.Dimens
 import com.zelianko.kitchencalculator.util.GroupProduct
 import com.zelianko.kitchencalculator.util.TypeCooking
 import com.zelianko.kitchencalculator.yandex_ads.BannerId
@@ -84,13 +78,6 @@ fun TimerScreen(
     val ringtone = RingtoneManager.getRingtone(context, notification)
 
     /**
-     * начение выбранного времени приготовления
-     */
-    val numberTypeCooking = remember {
-        mutableStateOf(20)
-    }
-
-    /**
      * Продукты с временем
      */
     val productList = viewModel.cookingTimeList.collectAsState()
@@ -106,6 +93,35 @@ fun TimerScreen(
     val translateMap = viewModel.mapTranslateProduct
 
     val cookingTimeTimer = viewModel.cookingTimeForTimer.collectAsState()
+
+    // Текущий выбор пользователя (поднят в VM, переживает навигацию).
+    val selectedGroupKey by viewModel.selectedGroupKey.collectAsState()
+    val selectedTypeKey by viewModel.selectedTypeKey.collectAsState()
+    val selectedProductId by viewModel.selectedProductId.collectAsState()
+
+    // Состояние фонового таймера — единый источник правды, переживает уход с экрана.
+    val timerState by TimerController.state.collectAsState()
+    // Таймер активен (идёт или на паузе, но не завершён) — выбор заблокирован.
+    val locked = timerState.totalMillis > 0L && !timerState.isFinished
+
+    // При возврате на экран с работающим таймером — восстанавливаем те же chips.
+    LaunchedEffect(locked, timerState.productId) {
+        if (locked) {
+            viewModel.restoreSelectionFromTimer(
+                groupKey = timerState.groupKey,
+                cookingTypeKey = timerState.cookingTypeKey,
+                productId = timerState.productId,
+            )
+        }
+    }
+
+    // Индексы для подсветки chips по выбранным ключам.
+    val groupIndex = listGroupProduct.indexOfFirst { it.key == selectedGroupKey }
+        .let { if (it < 0) 0 else it }
+    val typeIndex = listTypeCooking.indexOfFirst { it.key == selectedTypeKey }
+        .let { if (it < 0) 0 else it }
+    val productIndex = productList.value.indexOfFirst { it.id == selectedProductId }
+        .let { if (it < 0) 0 else it }
 
     Surface(
         color = colorResource(id = R.color.grey_light),
@@ -129,9 +145,10 @@ fun TimerScreen(
                     .fillMaxWidth()
             ) {
                 CustomScrollGroupProductsTabs(
-                    listGroupProduct,
-                    2,
-                    ringtone
+                    list = listGroupProduct,
+                    selectedIndex = groupIndex,
+                    enabled = !locked,
+                    ringtone = ringtone,
                 ) { event ->
                     viewModel.onEvent(event)
                 }
@@ -143,8 +160,12 @@ fun TimerScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                CustomCookingTypeTabs(listTypeCooking, 1, numberTypeCooking, ringtone)
-                { event ->
+                CustomCookingTypeTabs(
+                    list = listTypeCooking,
+                    selectedIndex = typeIndex,
+                    enabled = !locked,
+                    ringtone = ringtone,
+                ) { event ->
                     viewModel.onEvent(event)
                 }
             }
@@ -156,10 +177,11 @@ fun TimerScreen(
                         .fillMaxWidth()
                 ) {
                     CustomScrollProductTabs(
-                        productList.value,
-                        0,
-                        translateMap,
-                        ringtone
+                        list = productList.value,
+                        selectedIndex = productIndex,
+                        enabled = !locked,
+                        translateMap = translateMap,
+                        ringtone = ringtone,
                     ) { event ->
                         viewModel.onEvent(event)
                     }
@@ -171,7 +193,7 @@ fun TimerScreen(
             if (cookingProduct.value.id != null) {
                 ResultCardProduct(
                     cookingProduct.value,
-                    when (numberTypeCooking.value) {
+                    when (selectedTypeKey) {
                         TypeCooking.FRY -> cookingProduct.value.fryTime.toLong() * 1000L
                         TypeCooking.BOILING -> cookingProduct.value.boilingTime.toLong() * 1000L
                         TypeCooking.BRAISE -> cookingProduct.value.braiseTime.toLong() * 1000L
@@ -182,7 +204,7 @@ fun TimerScreen(
                     translateMap
                 )
 
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
                 if (cookingTimeTimer.value != 0L) {
                     Box(
@@ -192,60 +214,28 @@ fun TimerScreen(
                             Timer(
                                 totalTime = cookingTimeTimer.value,
                                 handleColor = colorResource(id = R.color.orange_primary),
-                                inactiveBarColor = Color.DarkGray,
+                                inactiveBarColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                 activeBarColor = colorResource(id = R.color.orange_primary),
-                                modifier = Modifier.size(250.dp),
+                                modifier = Modifier.size(260.dp),
                                 ringtone = ringtone,
-                                context = context
+                                context = context,
+                                groupKey = selectedGroupKey,
+                                cookingTypeKey = selectedTypeKey,
+                                productId = cookingProduct.value.id,
                             )
                         }
                     }
                 } else {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(horizontal = 30.dp)
-                            .clip(shape = RoundedCornerShape(12.dp)),
-                        colors = CardDefaults.cardColors(
-                            containerColor = colorResource(id = R.color.header_product_result),
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.not_find_time_for_cooking),
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontSize = 30.sp,
-                                fontWeight = FontWeight.SemiBold
-                            ),
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                    InfoMessageCard(
+                        text = stringResource(id = R.string.not_find_time_for_cooking),
+                        containerColor = colorResource(id = R.color.header_product_result),
+                    )
                 }
             } else {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(horizontal = 30.dp)
-                        .clip(shape = RoundedCornerShape(12.dp)),
-                    colors = CardDefaults.cardColors(
-                        containerColor = colorResource(id = R.color.tea_spoon_card),
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.please_tap_to_product),
-                        style = TextStyle(
-                            color = Color.Black,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.SemiBold
-                        ),
-                        textAlign = TextAlign.Center
-                    )
-                }
-
+                InfoMessageCard(
+                    text = stringResource(id = R.string.please_tap_to_product),
+                    containerColor = colorResource(id = R.color.tea_spoon_card),
+                )
             }
         }
     }
@@ -254,12 +244,12 @@ fun TimerScreen(
 @Composable
 fun CustomScrollProductTabs(
     list: List<CookingTime>,
-    startPosition: Int,
+    selectedIndex: Int,
+    enabled: Boolean,
     translateMap: HashMap<Int, Int>,
     ringtone: Ringtone,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
-    var selectedIndex by remember { mutableStateOf(startPosition) }
     ScrollableTabRow(
         edgePadding = 1.dp,
         selectedTabIndex = selectedIndex,
@@ -277,27 +267,14 @@ fun CustomScrollProductTabs(
             val idStringResource = translateMap.get(groupProduct.id!!.toInt())
             val nameProduct = idStringResource?.let { stringResource(id = it) }
 
-
-            Tab(
-                modifier = if (selected) Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(25))
-                    .background(
-                        colorResource(id = R.color.orange_primary)
-                    )
-                else Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(25))
-                    .background(
-                        Color.White
-                    ),
+            TimerChipTab(
+                text = nameProduct!!,
                 selected = selected,
+                enabled = enabled,
                 onClick = {
-                    selectedIndex = index
                     onEvent(TimerScreenEvent.ChooseProduct(groupProduct.id))
                     ringtone.stop()
                 },
-                text = { Text(text = nameProduct!!, color = Color.Black) }
             )
         }
     }
@@ -306,11 +283,11 @@ fun CustomScrollProductTabs(
 @Composable
 fun CustomScrollGroupProductsTabs(
     list: List<TwoField>,
-    startPosition: Int,
+    selectedIndex: Int,
+    enabled: Boolean,
     ringtone: Ringtone,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
-    var selectedIndex by remember { mutableStateOf(startPosition) }
     ScrollableTabRow(
         edgePadding = 1.dp,
         selectedTabIndex = selectedIndex,
@@ -324,26 +301,14 @@ fun CustomScrollGroupProductsTabs(
     ) {
         list.forEachIndexed { index, groupProduct ->
             val selected = selectedIndex == index
-            Tab(
-                modifier = if (selected) Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(25))
-                    .background(
-                        colorResource(id = R.color.orange_primary)
-                    )
-                else Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(25))
-                    .background(
-                        Color.White
-                    ),
+            TimerChipTab(
+                text = groupProduct.name,
                 selected = selected,
+                enabled = enabled,
                 onClick = {
-                    selectedIndex = index
                     onEvent(TimerScreenEvent.ChooseGroup(groupProduct.key))
                     ringtone.stop()
                 },
-                text = { Text(text = groupProduct.name, color = Color.Black) }
             )
         }
     }
@@ -352,12 +317,11 @@ fun CustomScrollGroupProductsTabs(
 @Composable
 fun CustomCookingTypeTabs(
     list: List<TwoField>,
-    startPosition: Int,
-    numberTypeCooking: MutableState<Int>,
+    selectedIndex: Int,
+    enabled: Boolean,
     ringtone: Ringtone,
     onEvent: (TimerScreenEvent) -> Unit
 ) {
-    var selectedIndex by remember { mutableIntStateOf(startPosition) }
     TabRow(
         selectedTabIndex = selectedIndex,
         containerColor = colorResource(id = R.color.grey_light),
@@ -370,35 +334,91 @@ fun CustomCookingTypeTabs(
     ) {
         list.forEachIndexed { index, cookingType ->
             val selected = selectedIndex == index
-            Tab(
-                modifier = if (selected) Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(25))
-                    .background(
-                        colorResource(id = R.color.orange_primary)
-                    )
-                else Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(25))
-                    .background(
-                        Color.White
-                    ),
+            TimerChipTab(
+                text = cookingType.name,
                 selected = selected,
+                enabled = enabled,
                 onClick = {
-                    selectedIndex = index
-                    numberTypeCooking.value = cookingType.key
                     onEvent(TimerScreenEvent.ChooseCookingType(cookingType.key))
                     ringtone.stop()
                 },
-                text = { Text(text = cookingType.name, color = Color.Black) }
             )
         }
     }
 }
 
+/**
+ * Единый chip-таб таймер-экрана. Когда [enabled] = false (таймер крутится),
+ * невыбранные chips затемняются и не реагируют на клик.
+ */
+@Composable
+private fun TimerChipTab(
+    text: String,
+    selected: Boolean,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    val containerColor = if (selected) {
+        colorResource(id = R.color.orange_primary)
+    } else {
+        colorResource(id = R.color.card_surface)
+    }
+    // Заблокированные и невыбранные chips приглушаем, выбранный остаётся ярким.
+    val tabAlpha = if (!enabled && !selected) 0.4f else 1f
+    Tab(
+        modifier = Modifier
+            .padding(2.dp)
+            .clip(RoundedCornerShape(25))
+            .alpha(tabAlpha)
+            .background(containerColor),
+        selected = selected,
+        enabled = enabled || selected,
+        onClick = { if (enabled) onClick() },
+        text = {
+            Text(
+                text = text,
+                color = if (selected) Color.Black else MaterialTheme.colorScheme.onSurface
+            )
+        }
+    )
+}
+
 
 /**
- * Карточка с данными по выбрнаному продукту
+ * Карточка-сообщение (пустые состояния таймера): крупный текст по центру
+ * на тонированном фоне, единое скругление и тень.
+ */
+@Composable
+private fun InfoMessageCard(
+    text: String,
+    containerColor: Color,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = Dimens.SpacingXl),
+        shape = RoundedCornerShape(Dimens.RadiusL),
+        colors = CardDefaults.cardColors(
+            containerColor = containerColor,
+            contentColor = Color.Black,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = Dimens.SpacingXl, horizontal = Dimens.SpacingL),
+            style = MaterialTheme.typography.titleLarge,
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+/**
+ * Карточка с данными по выбрнаному продукту — акцентный брендовый блок.
  */
 @Composable
 fun ResultCardProduct(
@@ -410,13 +430,13 @@ fun ResultCardProduct(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp)
-            .padding(horizontal = 30.dp)
-            .clip(shape = RoundedCornerShape(12.dp)),
+            .padding(horizontal = Dimens.SpacingXl),
+        shape = RoundedCornerShape(Dimens.RadiusL),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.orange_primary),
-            contentColor = Color.Black
-        )
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         val idStringResource = translateMap.get(product.id!!.toInt())
         var nameProduct = idStringResource?.let { stringResource(id = it) }
@@ -425,28 +445,24 @@ fun ResultCardProduct(
             nameProduct = nameProduct.substring(0, nameProduct.indexOf("("))
         }
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = Dimens.SpacingXl, horizontal = Dimens.SpacingL),
+            verticalArrangement = Arrangement.spacedBy(Dimens.SpacingXs, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = stringResource(id = R.string.cooking_time),
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 30.sp
-                )
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f),
+                textAlign = TextAlign.Center,
             )
             Text(
-                text = String.format(
-                    "%s", nameProduct
-                ),
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                text = String.format("%s", nameProduct),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
+                textAlign = TextAlign.Center,
             )
         }
     }
 }
-

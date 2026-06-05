@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Тёмная палитра. Переопределяем только фоны и контейнеры; брендовые карточки
-  (tea_glass_card / table_spoon_card / faceted_glass_card / tea_spoon_card) и
-  оранжевый акцент оставляем — они должны оставаться узнаваемыми.
+  Тёмная палитра. Фоны/поверхности/инпуты переопределяем под тёмную тему,
+  брендовые карточки мер оставляем светлыми мид-тонами (на них всегда чёрный текст).
 
   white/black намеренно НЕ переопределяем: код использует их как "точно белый"/
-  "точно чёрный" для отдельных рамок и заливок.
+  "точно чёрный" для отдельных рамок и заливок. Для адаптивных поверхностей
+  введены отдельные токены card_surface / input_background.
 -->
 <resources>
-    <color name="backgroud_row">#5C3232</color>
+    <!-- Строки / заголовки -->
+    <color name="backgroud_row">#3A2A24</color>
+    <color name="header_name_product">#7FB069</color>
+    <color name="header_product_result">#FFB59B</color>
 
-    <!-- Основные фоны экранов -->
-    <color name="all_background">#121212</color>
-    <color name="grey_light">#1F1F1F</color>
-    <color name="grey">#A0A0A0</color>
+    <!-- Основные фоны и поверхности -->
+    <color name="all_background">#16120F</color>
+    <color name="card_surface">#262120</color>
+    <color name="input_background">#2A2421</color>
+    <color name="grey_light">#262120</color>
+    <color name="grey">#A89E97</color>
 
     <!-- TopAppBar / диалоги -->
-    <color name="top_app_bar">#1F1F1F</color>
-    <color name="top_app_bar_gr">#3A2728</color>
+    <color name="top_app_bar">#1E1A17</color>
+    <color name="top_app_bar_gr">#3A2A24</color>
+    <!-- Светлый тёплый тон: используется как фон чипов/карточек с ЧЁРНЫМ текстом
+         (табы таймера, карточки результата), поэтому в тёмной теме тоже светлый. -->
+    <color name="orange_primary">#E8C0A2</color>
 
-    <!-- Карточки результатов: чуть приглушённые тона -->
-    <color name="tea_glass_card">#C29671</color>
-    <color name="tea_spoon_card">#A87575</color>
-    <color name="table_spoon_card">#86B271</color>
-    <color name="faceted_glass_card">#71A0C2</color>
-    <color name="header_name_product">#8FBE6A</color>
-    <color name="header_product_result">#C04545</color>
+    <!-- Карточки мер: приглушённые, но достаточно светлые для чёрного текста -->
+    <color name="tea_glass_card">#E0B488</color>
+    <color name="tea_spoon_card">#E0A89F</color>
+    <color name="table_spoon_card">#A6CE9C</color>
+    <color name="faceted_glass_card">#94BFD9</color>
 
-    <!-- Мясные «чипы» — насыщеннее, чтобы текст оставался читаемым -->
-    <color name="doneness_chip_bg">#5C3F40</color>
+    <!-- Мясные «чипы» -->
+    <color name="doneness_chip_bg">#4A352C</color>
     <color name="doneness_chip_text">#F2DCD0</color>
 
-    <color name="dismiss_color">#66FFA4A4</color>
+    <color name="dismiss_color">#66E07A6A</color>
 </resources>

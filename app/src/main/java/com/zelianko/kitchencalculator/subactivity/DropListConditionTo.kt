@@ -2,33 +2,30 @@ package com.zelianko.kitchencalculator.subactivity
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenuMaterial3
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.modelview.ProductViewModel
+import com.zelianko.kitchencalculator.ui.theme.Dimens
 
 /**
  * Выподающий список конвертировать в
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun DropListConditionTo(productViewModel: ProductViewModel) {
+fun DropListConditionTo(
+    productViewModel: ProductViewModel,
+    modifier: Modifier = Modifier,
+) {
     val products = listOf(
         stringResource(id = R.string.gramm),
         stringResource(id = R.string.table_spoon),
@@ -37,33 +34,23 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
         stringResource(id = R.string.faceted_glass),
         stringResource(id = R.string.oz)
     )
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .height(50.dp)
-            .padding(start = 30.dp, end = 20.dp)
-        // .background(Color.Black)
-    ) {
+    Column(modifier = modifier) {
         Text(
             text = stringResource(id = R.string.convert_to),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 4.dp),
+                .padding(bottom = Dimens.SpacingXs),
             textAlign = TextAlign.Start,
-            fontSize = 16.sp,
+            style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.Bold
         )
         SearchableExpandedDropDownMenuMaterial3(
             listOfItems = products,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.convert_to),
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 19.sp
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             },
             onDropDownItemSelected = { item ->
@@ -74,9 +61,6 @@ fun DropListConditionTo(productViewModel: ProductViewModel) {
                 DropDownItem(drItem)
             },
             defaultItem = {},
-//            onSearchTextFieldClicked = {
-//                keyboardController?.show()
-//            }
         )
     }
 }

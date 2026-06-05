@@ -3,7 +3,16 @@
     "allow": [
       "Bash(Get-ChildItem -Path \"D:\\\\StudioProject\\\\KitchenCalculator\" -Recurse -Name)",
       "PowerShell(Get-ChildItem -Path \"D:\\\\StudioProject\\\\KitchenCalculator\" -Recurse | Where-Object {$_.Extension -match '\\\\.\\(kt|gradle|xml\\)$'} | Select-Object -First 50 FullName)",
-      "WebFetch(domain:ads.yandex.com)"
+      "WebFetch(domain:ads.yandex.com)",
+      "Bash(./gradlew :app:compileDebugKotlin -q)",
+      "Bash(./gradlew :app:compileDebugKotlin :app:processDebugResources -q)",
+      "Bash(perl -0pi -e 's/color = Color\\\\.LightGray,/color = MaterialTheme.colorScheme.outlineVariant,/g' cook_temp_screen/CokingTemperatureScreen.kt)",
+      "Bash(perl -0pi -e 's/color = Color\\\\.LightGray,/color = MaterialTheme.colorScheme.outlineVariant,/g' sous_vide/SousVideScreen.kt)",
+      "Bash(grep -n \"import androidx.compose.ui.graphics.Color$\" recipe_add_screen/RecipeAddScreen.kt recipe_update_screen/RecipeUpdateScreen.kt)",
+      "Bash(./gradlew :app:assembleRelease)",
+      "Bash(./gradlew :app:processDebugResources -q)",
+      "Bash(find ~/.gradle/caches -path '*review-ktx*' -name '*.jar' 2>/dev/null | head; echo \"---\"; find ~/.gradle/caches -path '*review-ktx*2.0.2*' 2>/dev/null | head)",
+      "Bash(./gradlew :app:compileDebugKotlin :app:processDebugManifest -q)"
     ]
   }
 }

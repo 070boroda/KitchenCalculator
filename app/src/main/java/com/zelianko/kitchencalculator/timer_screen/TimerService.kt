@@ -34,6 +34,15 @@ data class TimerState(
     val remainingMillis: Long = 0L,
     val isRunning: Boolean = false,
     val isFinished: Boolean = false,
+    /**
+     * Контекст выбора, для которого запущен таймер. Нужен, чтобы при возврате
+     * на экран восстановить те же chips и заблокировать выбор другого продукта,
+     * пока таймер не остановлен. Переживает уход с экрана (object живёт в процессе,
+     * а foreground-сервис держит процесс живым).
+     */
+    val groupKey: Int? = null,
+    val cookingTypeKey: Int? = null,
+    val productId: Long? = null,
 )
 
 object TimerController {
@@ -44,10 +53,19 @@ object TimerController {
         _state.update(transform)
     }
 
-    fun start(context: Context, totalMillis: Long) {
+    fun start(
+        context: Context,
+        totalMillis: Long,
+        groupKey: Int? = null,
+        cookingTypeKey: Int? = null,
+        productId: Long? = null,
+    ) {
         val intent = Intent(context, TimerService::class.java).apply {
             action = TimerService.ACTION_START
             putExtra(TimerService.EXTRA_TOTAL_MILLIS, totalMillis)
+            putExtra(TimerService.EXTRA_GROUP_KEY, groupKey ?: Int.MIN_VALUE)
+            putExtra(TimerService.EXTRA_COOKING_TYPE_KEY, cookingTypeKey ?: Int.MIN_VALUE)
+            putExtra(TimerService.EXTRA_PRODUCT_ID, productId ?: Long.MIN_VALUE)
         }
         ContextCompat.startForegroundService(context, intent)
     }
@@ -73,7 +91,13 @@ class TimerService : Service() {
         when (intent?.action) {
             ACTION_START -> {
                 val total = intent.getLongExtra(EXTRA_TOTAL_MILLIS, 0L)
-                startTimer(total)
+                val groupKey = intent.getIntExtra(EXTRA_GROUP_KEY, Int.MIN_VALUE)
+                    .takeIf { it != Int.MIN_VALUE }
+                val typeKey = intent.getIntExtra(EXTRA_COOKING_TYPE_KEY, Int.MIN_VALUE)
+                    .takeIf { it != Int.MIN_VALUE }
+                val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, Long.MIN_VALUE)
+                    .takeIf { it != Long.MIN_VALUE }
+                startTimer(total, groupKey, typeKey, productId)
             }
             ACTION_PAUSE -> pauseTimer()
             ACTION_RESUME -> resumeTimer()
@@ -85,13 +109,21 @@ class TimerService : Service() {
         return START_STICKY
     }
 
-    private fun startTimer(totalMillis: Long) {
+    private fun startTimer(
+        totalMillis: Long,
+        groupKey: Int? = null,
+        cookingTypeKey: Int? = null,
+        productId: Long? = null,
+    ) {
         TimerController.update {
             TimerState(
                 totalMillis = totalMillis,
                 remainingMillis = totalMillis,
                 isRunning = true,
                 isFinished = false,
+                groupKey = groupKey,
+                cookingTypeKey = cookingTypeKey,
+                productId = productId,
             )
         }
         startInForeground(totalMillis)
@@ -173,10 +205,13 @@ class TimerService : Service() {
         ensureChannels()
         val notification = buildOngoingNotification(totalMillis, running = true)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // SPECIAL_USE — без таймаута (в отличие от SHORT_SERVICE, который
+            // система убивает через ~3 минуты с ANR). Таймер готовки может идти
+            // десятки минут, поэтому нужен длительный тип.
             startForeground(
                 NOTIFICATION_ID_ONGOING,
                 notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
             )
         } else {
             startForeground(NOTIFICATION_ID_ONGOING, notification)
@@ -354,6 +389,9 @@ class TimerService : Service() {
         const val ACTION_RESUME = "com.zelianko.kitchencalculator.timer.RESUME"
         const val ACTION_STOP = "com.zelianko.kitchencalculator.timer.STOP"
         const val EXTRA_TOTAL_MILLIS = "extra_total_millis"
+        const val EXTRA_GROUP_KEY = "extra_group_key"
+        const val EXTRA_COOKING_TYPE_KEY = "extra_cooking_type_key"
+        const val EXTRA_PRODUCT_ID = "extra_product_id"
 
         private const val CHANNEL_ID_ONGOING = "timer_ongoing"
         // v2 — у v1 был дефолтный звук канала вместо alarm, а изменить параметры

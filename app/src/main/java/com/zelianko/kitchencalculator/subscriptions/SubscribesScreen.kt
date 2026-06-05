@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -78,7 +79,7 @@ fun SubscribesScreen(
                     text = "Premium is already available",
                     modifier = Modifier.padding(top = 5.dp),
                     style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
-                    color = Color.DarkGray,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
             } else {
@@ -86,13 +87,13 @@ fun SubscribesScreen(
                     text = stringResource(id = R.string.premium_text),
                     modifier = Modifier.padding(top = 5.dp),
                     style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
-                    color = Color.DarkGray,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 Button(
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.backgroud_row),
+                        containerColor = colorResource(R.color.table_spoon),
                         contentColor = Color.White
                     ),
                     onClick = {

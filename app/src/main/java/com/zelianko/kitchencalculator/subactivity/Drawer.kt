@@ -154,7 +154,7 @@ fun Drawer(
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet(
-                    drawerContainerColor = colorResource(id = R.color.white)
+                    drawerContainerColor = colorResource(id = R.color.card_surface)
                 ) {
                     Box(
                         modifier
@@ -175,7 +175,11 @@ fun Drawer(
                                 NavigationDrawerItem(
                                     colors = NavigationDrawerItemDefaults.colors(
                                         selectedContainerColor = colorResource(id = R.color.orange_primary),
-                                        unselectedContainerColor = colorResource(id = R.color.white)
+                                        unselectedContainerColor = colorResource(id = R.color.card_surface),
+                                        selectedTextColor = colorResource(id = R.color.black),
+                                        selectedIconColor = colorResource(id = R.color.black),
+                                        unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+                                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                     ),
                                     shape = RectangleShape,
                                     label = {
@@ -256,7 +260,8 @@ fun Drawer(
                                         }) {
                                         Icon(
                                             imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                                            contentDescription = stringResource(id = R.string.create_recipe)
+                                            contentDescription = stringResource(id = R.string.create_recipe),
+                                            tint = colorResource(id = R.color.black),
                                         )
                                     }
                                 }

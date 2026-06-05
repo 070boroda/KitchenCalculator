@@ -37,6 +37,7 @@
     <string name="restart">Сброс</string>
     <string name="cancel">Отмена</string>
     <string name="resume">Продолжить</string>
+    <string name="reset">Сбросить</string>
     <string name="pause">Пауза</string>
 
     <!-- Accessibility -->
@@ -313,6 +314,7 @@
     <string name="apple">Яблоки</string>
     <string name="berry">Ягоды</string>
     <string name="add_recipe">Добавьте свой первый рецепт</string>
+    <string name="add_recipe_hint">Нажмите «+» вверху экрана, чтобы создать рецепт и собрать все блюда в одном месте</string>
     <string name="no_recipes_available_upon_request">По запросу нет рецептов</string>
     <string name="not_find_time_for_cooking">Для данного типа приготовления, время \n не найдено</string>
     <string name="аill_radius_width_or_height">Не заполнены обязательные поля</string>

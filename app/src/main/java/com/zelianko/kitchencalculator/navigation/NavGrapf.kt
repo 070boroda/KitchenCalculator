@@ -1,9 +1,9 @@
 package com.zelianko.kitchencalculator.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,7 +23,7 @@ fun NavGraf(
     NavHost(
         navController = navHostController,
         startDestination = Routes.RECIPE_LIST_SCREEN,
-        modifier = Modifier.background(Color.Black)
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
     ) {
         composable(Routes.COUNTER_SCREEN) {
             generalScreenContent()

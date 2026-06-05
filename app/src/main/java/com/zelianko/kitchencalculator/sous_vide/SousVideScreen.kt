@@ -7,32 +7,31 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.zelianko.kitchencalculator.R
+import com.zelianko.kitchencalculator.ui.theme.Dimens
 import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.yandex_ads.BannerId
 import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
@@ -515,46 +514,51 @@ fun SousVideScreen(
                     )
                 }
                 HorizontalDivider(
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.outlineVariant,
                     modifier = Modifier
                         .height(1.dp)
-                        .fillMaxHeight()
                         .fillMaxWidth()
                 )
             }
 
             itemsIndexed(dataCookingTempLists) { _, invoice ->
                 if (invoice.isTitle) {
-                    //Заголовок
+                    //Заголовок-секция с иконкой на тонированном фоне
                     Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = Dimens.SpacingS)
+                            .clip(RoundedCornerShape(Dimens.RadiusM))
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .padding(horizontal = Dimens.SpacingM, vertical = Dimens.SpacingS),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
                     ) {
+                        Image(
+                            imageVector = ImageVector.vectorResource(invoice.icon),
+                            contentDescription = invoice.nameProduct,
+                            modifier = Modifier.size(28.dp),
+                        )
+                        Spacer(modifier = Modifier.width(Dimens.SpacingM))
                         Text(
                             text = invoice.nameProduct,
-                            Modifier
-                                .padding(10.dp),
-                            fontWeight = FontWeight.Bold,
-                            style = TextStyle(
-                                fontSize = 15.sp
-                            )
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 } else {
                     Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = Dimens.SpacingXs),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
                     ) {
 
                         Image(
                             imageVector = ImageVector.vectorResource(invoice.icon),
                             contentDescription = invoice.nameProduct
                         )
-//                    TableCell(
-//                        text = invoice.invoice,
-//                        weight = column1Weight,
-//                        alignment = TextAlign.Left
-//                    )
                         TableCell(text = invoice.nameProduct, weight = column2Weight)
                         Spacer(modifier = Modifier.width(5.dp))
                         StatusCell(text = invoice.tempOne, weight = column3Weight)
@@ -564,14 +568,13 @@ fun SousVideScreen(
                             alignment = TextAlign.Right
                         )
                     }
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        modifier = Modifier
+                            .height(1.dp)
+                            .fillMaxWidth()
+                    )
                 }
-                HorizontalDivider(
-                    color = Color.LightGray,
-                    modifier = Modifier
-                        .height(1.dp)
-                        .fillMaxHeight()
-                        .fillMaxWidth()
-                )
             }
         }
 
@@ -592,9 +595,8 @@ fun RowScope.TableCell(
             .padding(10.dp),
         fontWeight = if (title) FontWeight.Bold else FontWeight.Normal,
         textAlign = alignment,
-        style = TextStyle(
-            fontSize = 15.sp
-        )
+        color = MaterialTheme.colorScheme.onSurface,
+        style = MaterialTheme.typography.bodyMedium,
     )
 }
 
@@ -616,9 +618,7 @@ fun RowScope.StatusCell(
             .background(color, shape = RoundedCornerShape(50.dp)),
         textAlign = alignment,
         color = textColor,
-        style = TextStyle(
-            fontSize = 15.sp
-        )
+        style = MaterialTheme.typography.bodyMedium,
     )
 }
 

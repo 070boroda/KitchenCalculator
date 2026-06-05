@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Основная тема приложения. Цвета и системные бары задаются из Compose (KitchenCalculatorTheme). -->
+    <!-- Основная тема приложения (светлый вариант). Тёмный — в values-night/themes.xml.
+         Разделение на light/night критично для inflated XML-вью (нативная реклама Yandex),
+         где ?android:attr/textColorPrimary/Secondary должны адаптироваться к тёмной теме. -->
     <style name="Theme.KitchenCalculator" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

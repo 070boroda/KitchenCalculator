@@ -7,29 +7,42 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="backgroud_row">#FF7C7C</color>
-    <color name="table_spoon">#EA6313</color>
-    <color name="faceted_glass">#39CEF3</color>
-    <color name="tea_spoon">#39F3CE</color>
-    <color name="header_name_product">#BBFB8D</color>
-    <color name="header_product_result">#FB2C2C</color>
+
+    <!-- Брендовый акцент -->
+    <color name="table_spoon">#E35728</color>
+    <color name="faceted_glass">#3AA0D6</color>
+    <color name="tea_spoon">#3FC0A0</color>
+    <color name="orange_primary">#FFDBCC</color>
+    <color name="splash_background">#FFE35728</color>
+
+    <!-- Заголовки таблиц / строки -->
+    <color name="header_name_product">#7FB069</color>
+    <color name="header_product_result">#E35728</color>
+    <color name="backgroud_row">#FFE2D9</color>
+
+    <!-- TopAppBar / диалоги -->
     <color name="top_app_bar">#FFFFFF</color>
-    <color name="top_app_bar_gr">#FAD7DB</color>
-    <color name="orange_primary">#FFCFA4</color>
+    <color name="top_app_bar_gr">#F2E7E0</color>
     <color name="black_10_percent">#000000</color>
 
-    <color name="all_background">#F8F8F8</color>
-    <color name="tea_glass_card">#FFCFA4</color>
-    <color name="tea_spoon_card">#FFA4A4</color>
-    <color name="table_spoon_card">#BBFFA4</color>
-    <color name="faceted_glass_card">#A4D9FF</color>
-    <color name="grey">#9E9E9E</color>
-    <color name="grey_light">#D9D9D9</color>
-    <color name="dismiss_color">#66FFA4A4</color>
+    <!-- Фоны и поверхности -->
+    <color name="all_background">#FBF7F4</color>
+    <color name="card_surface">#FFFFFF</color>
+    <color name="input_background">#FFFFFF</color>
 
-    <color name="doneness_chip_bg">#FFB88C8F</color>
-    <color name="doneness_chip_text">#FF473E3D</color>
+    <!-- Карточки мер: мягкие современные тона, чёрный текст читается уверенно -->
+    <color name="tea_glass_card">#FFE0B5</color>
+    <color name="tea_spoon_card">#FFD3CC</color>
+    <color name="table_spoon_card">#CDEBC5</color>
+    <color name="faceted_glass_card">#C3E1F5</color>
 
-    <color name="splash_background">#FFEA6313</color>
+    <!-- Нейтральные -->
+    <color name="grey">#8A8580</color>
+    <color name="grey_light">#ECE5DF</color>
+    <color name="dismiss_color">#66E07A6A</color>
+
+    <!-- Мясные «чипы» -->
+    <color name="doneness_chip_bg">#F2D9CC</color>
+    <color name="doneness_chip_text">#4A352C</color>
 
 </resources>

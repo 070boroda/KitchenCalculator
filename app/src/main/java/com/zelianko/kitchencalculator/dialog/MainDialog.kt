@@ -66,7 +66,7 @@ fun MainDialog(dialogController: DialogController) {
     ) {
         Card(
             shape = RoundedCornerShape(Dimens.RadiusL),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.card_surface)),
         ) {
             Column(
                 modifier = Modifier
@@ -77,7 +77,7 @@ fun MainDialog(dialogController: DialogController) {
                 Text(
                     text = stringResource(id = R.string.form_in_recipe),
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Spacer(modifier = Modifier.height(Dimens.SpacingM))
                 HorizontalDivider()
@@ -145,7 +145,7 @@ fun MainDialog(dialogController: DialogController) {
                     }) {
                         Text(
                             text = stringResource(id = R.string.no),
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     TextButton(onClick = {
@@ -182,7 +182,7 @@ private fun FormSection(
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = Dimens.SpacingXs),
@@ -256,7 +256,7 @@ private fun ShapeOption(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

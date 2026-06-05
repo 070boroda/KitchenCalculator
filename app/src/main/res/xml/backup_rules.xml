@@ -12,7 +12,4 @@
     <include domain="sharedpref" path="." />
 
     <exclude domain="sharedpref" path="appmetrica.xml" />
-    <exclude domain="file" path="AppMetrica" />
-    <exclude domain="file" path="appmetrica_native_crashes" />
-    <exclude domain="file" path="YandexMetricaConfig" />
 </full-backup-content>

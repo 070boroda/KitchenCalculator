@@ -52,6 +52,8 @@ import com.zelianko.kitchencalculator.subactivity.RecipeImagePicker
 import com.zelianko.kitchencalculator.ui.theme.Dimens
 import com.zelianko.kitchencalculator.util.Routes
 import com.zelianko.kitchencalculator.util.UiEvent
+import com.zelianko.kitchencalculator.util.findActivity
+import com.zelianko.kitchencalculator.util.requestInAppReview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,8 +78,10 @@ fun RecipeUpdateScreen(
                 UiEvent.ShowSnackBarIfNameProductIsEmpty,
                 UiEvent.ShowSnackBarIfProductRowIsEmpty ->
                     Toast.makeText(context, productIsEmpty, Toast.LENGTH_SHORT).show()
-                UiEvent.RecipeSaved ->
+                UiEvent.RecipeSaved -> {
                     Toast.makeText(context, savedMessage, Toast.LENGTH_SHORT).show()
+                    context.findActivity()?.let { requestInAppReview(it) }
+                }
                 else -> Unit
             }
         }
@@ -133,7 +137,7 @@ fun RecipeUpdateScreen(
                     onClick = { viewModel.onEvent(RecipeUpdateEvent.OnItemSave) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.orange_primary),
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        contentColor = colorResource(id = R.color.black),
                     ),
                     shape = RoundedCornerShape(Dimens.RadiusM),
                 ) {
