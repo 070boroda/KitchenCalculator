@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.zelianko.kitchencalculator"
-    compileSdk = 36
+    compileSdk = 37
 
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
@@ -17,10 +17,10 @@ android {
 
     defaultConfig {
         applicationId = "com.zelianko.kitchencalculator"
-        minSdk = 29
+        minSdk = 31
         targetSdk = 36
-        versionCode = 36
-        versionName = "1.0.0.36"
+        versionCode = 38
+        versionName = "1.0.0.38"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -112,8 +112,8 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     // Billing
-    implementation(libs.billing)
-    implementation(libs.billing.ktx)
+//    implementation(libs.billing)
+//    implementation(libs.billing.ktx)
 
     // Third-party UI
     implementation(libs.sheets.compose.dialogs.core)

@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zelianko.kitchencalculator.R
 import com.zelianko.kitchencalculator.ui.theme.Dimens
-import com.zelianko.kitchencalculator.subscriptions.BillingViewModel
 import com.zelianko.kitchencalculator.yandex_ads.BannerId
 import com.zelianko.kitchencalculator.yandex_ads.BannerSticky
 

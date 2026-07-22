@@ -1,264 +1,488 @@
-package com.zelianko.kitchencalculator.subscriptions
-
-import android.app.Activity
-import android.content.Context
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.android.billingclient.api.AcknowledgePurchaseParams
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClient.BillingResponseCode
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
-import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.ConsumeParams
-import com.android.billingclient.api.ConsumeResponseListener
-import com.android.billingclient.api.ProductDetails
-import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.QueryProductDetailsParams
-import com.android.billingclient.api.QueryPurchasesParams
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.collect.ImmutableList
-import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
-import dagger.hilt.android.lifecycle.HiltViewModel
-
-class BillingViewModel(
-) : ViewModel() {
-
-    private var _isActiveSub = MutableLiveData(false)
-        private set
-    val isActiveSub: LiveData<Boolean> = _isActiveSub
-
-    private var _textSub = MutableLiveData<String>()
-        private set
-    val textSub: LiveData<String> = _textSub
-
-    private var _textPrice = MutableLiveData("")
-        private set
-    val textPrice: LiveData<String> = _textPrice
-
-    private var _textDiscr = MutableLiveData("")
-        private set
-    val textDiscr: LiveData<String> = _textDiscr
-
-    private var _offerToken = MutableLiveData("")
-        private set
-    val offerToken: LiveData<String> = _offerToken
-    private var _productDetails = MutableLiveData<ProductDetails>()
-        private set
-    val productDetails: LiveData<ProductDetails> = _productDetails
-
-    var billingClient: BillingClient? = null
-
-
-    /**
-     * Проверка данных есть подписки или нет
-     */
-    private val purchasesUpdatedListener =
-        PurchasesUpdatedListener { billingResult, purchases ->
-            if ((billingResult.responseCode == BillingResponseCode.OK) && purchases != null) {
-                Log.d("purchases state", purchases.size.toString())
-                for (purchase in purchases) {
-                    handlePurchase(purchase)
-                    Log.d("purchases state", "After handlePurchase")
-                }
-            } else if (billingResult.responseCode == BillingResponseCode.USER_CANCELED) {
-                _isActiveSub.postValue(false)
-            } else if (billingResult.responseCode == BillingResponseCode.SERVICE_DISCONNECTED) {
-                Log.d("BILLING ERROR", "SERVICE_DISCONNECTED")
-            }
-        }
-
-    /**
-     * Инициализация загрузки
-     */
-    fun initBillingClient(context: Context) {
-        billingClient = BillingClient.newBuilder(context)
-            .setListener(purchasesUpdatedListener)
-            .enablePendingPurchases()
-            .build()
-
-        Log.d("purchases state", billingClient?.isReady.toString())
-        Log.d("purchases state", "initial connection is DONE")
-        establishConnection()
-    }
-
-    fun establishConnection() {
-        Log.d("billingClient", "Start establishConnection")
-        billingClient?.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(billingResult: BillingResult) {
-                if (billingResult.responseCode == BillingResponseCode.OK) {
-                    Log.d("purchases state", "Start showProducts")
-                    showProducts()
-                }
-            }
-
-            override fun onBillingServiceDisconnected() {
-                Log.d("purchases state", "Disconect")
-                establishConnection()
-            }
-        })
-    }
-
-    /**
-     * Получаем список продуктов, доступных для покупки
-     */
-    fun showProducts() {
-        Log.d("billingClient", "Start query for show product")
-        val queryProductDetailsParams =
-            QueryProductDetailsParams.newBuilder()
-                .setProductList(
-                    ImmutableList.of(
-                        QueryProductDetailsParams.Product.newBuilder()
-                            .setProductId(MONTHLY)
-                            .setProductType(BillingClient.ProductType.SUBS)
-                            .build()
-                    )
-                )
-                .build()
-        Log.d("purchases state", "Start query for show product3")
-        billingClient?.queryProductDetailsAsync(queryProductDetailsParams) { billingResult, productDetailsList ->
-            Log.d("billingClient", "Start query for show product2")
-            if (billingResult.responseCode == BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
-                if (productDetailsList[0].productId.equals(MONTHLY)) {
-
-                    _textSub.postValue(productDetailsList[0].name)
-
-                    _textDiscr.postValue(productDetailsList[0].description)
-
-                    _textPrice.postValue(
-                        productDetailsList[0].subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.get(
-                            0
-                        )?.formattedPrice
-                    )
-
-                    _offerToken.postValue(productDetailsList[0].subscriptionOfferDetails?.get(0)?.offerToken)
-
-                    _productDetails.postValue(productDetailsList[0])
-                }
-            } else {
-                Log.d(
-                    "purchases statet",
-                    billingResult.responseCode.toString() + " " + billingResult.debugMessage
-                )
-                Log.d("purchases state Product size", productDetailsList.size.toString())
-                Log.d("purchases state", "Product is empty")
-            }
-        }
-    }
-
-
-    /**
-     * По нажатию на кнопку вызывается этот метод для активации подписки
-     */
-    fun launchPurchaseFlow(
-        productDetails: ProductDetails,
-        activity: Activity,
-        selectedOfferToken: String
-    ) {
-        Log.d("purchases state", "start byuing")
-        val productDetailsParamsList = listOf(
-            ProductDetailsParams.newBuilder()
-                .setProductDetails(productDetails)
-                .setOfferToken(selectedOfferToken)
-                .build()
-        )
-
-        val billingFlowParams = BillingFlowParams.newBuilder()
-            .setProductDetailsParamsList(productDetailsParamsList)
-            .build()
-        val billingResult = billingClient?.launchBillingFlow(activity, billingFlowParams)
-//        if (billingResult?.responseCode == BillingResponseCode.OK) {
-//            _isActiveSub.postValue(true)
-//            Log.d("testOffer", isActiveSub.value.toString())
+//package com.zelianko.kitchencalculator.subscriptions
+//
+//import android.app.Activity
+//import android.content.Context
+//import android.util.Log
+//import androidx.lifecycle.LiveData
+//import androidx.lifecycle.MutableLiveData
+//import androidx.lifecycle.ViewModel
+//import com.android.billingclient.api.AcknowledgePurchaseParams
+//import com.android.billingclient.api.BillingClient
+//import com.android.billingclient.api.BillingClient.BillingResponseCode
+//import com.android.billingclient.api.BillingClientStateListener
+//import com.android.billingclient.api.BillingFlowParams
+//import com.android.billingclient.api.BillingResult
+//import com.android.billingclient.api.PendingPurchasesParams
+//import com.android.billingclient.api.ProductDetails
+//import com.android.billingclient.api.Purchase
+//import com.android.billingclient.api.PurchasesUpdatedListener
+//import com.android.billingclient.api.QueryProductDetailsParams
+//import com.android.billingclient.api.QueryPurchasesParams
+//import com.zelianko.kitchencalculator.constants.StringConstants.Companion.MONTHLY
+//import dagger.hilt.android.lifecycle.HiltViewModel
+//
+//@HiltViewModel
+//class BillingViewModel : ViewModel() {
+//
+//    companion object {
+//        private const val TAG = "BillingViewModel"
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // LiveData
+//    // ------------------------------------------------------------------------
+//
+//    private val _isActiveSub = MutableLiveData(false)
+//    val isActiveSub: LiveData<Boolean> = _isActiveSub
+//
+//    private val _textSub = MutableLiveData("")
+//    val textSub: LiveData<String> = _textSub
+//
+//    private val _textPrice = MutableLiveData("")
+//    val textPrice: LiveData<String> = _textPrice
+//
+//    private val _textDiscr = MutableLiveData("")
+//    val textDiscr: LiveData<String> = _textDiscr
+//
+//    private val _offerToken = MutableLiveData("")
+//    val offerToken: LiveData<String> = _offerToken
+//
+//    private val _productDetails = MutableLiveData<ProductDetails>()
+//    val productDetails: LiveData<ProductDetails> = _productDetails
+//
+//    // ------------------------------------------------------------------------
+//    // Billing
+//    // ------------------------------------------------------------------------
+//
+//    private var billingClient: BillingClient? = null
+//
+//    private val purchasesUpdatedListener =
+//        PurchasesUpdatedListener { billingResult, purchases ->
+//
+//            when (billingResult.responseCode) {
+//
+//                BillingResponseCode.OK -> {
+//
+//                    if (purchases.isNullOrEmpty()) {
+//                        Log.d(TAG, "Purchase list is empty")
+//                        return@PurchasesUpdatedListener
+//                    }
+//
+//                    purchases.forEach {
+//                        handlePurchase(it)
+//                    }
+//                }
+//
+//                BillingResponseCode.USER_CANCELED -> {
+//                    Log.d(TAG, "Purchase canceled")
+//                }
+//
+//                BillingResponseCode.ITEM_ALREADY_OWNED -> {
+//                    Log.d(TAG, "Subscription already owned")
+//                    queryPurchases()
+//                }
+//
+//                else -> {
+//                    Log.e(
+//                        TAG,
+//                        "Purchase error: ${billingResult.responseCode} ${billingResult.debugMessage}"
+//                    )
+//                }
+//            }
 //        }
-    }
-
-    /**
-     * Проверка наличия подписки
-     *
-     * вроде работает
-     * нужно сделать еще переподписку
-     *
-     *https://github.com/wdtheprovider/in-app-purchases-subscription#step-8-check-subscription-this-code-goes-to-your-splash-screen-
-     */
-
-    fun checkSubscription(context: Context) {
-        billingClient = BillingClient.newBuilder(context).enablePendingPurchases()
-            .setListener { billingResult: BillingResult?, list: List<Purchase?>? -> }
-            .build()
-
-        Log.d("purchases state", "start check sub")
-
-        billingClient?.startConnection(object : BillingClientStateListener {
-            override fun onBillingServiceDisconnected() {
-                Log.d("testOffer", " onBillingServiceDisconnected")
-            }
-
-            override fun onBillingSetupFinished(billingResult: BillingResult) {
-                if (billingResult.responseCode == BillingResponseCode.OK) {
-                    billingClient?.queryPurchasesAsync(
-                        QueryPurchasesParams.newBuilder()
-                            .setProductType(BillingClient.ProductType.SUBS).build()
-                    ) { billingResult1: BillingResult, list: List<Purchase> ->
-                        Log.d("testOffer", "BillingResult" + billingResult1.responseCode)
-                        if (billingResult1.responseCode == BillingResponseCode.OK) {
-                            Log.d("testOffer", list.size.toString() + " size")
-                            if (list.size > 0) {
-                                var i = 0
-                                for (purchase in list) {
-                                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                                        _isActiveSub.postValue(true) // set 1 to activate premium feature
-                                    } else {
-                                        _isActiveSub.postValue(false)
-                                    }
-                                    //Here you can manage each product, if you have multiple subscription
-                                    Log.d(
-                                        "purchases state",
-                                        purchase.originalJson
-                                    ) // Get to see the order information
-                                    Log.d("purchases state", " index$i")
-                                    i++
-                                }
-                                Log.d("purchases state", _isActiveSub.value.toString())
-                            } else {
-                                _isActiveSub.postValue(false) // set 0 to de-activate premium feature
-                                Log.d("purchases state","No sub, check subscriptions")
-                            }
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-
-    private fun handlePurchase(purchase: Purchase) {
-        Log.d("purchases state", "From handlePurchase")
-        val consumeParams = ConsumeParams.newBuilder()
-            .setPurchaseToken(purchase.purchaseToken)
-            .build()
-
-        val listener = ConsumeResponseListener { billingResult, s -> }
-
-        billingClient?.consumeAsync(consumeParams, listener)
-
-        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-            if (!purchase.isAcknowledged) {
-                val acknowledgePurchaseParams = AcknowledgePurchaseParams
-                    .newBuilder()
-                    .setPurchaseToken(purchase.purchaseToken)
-                    .build()
-
-                billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
-                    Log.d("purchases state", "From handlePurchase billing result" + billingResult.responseCode)
-                    if (billingResult.responseCode == BillingResponseCode.OK) {
-                        _isActiveSub.postValue(true)
-                    }
-                }
-            }
-        }
-    }
-}
+//
+//    // ------------------------------------------------------------------------
+//    // Initialization
+//    // ------------------------------------------------------------------------
+//
+//    fun initBillingClient(context: Context) {
+//
+//        if (billingClient?.isReady == true) {
+//            return
+//        }
+//
+//        billingClient =
+//            BillingClient.newBuilder(context.applicationContext)
+//                .setListener(purchasesUpdatedListener)
+//                .enablePendingPurchases(
+//                    PendingPurchasesParams.newBuilder()
+//                        .enableOneTimeProducts()
+//                        .build()
+//                )
+//                .build()
+//
+//        establishConnection()
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // Connection
+//    // ------------------------------------------------------------------------
+//
+//    fun establishConnection() {
+//
+//        val client = billingClient ?: return
+//
+//        if (client.isReady) {
+//            showProducts()
+//            queryPurchases()
+//            return
+//        }
+//
+//        client.startConnection(object : BillingClientStateListener {
+//
+//            override fun onBillingSetupFinished(
+//                billingResult: BillingResult
+//            ) {
+//
+//                if (billingResult.responseCode ==
+//                    BillingResponseCode.OK
+//                ) {
+//
+//                    Log.d(TAG, "Billing connected")
+//
+//                    showProducts()
+//
+//                    queryPurchases()
+//
+//                } else {
+//
+//                    Log.e(
+//                        TAG,
+//                        "Billing connection error ${billingResult.debugMessage}"
+//                    )
+//                }
+//            }
+//
+//            override fun onBillingServiceDisconnected() {
+//
+//                Log.w(TAG, "Billing disconnected")
+//
+//                establishConnection()
+//            }
+//        })
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // Products
+//    // ------------------------------------------------------------------------
+//
+//    fun showProducts() {
+//
+//        val client = billingClient ?: return
+//
+//        if (!client.isReady) {
+//            establishConnection()
+//            return
+//        }
+//
+//        val params =
+//            QueryProductDetailsParams.newBuilder()
+//                .setProductList(
+//                    listOf(
+//                        QueryProductDetailsParams.Product
+//                            .newBuilder()
+//                            .setProductId(MONTHLY)
+//                            .setProductType(BillingClient.ProductType.SUBS)
+//                            .build()
+//                    )
+//                )
+//                .build()
+//
+//        client.queryProductDetailsAsync(params) { billingResult, products ->
+//
+//            if (billingResult.responseCode != BillingResponseCode.OK) {
+//
+//                Log.e(
+//                    TAG,
+//                    "queryProductDetailsAsync error ${billingResult.debugMessage}"
+//                )
+//
+//                return@queryProductDetailsAsync
+//            }
+//
+//            if (products.isEmpty()) {
+//
+//                Log.e(TAG, "Subscription product not found")
+//
+//                return@queryProductDetailsAsync
+//            }
+//
+//            val product = products.first()
+//
+//            _productDetails.postValue(product)
+//
+//            _textSub.postValue(product.name)
+//
+//            _textDiscr.postValue(product.description)
+//
+//            val offer = product.subscriptionOfferDetails
+//                ?.firstOrNull()
+//
+//            _offerToken.postValue(
+//                offer?.offerToken ?: ""
+//            )
+//
+//            val price =
+//                offer
+//                    ?.pricingPhases
+//                    ?.pricingPhaseList
+//                    ?.firstOrNull()
+//                    ?.formattedPrice
+//                    ?: ""
+//
+//            _textPrice.postValue(price)
+//
+//            Log.d(TAG, "Loaded subscription: ${product.productId}")
+//        }
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // Purchase
+//    // ------------------------------------------------------------------------
+//
+//    fun launchPurchaseFlow(
+//        productDetails: ProductDetails,
+//        activity: Activity,
+//        selectedOfferToken: String
+//    ) {
+//
+//        val client = billingClient ?: return
+//
+//        if (!client.isReady) {
+//            establishConnection()
+//            return
+//        }
+//
+//        val productDetailsParams =
+//            BillingFlowParams.ProductDetailsParams
+//                .newBuilder()
+//                .setProductDetails(productDetails)
+//                .setOfferToken(selectedOfferToken)
+//                .build()
+//
+//        val billingFlowParams =
+//            BillingFlowParams.newBuilder()
+//                .setProductDetailsParamsList(
+//                    listOf(productDetailsParams)
+//                )
+//                .build()
+//
+//        val result =
+//            client.launchBillingFlow(
+//                activity,
+//                billingFlowParams
+//            )
+//
+//        Log.d(
+//            TAG,
+//            "launchBillingFlow: ${result.responseCode} ${result.debugMessage}"
+//        )
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // Compatibility
+//    // ------------------------------------------------------------------------
+//
+//    /**
+//     * Старый публичный метод.
+//     * Оставлен, чтобы не менять существующий код проекта.
+//     */
+//    fun checkSubscription(context: Context) {
+//
+//        if (billingClient == null) {
+//            initBillingClient(context)
+//            return
+//        }
+//
+//        queryPurchases()
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // Existing Purchases
+//    // ------------------------------------------------------------------------
+//
+//    private fun queryPurchases() {
+//
+//        val client = billingClient ?: return
+//
+//        if (!client.isReady) {
+//            return
+//        }
+//
+//        val params =
+//            QueryPurchasesParams.newBuilder()
+//                .setProductType(
+//                    BillingClient.ProductType.SUBS
+//                )
+//                .build()
+//
+//        client.queryPurchasesAsync(params) { billingResult, purchases ->
+//
+//            if (billingResult.responseCode !=
+//                BillingResponseCode.OK
+//            ) {
+//
+//                Log.e(
+//                    TAG,
+//                    "queryPurchasesAsync error ${billingResult.debugMessage}"
+//                )
+//
+//                _isActiveSub.postValue(false)
+//
+//                return@queryPurchasesAsync
+//            }
+//
+//            if (purchases.isEmpty()) {
+//
+//                Log.d(TAG, "No active subscriptions")
+//
+//                _isActiveSub.postValue(false)
+//
+//                return@queryPurchasesAsync
+//            }
+//
+//            var hasActiveSubscription = false
+//
+//            purchases.forEach { purchase ->
+//
+//                Log.d(
+//                    TAG,
+//                    "Purchase state=${purchase.purchaseState}"
+//                )
+//
+//                Log.d(
+//                    TAG,
+//                    purchase.originalJson
+//                )
+//
+//                if (purchase.purchaseState ==
+//                    Purchase.PurchaseState.PURCHASED
+//                ) {
+//
+//                    hasActiveSubscription = true
+//
+//                    handlePurchase(purchase)
+//                }
+//            }
+//
+//            _isActiveSub.postValue(
+//                hasActiveSubscription
+//            )
+//        }
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // Purchase processing
+//    // ------------------------------------------------------------------------
+//
+//    private fun handlePurchase(
+//        purchase: Purchase
+//    ) {
+//
+//        if (purchase.purchaseState !=
+//            Purchase.PurchaseState.PURCHASED
+//        ) {
+//
+//            Log.d(
+//                TAG,
+//                "Purchase is not completed"
+//            )
+//
+//            return
+//        }
+//
+//        _isActiveSub.postValue(true)
+//
+//        if (purchase.isAcknowledged) {
+//
+//            Log.d(
+//                TAG,
+//                "Purchase already acknowledged"
+//            )
+//
+//            return
+//        }
+//
+//        val acknowledgeParams =
+//            AcknowledgePurchaseParams.newBuilder()
+//                .setPurchaseToken(
+//                    purchase.purchaseToken
+//                )
+//                .build()
+//
+//        billingClient?.acknowledgePurchase(
+//            acknowledgeParams
+//        ) { billingResult ->
+//
+//            if (billingResult.responseCode ==
+//                BillingResponseCode.OK
+//            ) {
+//
+//                Log.d(
+//                    TAG,
+//                    "Purchase acknowledged"
+//                )
+//
+//                _isActiveSub.postValue(true)
+//
+//            } else {
+//
+//                Log.e(
+//                    TAG,
+//                    "Acknowledge failed ${billingResult.debugMessage}"
+//                )
+//            }
+//        }
+//    }
+//
+//    // ------------------------------------------------------------------------
+//    // Helpers
+//    // ------------------------------------------------------------------------
+//
+//    /**
+//     * Возвращает первый доступный offer.
+//     *
+//     * Если позже появится несколько Base Plans,
+//     * достаточно изменить только этот метод.
+//     */
+//    private fun ProductDetails.bestOffer() =
+//        subscriptionOfferDetails?.firstOrNull()
+//
+//    /**
+//     * Есть ли активная покупка.
+//     */
+//    private fun Purchase.isPurchased(): Boolean =
+//        purchaseState == Purchase.PurchaseState.PURCHASED
+//
+//    /**
+//     * Требуется ли подтверждение покупки.
+//     */
+//    private fun Purchase.needAcknowledge(): Boolean =
+//        !isAcknowledged
+//
+//    /**
+//     * Можно ли выполнять запросы Billing.
+//     */
+//    private fun isBillingReady(): Boolean =
+//        billingClient?.isReady == true
+//
+//    // ------------------------------------------------------------------------
+//    // Lifecycle
+//    // ------------------------------------------------------------------------
+//
+//    override fun onCleared() {
+//
+//        super.onCleared()
+//
+//        try {
+//
+//            billingClient?.endConnection()
+//
+//            Log.d(TAG, "Billing disconnected")
+//
+//        } catch (_: Exception) {
+//        }
+//
+//        billingClient = null
+//    }
+//}
