@@ -12,7 +12,11 @@
       "Bash(./gradlew :app:assembleRelease)",
       "Bash(./gradlew :app:processDebugResources -q)",
       "Bash(find ~/.gradle/caches -path '*review-ktx*' -name '*.jar' 2>/dev/null | head; echo \"---\"; find ~/.gradle/caches -path '*review-ktx*2.0.2*' 2>/dev/null | head)",
-      "Bash(./gradlew :app:compileDebugKotlin :app:processDebugManifest -q)"
+      "Bash(./gradlew :app:compileDebugKotlin :app:processDebugManifest -q)",
+      "Bash(./gradlew :app:dependencies --configuration releaseRuntimeClasspath -q)",
+      "Bash(grep -E \"^\\\\|?[ |]{0,12}[+\\\\\\\\\\\\\\\\]---\")",
+      "Bash(./gradlew :app:assembleRelease -q)",
+      "Bash(curl -s https://artifactory.bidmachine.io/bidmachine/io/bidmachine/ads/maven-metadata.xml)"
     ]
   }
 }

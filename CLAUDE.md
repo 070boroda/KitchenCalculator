@@ -47,9 +47,9 @@ DI генерируется через **KSP** (миграция с kapt уже 
 
 ### Реклама, биллинг, аналитика
 
-- **Yandex Ads** (`yandex_ads/`) — основной рекламный SDK (`com.yandex.android:mobileads-mediation`), включая `AppOpenAdManager` и баннеры. ID баннеров — в `BannerId.kt`.
+- **Yandex Ads** (`yandex_ads/`) — основной рекламный SDK (`com.yandex.android:mobileads-mediation`, версия `yandexAds` в `libs.versions.toml`), включая `AppOpenAdManager` и баннеры. ID баннеров — в `BannerId.kt`. Из медиации через `exclude` в `app/build.gradle.kts` убран BidMachine (`io.bidmachine*` + `com.unity3d.ads-mediation:bidmachine-adapter`): его SDK лежит в отдельном репозитории и раздувает сборку до OOM в R8. При обновлении Yandex Ads проверять, не появились ли новые артефакты BidMachine.
 - **Google Ads** (`google_ads/`) — присутствует код (`AppOpenAdManager`, `GoogleBannerAd`), но Play Services Ads зависимость закомментирована в `app/build.gradle.kts`. При работе с гугл-рекламой проверять, не отключён ли SDK.
-- **Биллинг** (`subscriptions/`) — `com.android.billingclient:billing-ktx:7.1.1`, `BillingViewModel`, экраны `ChooseSubscription` и `SubscribesScreen`. В истории есть коммит `107d021` «убрал биллинг — сборка для GP» — перед изменениями свериться, в каком состоянии биллинг сейчас.
+- **Биллинг** (`subscriptions/`) — `BillingViewModel`, экраны `ChooseSubscription` и `SubscribesScreen`. Прямая зависимость `billing`/`billing-ktx` сейчас **закомментирована** в `app/build.gradle.kts` (коммит `107d021` «убрал биллинг — сборка для GP»). При этом Play Billing всё равно попадает в сборку транзитивно: Yandex Ads → myTarget → MyTracker → `com.android.billingclient:billing`. Google Play требует billing **8.0.0+** (с 30.08.2026), сейчас резолвится 9.1.0. После обновления рекламных SDK проверять версию: `gradlew.bat :app:dependencies --configuration releaseRuntimeClasspath` и искать `billingclient`.
 - **Аналитика**: Firebase Analytics + Crashlytics (`firebase-bom:34.0.0`, `google-services.json` в `app/`) и Yandex AppMetrica (`io.appmetrica.analytics:analytics`).
 
 ### Прочее
@@ -63,4 +63,4 @@ DI генерируется через **KSP** (миграция с kapt уже 
 
 - Shell — PowerShell, использовать `gradlew.bat`, а не `./gradlew`.
 - Дополнительные maven-репозитории (jitpack, mintegral, ironsource, pangle, tapjoy, chartboost, appnext) подключены в `settings.gradle.kts` для медиации Yandex Ads — при сетевых ошибках сборки смотреть туда.
-- `release` build-тип сейчас собирается **без minify** (`isMinifyEnabled = false`) — ProGuard/R8 фактически выключен. Это осознанное состояние, не «чинить» молча.
+- `release` build-тип собирается **с R8**: `isMinifyEnabled = true` + `isShrinkResources = true`, правила — в `app/proguard-rules.pro` (включено в коммите `30d4912`). В `debug` minify выключен, поэтому проблемы R8 (вырезанные/переименованные классы, используемые через рефлексию: Room, Hilt, рекламные SDK) видны только в release — после изменения зависимостей или keep-правил проверять именно release-сборку на устройстве. Для читаемых стектрейсов в Crashlytics нужен `mapping.txt`.

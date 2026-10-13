@@ -19,8 +19,8 @@ android {
         applicationId = "com.zelianko.kitchencalculator"
         minSdk = 31
         targetSdk = 36
-        versionCode = 38
-        versionName = "1.0.0.38"
+        versionCode = 39
+        versionName = "1.0.0.39"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -64,7 +64,13 @@ android {
 
 dependencies {
     // Yandex Ads + AppMetrica
-    implementation(libs.yandex.mobileads.mediation)
+    implementation(libs.yandex.mobileads.mediation) {
+        // BidMachine не нужен: его SDK лежит в отдельном репозитории и сильно раздувает сборку.
+        exclude(group = "io.bidmachine")
+        exclude(group = "io.bidmachine.media3")
+        exclude(group = "io.bidmachine.libs")
+        exclude(group = "com.unity3d.ads-mediation", module = "bidmachine-adapter")
+    }
     implementation(libs.appmetrica.analytics)
 
     // AndroidX core
